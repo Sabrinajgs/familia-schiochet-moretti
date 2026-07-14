@@ -376,6 +376,31 @@
   }
   #album figure.sem-numero { counter-increment: none; }
   #album figure.sem-numero > figcaption::before { content: "Vídeo"; }
+  /* numeração própria da seção das bodas de ouro */
+  #bodas-ouro { counter-reset: bfoto; }
+  #bodas-ouro figure { counter-increment: bfoto; }
+  #bodas-ouro figure > figcaption::before {
+    content: "Bodas · foto " counter(bfoto);
+    display: block; font-family: 'Segoe UI', Roboto, sans-serif; font-style: normal;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--latao-texto); margin-bottom: 3px;
+  }
+  /* ── Recados / participação ──────────────────── */
+  .recado-intro { max-width: 40em; color: var(--tinta-suave); margin: 0 auto 6px; text-align: center; font-style: italic; }
+  .recado-botoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 28px 0 22px; }
+  .recado-botoes a {
+    display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
+    background: var(--papel-carta); border: 1px solid var(--latao); border-radius: 30px;
+    padding: 13px 24px; color: var(--latao-texto);
+    font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.2rem; transition: background 0.2s;
+  }
+  .recado-botoes a:hover { background: var(--papel); }
+  .recado-botoes a .ic { font-size: 1.2rem; }
+  .recado-nota {
+    max-width: 40em; margin: 6px auto 0; text-align: center; font-size: 0.9rem;
+    color: var(--tinta-suave); font-style: italic;
+    border-top: 1px solid var(--linha); padding-top: 18px;
+  }
   .nota-album {
     margin-top: 26px;
     font-size: 0.95rem;
@@ -515,8 +540,10 @@
       <li><a href="#encontro">O encontro</a></li>
       <li><a href="#engenho">O engenho e a casa</a></li>
       <li><a href="#album">Álbum de fotos</a></li>
+      <li><a href="#bodas-ouro">Bodas de ouro</a></li>
       <li><a href="#quem-lembra">Quem lembra?</a></li>
       <li><a href="#receitas">Receitas &amp; ditados</a></li>
+      <li><a href="#recados">Deixe seu recado</a></li>
     </ul>
   </nav>
 </header>
@@ -1085,6 +1112,66 @@
     <p class="nota-album">As fotos antigas de papel não precisam de scanner: uma foto tirada com o celular, com boa luz e sem sombra, já fica ótima aqui.</p>
   </section>
 
+  <section id="bodas-ouro">
+    <p class="rotulo">Um capítulo à parte</p>
+    <h2>Bodas de ouro do nono Arlindo e da nona Maria</h2>
+    <p class="abertura-secao">Os 50 anos de casados do nono Arlindo e da nona Maria Moretti Schiochet — os pais do vô Vitório. Foi em <strong>18 de junho de 1988</strong>, com missa de ação de graças na igreja de Santo Antônio, em Nereu Ramos. Um dia de festa, guardado nas fotos e nos cartões que parentes e amigos enviaram.</p>
+    <div class="grade-album">
+      <figure>
+        <div class="foto">
+          <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+          <img loading="lazy" decoding="async" src="img/bodas_principal.jpg" alt="O nono Arlindo e a nona Maria segurando o número 50, nas bodas de ouro, diante do altar">
+        </div>
+        <figcaption>Os 50 anos de casados do nono Arlindo e da nona Maria — as bodas de ouro, celebradas na igreja, com o “50” dourado nas mãos.</figcaption>
+      </figure>
+    </div>
+
+    <details class="mais-fotos">
+      <summary><span class="seta">›</span> <span class="abrir">Ver as fotos das bodas</span><span class="fechar">Fechar as fotos</span> <span class="conta">(3 fotos)</span></summary>
+      <div class="grade-album">
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/bodas_familia.jpg" alt="O nono Arlindo e a nona Maria com os filhos nas bodas de ouro, com os nomes marcados na foto">
+          </div>
+          <figcaption>O nono Arlindo e a nona Maria com os filhos, nas bodas de ouro — os nomes estão marcados na própria foto (entre eles, o nosso vô Vitório).</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/bodas_nona_irmas.jpg" alt="A nona Maria com as irmãs dela, numa igreja">
+          </div>
+          <figcaption>A nona Maria com as irmãs dela — Paulina, Clara, Palmira e Helena. O lado Moretti da família.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/bodas_nono_irmaos.jpg" alt="O nono Arlindo com os irmãos dele">
+          </div>
+          <figcaption>O nono Arlindo com os irmãos — Ricardinho, Alfredo e Gentile.</figcaption>
+        </figure>
+      </div>
+    </details>
+
+    <details class="mais-fotos" id="cartoes-bodas">
+      <summary><span class="seta">›</span> <span class="abrir">Ver os cartões de parentes e amigos</span><span class="fechar">Fechar os cartões</span> <span class="conta">(11 cartões)</span></summary>
+      <p class="nota-album" style="margin:22px 0 4px">Os cartões que a família e os amigos enviaram nas bodas de ouro, em 1988 — guardados com todo o carinho.</p>
+      <div class="grade-album">
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_01.jpg" alt="Capa do álbum de cartões de bodas de ouro"></div><figcaption>A capa do álbum de cartões — os votos de bodas de ouro que parentes e amigos enviaram.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_02.jpg" alt="Cartões de bodas de ouro"></div><figcaption>Cartões e mensagens de parentes e amigos, cheios de votos de felicidade.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_03.jpg" alt="Cartão assinado pelos filhos, netos e bisnetos"></div><figcaption>O cartão assinado pelos filhos, netos e bisnetos — para os pais e avós, Arlindo e Maria.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_04.jpg" alt="Cartões de bodas de ouro"></div><figcaption>Mais votos e bênçãos que chegaram de longe e de perto.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_05.jpg" alt="Cartões de bodas de ouro"></div><figcaption>Recados de amigos e parentes, guardados no álbum das bodas.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_06.jpg" alt="Cartões de bodas de ouro"></div><figcaption>Cartões e mensagens de carinho pelos 50 anos de casados.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_07.jpg" alt="Cartões de bodas de ouro"></div><figcaption>Votos de felicidade que a família recebeu naquele dia.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_08.jpg" alt="Cartões de bodas de ouro"></div><figcaption>Mais cartões de parentes e amigos, com palavras de fé e afeto.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_09.jpg" alt="Cartões de bodas de ouro"></div><figcaption>Mensagens que atravessaram o país para chegar até eles.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_10.jpg" alt="Cartões de bodas de ouro"></div><figcaption>Cartões de sobrinhos, afilhados e amigos de longa data.</figcaption></figure>
+        <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_11.jpg" alt="Lembrança da missa de bodas de ouro"></div><figcaption>A lembrança da missa em ação de graças — Igreja de Santo Antônio, Nereu Ramos, 18 de junho de 1988.</figcaption></figure>
+      </div>
+    </details>
+  </section>
+
   <section id="quem-lembra">
     <p class="rotulo">Capítulo sexto</p>
     <h2>Quem lembra?</h2>
@@ -1117,6 +1204,18 @@
         <p class="verbete"><strong>“Chacramenta!”</strong> — quando a coisa aperta, ela solta esse xingamento herdado do italiano. A própria vó explicou de onde vem: lá na Itália, os antigos resmungavam “sacramenta!” — e, atravessando o oceano e as gerações, o “sacramenta” foi virando o nosso “chacramenta”, que hoje chega mansinho na cozinha dela.</p>
       </div>
     </div>
+  </section>
+
+  <section id="recados">
+    <p class="rotulo">Participe</p>
+    <h2>Deixe seu recado</h2>
+    <p class="recado-intro">Este álbum é de todos nós. Sua lembrança, sua história e suas fotos são muito bem-vindas — cada uma faz este legado crescer.</p>
+    <div class="recado-botoes">
+      <a href="mailto:sabrinajgs@icloud.com?subject=Recado%20para%20o%20álbum%20da%20família%20Schiochet"><span class="ic">💬</span> Deixar um recado</a>
+      <a href="mailto:sabrinajgs@icloud.com?subject=Resposta%20para%20o%20álbum%20(Quem%20lembra)"><span class="ic">❓</span> Responder uma pergunta</a>
+      <a href="mailto:sabrinajgs@icloud.com?subject=Foto%20para%20o%20álbum%20da%20família"><span class="ic">📷</span> Enviar uma foto</a>
+    </div>
+    <p class="recado-nota">Os recados e as fotos chegam primeiro para a Sabrina, que cuida deste álbum com carinho. É ela quem escolhe, com o coração, o que passa a fazer parte destas páginas — para que aqui fique guardado só o que é bonito e verdadeiro.</p>
   </section>
 
 </main>
