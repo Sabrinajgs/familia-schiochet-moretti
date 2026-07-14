@@ -9,7 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Maria &amp; Vitório — o legado da nossa família">
 <meta property="og:description" content="Um álbum de memória da nossa família, sempre em construção, feito com carinho.">
-<meta property="og:image" content="https://familia-schiochet.github.io/img/vo_vitorio_sabrina.jpg">
+<meta property="og:image" content="https://familia-schiochet.github.io/img/casal_festa.jpg">
 <meta property="og:url" content="https://familia-schiochet.github.io/">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -366,6 +366,24 @@
     border-left: 2px solid var(--latao);
     padding-left: 14px;
   }
+  /* "pasta" de fotos que abre ao clicar */
+  .mais-fotos { margin-top: 30px; }
+  .mais-fotos > summary {
+    cursor: pointer; list-style: none; text-align: center;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.25rem; color: var(--latao-texto);
+    border: 1px solid var(--latao); background: var(--papel-carta);
+    padding: 13px 24px; border-radius: 30px; max-width: 360px;
+    margin: 0 auto; transition: background 0.2s;
+  }
+  .mais-fotos > summary::-webkit-details-marker { display: none; }
+  .mais-fotos > summary:hover { background: var(--papel); }
+  .mais-fotos > summary .conta { font-style: italic; color: var(--tinta-suave); font-size: 0.92rem; }
+  .mais-fotos > summary .seta { display: inline-block; transition: transform 0.2s; }
+  .mais-fotos[open] > summary .seta { transform: rotate(90deg); }
+  .mais-fotos[open] > summary { margin-bottom: 26px; }
+  .mais-fotos[open] > summary .abrir { display: none; }
+  .mais-fotos:not([open]) > summary .fechar { display: none; }
 
   /* ── Quem lembra ─────────────────────────────── */
   .perguntas { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
@@ -745,14 +763,21 @@
   <section id="album">
     <p class="rotulo">Capítulo quinto</p>
     <h2>Álbum de fotos</h2>
-    <p class="abertura-secao">As fotos soltas da família — de todos os tempos. Cada uma com sua legenda: quem é, onde foi, mais ou menos quando.</p>
+    <p class="abertura-secao">As fotos da família. Aqui em cima, algumas das mais queridas — e, logo abaixo, o botão que abre a pasta com todas as outras.</p>
     <div class="grade-album">
       <figure>
         <div class="foto">
           <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
-          <img loading="lazy" decoding="async" src="img/reveillon_familia.jpg" alt="Réveillon em família — o vô Vitório rindo, a Sabrina, a vó Maria e o tio João Vitor abrindo o espumante">
+          <img loading="lazy" decoding="async" src="img/casal_festa.jpg" alt="O vô Vitório e a vó Maria juntos, bem elegantes, numa festa">
         </div>
-        <figcaption>Réveillon em família: o tio João Vitor abre o espumante, o vô Vitório cai na risada, e a Sabrina e a vó Maria comemoram — casa cheia de alegria, do jeito que o vô amava.</figcaption>
+        <figcaption>O vô Vitório e a vó Maria numa festa — elegantes e juntos, do jeito que a gente gosta de guardar.</figcaption>
+      </figure>
+      <figure>
+        <div class="foto">
+          <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+          <img loading="lazy" decoding="async" src="img/casal.jpg" alt="A vó Maria e o vô Vitório rindo juntos, num momento descontraído">
+        </div>
+        <figcaption>Um momento descontraído dos dois em casa — a vó Maria e o vô Vitório rindo juntos.</figcaption>
       </figure>
       <figure>
         <div class="foto">
@@ -764,66 +789,94 @@
       <figure>
         <div class="foto">
           <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
-          <img loading="lazy" decoding="async" src="img/tres_geracoes.jpg" alt="Sabrina, a vó Maria e a mãe Nevia juntas, sorrindo">
+          <img loading="lazy" decoding="async" src="img/vo_victor_crianca.jpg" alt="O vô Vitório, o bisneto Victor ainda criança e fantasiado, e a Sabrina">
         </div>
-        <figcaption>Três gerações num passeio: a Sabrina, a vó Maria e a mãe Nevia.</figcaption>
-      </figure>
-      <figure>
-        <div class="foto">
-          <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
-          <img loading="lazy" decoding="async" src="img/vo_maria_coracao.jpg" alt="A vó Maria sorrindo e fazendo um coração com a mão">
-        </div>
-        <figcaption>A vó Maria mandando um coração — travessura do bisneto Victor, que arrancou esse gesto dela.</figcaption>
-      </figure>
-      <figure>
-        <div class="foto">
-          <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
-          <img loading="lazy" decoding="async" src="img/festa_junina.jpg" alt="A vó Maria em traje de festa junina e a Sabrina num dia de jogo do Brasil">
-        </div>
-        <figcaption>A vó Maria e a Sabrina num dia de jogo do Brasil — a vó pronta para a apresentação de festa junina do grupo de idosos.</figcaption>
-      </figure>
-      <figure>
-        <div class="foto">
-          <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
-          <img loading="lazy" decoding="async" src="img/festa_familia.jpg" alt="A vó Maria, a mãe Nevia, a Sabrina e o Victor na 18ª Festa da Família Schiochet">
-        </div>
-        <figcaption>Na 18ª Festa da Família Schiochet: a vó Maria, a mãe Nevia, a Sabrina e o Victor.</figcaption>
-      </figure>
-      <figure>
-        <div class="foto">
-          <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
-          <img loading="lazy" decoding="async" src="img/vo_maria_banner.jpg" alt="A vó Maria ao lado do banner do encontro da Família de Arlindo e Maria Schiochet, com a bandeira do Brasil">
-        </div>
-        <figcaption>A vó Maria no encontro anual da família — a festa que leva o nome do nono e da nona: “Família de Arlindo e Maria Schiochet”.</figcaption>
-      </figure>
-      <figure>
-        <div class="foto">
-          <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
-          <img loading="lazy" decoding="async" src="img/beijo_na_vo.jpg" alt="O Victor e a Sabrina beijando a vó Maria, um de cada lado">
-        </div>
-        <figcaption>Um beijo de cada lado: o Victor e a Sabrina enchendo a vó Maria de carinho.</figcaption>
-      </figure>
-      <figure>
-        <div class="foto">
-          <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
-          <img loading="lazy" decoding="async" src="img/aconchego.jpg" alt="Victor, a vó Maria e a Sabrina juntinhos, sorrindo">
-        </div>
-        <figcaption>Victor, a vó Maria e a Sabrina no aniversário da tia Rose — daqueles aconchegos que valem por tudo.</figcaption>
-      </figure>
-      <figure>
-        <div class="foto">
-          <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
-          <img loading="lazy" decoding="async" src="img/rose_e_vo.jpg" alt="A tia Rose e a vó Maria juntas, sorrindo">
-        </div>
-        <figcaption>A tia Rose e a vó Maria — mãe e filha — no aniversário da tia Rose.</figcaption>
+        <figcaption>O vô Vitório com o bisneto Victor, ainda pequeno e fantasiado, e a Sabrina — o bisavô e o menino que leva o nome dele.</figcaption>
       </figure>
     </div>
-    <figure style="max-width:560px;margin:28px auto 0">
-      <video controls muted playsinline preload="metadata" style="width:100%;display:block;border:1px solid var(--cantoneira);background:#000">
-        <source src="img/vo_costurando.mp4" type="video/mp4">
-      </video>
-      <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">A vó Maria costurando — as mãos que, a vida inteira, vestiram e cuidaram de tanta gente. <span style="opacity:.7">(vídeo sem som)</span></figcaption>
-    </figure>
+
+    <details class="mais-fotos">
+      <summary><span class="seta">›</span> <span class="abrir">Ver mais fotos da família</span><span class="fechar">Fechar as fotos</span> <span class="conta">(mais 10 fotos e 1 vídeo)</span></summary>
+      <div class="grade-album">
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/reveillon_familia.jpg" alt="Réveillon em família — o vô Vitório rindo, a Sabrina, a vó Maria e o tio João Vitor abrindo o espumante">
+          </div>
+          <figcaption>Réveillon em família: o tio João Vitor abre o espumante, o vô Vitório cai na risada, e a Sabrina e a vó Maria comemoram — casa cheia de alegria, do jeito que o vô amava.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/grupo_familia.jpg" alt="Nevia, o Victor criança, a vó Maria, o vô Vitório, o Arvoli e a Sabrina">
+          </div>
+          <figcaption>A família reunida: a Nevia, o Victor pequeno, a vó Maria, o vô Vitório, o Arvoli (marido da Nevia) e a Sabrina.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/vo_maria_coracao.jpg" alt="A vó Maria sorrindo e fazendo um coração com a mão">
+          </div>
+          <figcaption>A vó Maria mandando um coração — travessura do bisneto Victor, que arrancou esse gesto dela.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/tres_geracoes.jpg" alt="Sabrina, a vó Maria e a mãe Nevia juntas, sorrindo">
+          </div>
+          <figcaption>Três gerações num passeio: a Sabrina, a vó Maria e a mãe Nevia.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/festa_junina.jpg" alt="A vó Maria em traje de festa junina e a Sabrina num dia de jogo do Brasil">
+          </div>
+          <figcaption>A vó Maria e a Sabrina num dia de jogo do Brasil — a vó pronta para a apresentação de festa junina do grupo de idosos.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/festa_familia.jpg" alt="A vó Maria, a mãe Nevia, a Sabrina e o Victor na 18ª Festa da Família Schiochet">
+          </div>
+          <figcaption>Na 18ª Festa da Família Schiochet: a vó Maria, a mãe Nevia, a Sabrina e o Victor.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/vo_maria_banner.jpg" alt="A vó Maria ao lado do banner do encontro da Família de Arlindo e Maria Schiochet, com a bandeira do Brasil">
+          </div>
+          <figcaption>A vó Maria no encontro anual da família — a festa que leva o nome do nono e da nona: “Família de Arlindo e Maria Schiochet”.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/beijo_na_vo.jpg" alt="O Victor e a Sabrina beijando a vó Maria, um de cada lado">
+          </div>
+          <figcaption>Um beijo de cada lado: o Victor e a Sabrina enchendo a vó Maria de carinho.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/aconchego.jpg" alt="Victor, a vó Maria e a Sabrina juntinhos, sorrindo">
+          </div>
+          <figcaption>Victor, a vó Maria e a Sabrina no aniversário da tia Rose — daqueles aconchegos que valem por tudo.</figcaption>
+        </figure>
+        <figure>
+          <div class="foto">
+            <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
+            <img loading="lazy" decoding="async" src="img/rose_e_vo.jpg" alt="A tia Rose e a vó Maria juntas, sorrindo">
+          </div>
+          <figcaption>A tia Rose e a vó Maria — mãe e filha — no aniversário da tia Rose.</figcaption>
+        </figure>
+      </div>
+      <figure style="max-width:560px;margin:24px auto 0">
+        <video controls muted playsinline preload="none" style="width:100%;display:block;border:1px solid var(--cantoneira);background:#000">
+          <source src="img/vo_costurando.mp4" type="video/mp4">
+        </video>
+        <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">A vó Maria costurando — as mãos que, a vida inteira, vestiram e cuidaram de tanta gente. <span style="opacity:.7">(vídeo sem som)</span></figcaption>
+      </figure>
+    </details>
+
     <p class="nota-album">As fotos antigas de papel não precisam de scanner: uma foto tirada com o celular, com boa luz e sem sombra, já fica ótima aqui.</p>
   </section>
 
