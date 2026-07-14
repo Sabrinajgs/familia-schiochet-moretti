@@ -126,7 +126,7 @@
     padding: clamp(28px, 6vw, 64px) clamp(16px, 4vw, 40px);
   }
   .capa-moldura {
-    max-width: 900px;
+    max-width: min(94vw, 940px);
     margin: 0 auto;
     border: 1px solid rgba(201, 160, 80, 0.55);
     padding: 6px;
@@ -185,9 +185,10 @@
 
   /* ── Miolo ───────────────────────────────────── */
   .pagina {
-    max-width: 860px;
+    width: min(94vw, 980px);
+    max-width: 100%;
     margin: 0 auto;
-    padding: 0 clamp(18px, 4vw, 32px) 40px;
+    padding: 0 clamp(16px, 4vw, 32px) 40px;
   }
   section { padding-top: clamp(48px, 8vw, 76px); }
   section > .rotulo { color: var(--latao-texto); }
@@ -517,7 +518,93 @@
     font-size: 0.92rem;
   }
   footer p { max-width: 42em; margin: 0.5em auto; }
+
+  /* ══ Segurança de largura + páginas que se ajustam ao aparelho ══ */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { max-width: 100%; overflow-x: hidden; }
+  img, svg, video, iframe { max-width: 100%; height: auto; }
+
+  /* ══ Tela inicial: capa + carrossel de assuntos ══ */
+  #inicio { padding-bottom: 8px; }
+  .abre-inicio {
+    text-align: center; color: var(--tinta-suave); font-style: italic;
+    max-width: 34em; margin: clamp(26px,5vw,42px) auto 2px; padding: 0 18px;
+  }
+  .dica-arraste {
+    text-align: center; color: var(--tinta-suave);
+    font-size: .8rem; opacity: .7; margin: 6px 0 0;
+  }
+  .carrossel {
+    display: flex; gap: 14px; overflow-x: auto;
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+    padding: 16px clamp(14px,4vw,28px) 26px;
+    margin: 4px auto 0; max-width: 1180px;
+    scrollbar-width: thin; scrollbar-color: var(--linha) transparent;
+  }
+  .carrossel::-webkit-scrollbar { height: 8px; }
+  .carrossel::-webkit-scrollbar-thumb { background: var(--linha); border-radius: 8px; }
+  .cartao-link {
+    scroll-snap-align: start; flex: 0 0 auto;
+    width: clamp(158px, 44vw, 208px); min-height: 148px;
+    background: var(--papel-carta);
+    border: 1px solid var(--linha); border-top: 3px solid var(--latao);
+    border-radius: 5px; padding: 18px 16px 16px;
+    text-decoration: none; color: var(--tinta);
+    display: flex; flex-direction: column; gap: 7px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .cartao-link:hover, .cartao-link:focus-visible {
+    transform: translateY(-3px); box-shadow: 0 7px 20px rgba(0,0,0,.13); outline: none;
+  }
+  .cartao-link .ic { font-size: 1.75rem; line-height: 1; }
+  .cartao-link .tit {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.3rem; font-weight: 600; line-height: 1.1; color: var(--latao-texto);
+  }
+  .cartao-link .teaser { font-size: .82rem; color: var(--tinta-suave); line-height: 1.4; }
+
+  /* ══ Barra "Voltar ao início" (só dentro de um assunto) ══ */
+  .barra-voltar {
+    position: sticky; top: 0; z-index: 30;
+    align-items: center; gap: 14px;
+    background: var(--capa-b); color: var(--sobre-capa);
+    padding: 10px clamp(14px,4vw,28px);
+    box-shadow: 0 2px 10px rgba(0,0,0,.2);
+  }
+  .barra-voltar .btn-voltar {
+    background: var(--latao-capa); color: #1B2C21;
+    border: none; border-radius: 999px; cursor: pointer;
+    font-family: Georgia, serif; font-size: 1rem; font-weight: bold;
+    padding: 9px 20px; text-decoration: none; white-space: nowrap;
+  }
+  .barra-voltar .btn-voltar:hover { filter: brightness(1.08); }
+  .barra-voltar .barra-titulo {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.25rem; color: var(--sobre-capa);
+  }
+  .barra-titulo .e { color: var(--latao-capa); font-style: italic; }
+
+  /* ══ Link "Responder" nas perguntas ══ */
+  .pergunta .responder {
+    display: inline-block; margin-left: 6px; vertical-align: 1px;
+    font-family: 'Segoe UI', Roboto, sans-serif; font-size: .74rem; font-weight: 600;
+    color: var(--latao-texto); text-decoration: none;
+    border: 1px solid rgba(165,119,42,.45); border-radius: 999px;
+    padding: 2px 12px; white-space: nowrap;
+  }
+  .pergunta .responder:hover { background: rgba(165,119,42,.12); }
+
+  /* ══ Modo "uma página por assunto" — só quando o JS liga ══ */
+  .js .barra-voltar { display: none; }
+  .js body:not(.navegando) main.pagina { display: none; }
+  .js body.navegando .capa,
+  .js body.navegando #inicio { display: none; }
+  .js body.navegando main.pagina > section { display: none; }
+  .js body.navegando main.pagina > section.ativa { display: block; padding-top: clamp(22px,5vw,40px); }
+  .js body.navegando .barra-voltar { display: flex; }
 </style>
+<script>document.documentElement.classList.add('js');</script>
 
 <header class="capa">
   <div class="capa-moldura">
@@ -532,35 +619,42 @@
       <p class="capa-data">Um álbum de família, sempre em construção · desde julho de 2026</p>
     </div>
   </div>
-  <nav aria-label="Partes do álbum">
-    <ul class="indice">
-      <li><a href="#geracoes">As gerações</a></li>
-      <li><a href="#arvore">A árvore</a></li>
-      <li><a href="#travessia">A travessia</a></li>
-      <li><a href="#encontro">O encontro</a></li>
-      <li><a href="#engenho">O engenho e a casa</a></li>
-      <li><a href="#album">Álbum de fotos</a></li>
-      <li><a href="#bodas-ouro">Bodas de ouro</a></li>
-      <li><a href="#documentos">Documentos e lembranças</a></li>
-      <li><a href="#quem-lembra">Quem lembra?</a></li>
-      <li><a href="#receitas">Receitas &amp; ditados</a></li>
-      <li><a href="#recados">Deixe seu recado</a></li>
-    </ul>
-  </nav>
 </header>
 
-<main class="pagina">
+<nav class="barra-voltar" aria-label="Voltar ao início">
+  <a class="btn-voltar" href="#" onclick="history.back();return false;">← Início</a>
+  <span class="barra-titulo">Maria <span class="e">&amp;</span> Vitório</span>
+</nav>
 
+<div id="inicio">
+  <p class="abre-inicio">Este é o nosso álbum de família. Toque num assunto para abrir — e volte ao início quando quiser.</p>
+  <p class="dica-arraste" aria-hidden="true">↔ arraste para o lado para ver todos os assuntos</p>
+  <nav class="carrossel" aria-label="Assuntos do álbum">
+    <a class="cartao-link" href="#geracoes"><span class="ic" aria-hidden="true">👪</span><span class="tit">As gerações</span><span class="teaser">Dos mais antigos aos ramos de hoje.</span></a>
+    <a class="cartao-link" href="#arvore"><span class="ic" aria-hidden="true">🌳</span><span class="tit">A árvore</span><span class="teaser">A família desenhada, de Belluno até nós.</span></a>
+    <a class="cartao-link" href="#travessia"><span class="ic" aria-hidden="true">🌊</span><span class="tit">A travessia</span><span class="teaser">A viagem da Itália para o Brasil.</span></a>
+    <a class="cartao-link" href="#encontro"><span class="ic" aria-hidden="true">💍</span><span class="tit">O encontro</span><span class="teaser">O namoro e o casamento do vô e da vó.</span></a>
+    <a class="cartao-link" href="#engenho"><span class="ic" aria-hidden="true">🏠</span><span class="tit">O engenho e a casa</span><span class="teaser">O melado, os doces e a casa tombada.</span></a>
+    <a class="cartao-link" href="#album"><span class="ic" aria-hidden="true">📸</span><span class="tit">Álbum de fotos</span><span class="teaser">As nossas fotos de família.</span></a>
+    <a class="cartao-link" href="#bodas-ouro"><span class="ic" aria-hidden="true">💛</span><span class="tit">Bodas de ouro</span><span class="teaser">Os 50 anos do nono e da nona.</span></a>
+    <a class="cartao-link" href="#documentos"><span class="ic" aria-hidden="true">📜</span><span class="tit">Documentos e lembranças</span><span class="teaser">Certidões e lembrancinhas guardadas.</span></a>
+    <a class="cartao-link" href="#quem-lembra"><span class="ic" aria-hidden="true">❓</span><span class="tit">Quem lembra?</span><span class="teaser">Perguntas que a família ajuda a responder.</span></a>
+    <a class="cartao-link" href="#receitas"><span class="ic" aria-hidden="true">🍰</span><span class="tit">Receitas &amp; ditados</span><span class="teaser">A cuca da vó e o jeito de falar.</span></a>
+    <a class="cartao-link" href="#recados"><span class="ic" aria-hidden="true">💬</span><span class="tit">Deixe seu recado</span><span class="teaser">Mande um carinho, uma foto, uma história.</span></a>
+  </nav>
   <div class="carta">
     <p>Este álbum é uma homenagem — aos que vieram antes de nós, e a todos que ainda vão chegar. Ele está sempre em construção, feito com carinho, no ritmo tranquilo das lembranças.</p>
     <p>Cada espaço vazio que você encontrar aqui é um convite: uma foto que ainda vai chegar, uma história que alguém da família ainda vai contar, um nome que alguém ainda lembra. Aos poucos, as páginas vão se enchendo — do jeito que as coisas boas crescem: devagar e com carinho.</p>
     <p class="assinatura">Se você chegou até aqui, é porque faz parte desta história.</p>
   </div>
+</div>
+
+<main class="pagina">
 
   <section id="geracoes">
     <p class="rotulo">Capítulo primeiro</p>
     <h2>As gerações</h2>
-    <p class="abertura-secao">A família contada de cima para baixo: dos mais antigos, que abriram o caminho, até os ramos de hoje. (Logo adiante, tem também a árvore desenhada.)</p>
+    <p class="abertura-secao">A família contada de cima para baixo: dos mais antigos, que abriram o caminho, até os ramos de hoje. (No assunto “A árvore” ela aparece também desenhada.)</p>
 
     <article class="geracao">
       <div class="num-ger" aria-hidden="true">I</div>
@@ -678,8 +772,10 @@
         </div>
       </div>
     </article>
+  </section>
 
-    <div class="arvore" id="arvore">
+  <section id="arvore">
+    <div class="arvore">
       <p class="rotulo">De Belluno até hoje</p>
       <h3>A árvore da família</h3>
       <p class="arvore-sub">De uma raiz nas montanhas de Belluno, uma família inteira. Este é o caminho que desceu da Itália até o vô Vitório e a vó Maria — e os ramos que floresceram deles.</p>
@@ -1361,11 +1457,11 @@
     <h2>Quem lembra?</h2>
     <p class="abertura-secao">Muitas respostas já chegaram — a vó Maria contou, e o livro genealógico da família revelou o resto. Estas são as que ainda faltam. Se você souber uma delas, ou um pedacinho, conte para quem guarda este álbum.</p>
     <ul class="perguntas">
-      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>Quem eram os pais da nona Maria Moretti — de que canto da Itália vieram os Moretti?</span></li>
-      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>Alguém tem foto do nono Arlindo, da nona Maria, ou do velho engenho de melado?</span></li>
-      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>Alguém guarda fotos antigas, cartas, certidões ou documentos dos mais velhos?</span></li>
-      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>A receita da nega maluca da vó — alguém sabe de cor?</span></li>
-      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>Quais histórias os mais velhos sempre repetiam nos almoços de domingo?</span></li>
+      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>Quem eram os pais da nona Maria Moretti — de que canto da Itália vieram os Moretti? <a class="responder" href="mailto:sabrinajgs@icloud.com?subject=Resposta%20%28Quem%20lembra%3F%29&body=Pergunta%3A%20Quem%20eram%20os%20pais%20da%20nona%20Maria%20Moretti%20%E2%80%94%20de%20que%20canto%20da%20It%C3%A1lia%20vieram%20os%20Moretti%3F%0A%0AO%20que%20eu%20lembro%3A%20">Responder</a></span></li>
+      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>Alguém tem foto do nono Arlindo, da nona Maria, ou do velho engenho de melado? <a class="responder" href="mailto:sabrinajgs@icloud.com?subject=Resposta%20%28Quem%20lembra%3F%29&body=Pergunta%3A%20Algu%C3%A9m%20tem%20foto%20do%20nono%20Arlindo%2C%20da%20nona%20Maria%2C%20ou%20do%20velho%20engenho%20de%20melado%3F%0A%0AO%20que%20eu%20lembro%3A%20">Responder</a></span></li>
+      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>Alguém guarda fotos antigas, cartas, certidões ou documentos dos mais velhos? <a class="responder" href="mailto:sabrinajgs@icloud.com?subject=Resposta%20%28Quem%20lembra%3F%29&body=Pergunta%3A%20Algu%C3%A9m%20guarda%20fotos%20antigas%2C%20cartas%2C%20certid%C3%B5es%20ou%20documentos%20dos%20mais%20velhos%3F%0A%0AO%20que%20eu%20lembro%3A%20">Responder</a></span></li>
+      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>A receita da nega maluca da vó — alguém sabe de cor? <a class="responder" href="mailto:sabrinajgs@icloud.com?subject=Resposta%20%28Quem%20lembra%3F%29&body=Pergunta%3A%20A%20receita%20da%20nega%20maluca%20da%20v%C3%B3%20%E2%80%94%20algu%C3%A9m%20sabe%20de%20cor%3F%0A%0AO%20que%20eu%20lembro%3A%20">Responder</a></span></li>
+      <li class="pergunta"><span class="marca" aria-hidden="true">?</span><span>Quais histórias os mais velhos sempre repetiam nos almoços de domingo? <a class="responder" href="mailto:sabrinajgs@icloud.com?subject=Resposta%20%28Quem%20lembra%3F%29&body=Pergunta%3A%20Quais%20hist%C3%B3rias%20os%20mais%20velhos%20sempre%20repetiam%20nos%20almo%C3%A7os%20de%20domingo%3F%0A%0AO%20que%20eu%20lembro%3A%20">Responder</a></span></li>
     </ul>
   </section>
 
@@ -1415,7 +1511,37 @@
   <p>Um álbum vivo, sempre em construção — feito pela família, com amor.</p>
   <p>Feito com carinho, devagarinho, como se guarda o que importa.</p>
   <p>Última atualização: 14 de julho de 2026</p>
+  <p style="margin-top:18px"><a href="#" onclick="history.back();return false;" class="voltar-rodape" style="display:none;color:var(--latao-texto);text-decoration:none;border-bottom:1px solid rgba(165,119,42,.4);padding-bottom:2px">↑ Voltar ao início</a></p>
 </footer>
+
+<script>
+(function () {
+  // Mostra uma seção por vez (como se fosse outra página) e controla o "Voltar ao início".
+  function render() {
+    var id = (location.hash || '').replace(/^#/, '');
+    var secoes = document.querySelectorAll('main.pagina > section');
+    for (var i = 0; i < secoes.length; i++) secoes[i].classList.remove('ativa');
+    var alvo = id ? document.getElementById(id) : null;
+    var ehSecao = alvo && alvo.parentNode && alvo.parentNode.classList.contains('pagina');
+    var voltarPe = document.querySelector('.voltar-rodape');
+    if (ehSecao) {
+      alvo.classList.add('ativa');
+      document.body.classList.add('navegando');
+      if (voltarPe) voltarPe.style.display = 'inline-block';
+    } else {
+      document.body.classList.remove('navegando');
+      if (voltarPe) voltarPe.style.display = 'none';
+    }
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', render);
+  // O link compartilhado SEMPRE abre na tela inicial (ignora âncora antiga como #arvore).
+  if (location.hash) {
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  }
+  render();
+})();
+</script>
 
 </body>
 </html>
