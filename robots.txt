@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://familia-schiochet.github.io/sitemap.xml
