@@ -357,6 +357,27 @@
   }
   .carta p { margin: 0.6em 0; }
   .carta .assinatura { font-style: italic; color: var(--tinta-suave); margin-top: 1.2em; }
+
+  /* ── O roteiro da viagem (o sumário do álbum) ── */
+  .roteiro { max-width: 760px; margin: 26px auto 4px; padding: 22px 26px 10px; background: var(--papel-carta); border: 1px solid var(--cantoneira); }
+  .roteiro > .rotulo { text-align: center; }
+  .roteiro-abre { text-align: center; font-style: italic; color: var(--tinta-suave); margin: 6px 0 6px; }
+  .roteiro-parte { padding: 13px 2px 12px; }
+  .roteiro-parte + .roteiro-parte { border-top: 1px dashed var(--cantoneira); }
+  .roteiro-tit { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.4rem; font-weight: 600; margin: 0; color: var(--tinta); }
+  .roteiro-tit .num { display: inline-block; min-width: 1.5em; color: var(--latao-texto); font-style: italic; }
+  .roteiro-desc { margin: 2px 0 8px; color: var(--tinta-suave); font-size: 0.95rem; }
+  .roteiro-caps { margin: 0; line-height: 2.1; }
+  .roteiro-caps a { color: var(--latao-texto); text-decoration: none; border-bottom: 1px dotted var(--cantoneira); white-space: nowrap; }
+  .roteiro-caps a:hover { border-bottom-style: solid; }
+  .roteiro-caps i { font-style: normal; color: var(--cantoneira); margin: 0 9px; }
+
+  /* ── "A viagem continua" — a ponte pro próximo capítulo ── */
+  .proximo-cap { text-align: right; margin: 36px 0 0; padding-top: 14px; border-top: 1px dashed var(--cantoneira); }
+  .proximo-cap span { display: block; font-style: italic; color: var(--tinta-suave); font-size: 0.92rem; margin-bottom: 2px; }
+  .proximo-cap a { color: var(--latao-texto); text-decoration: none; font-weight: 600; font-size: 1.05rem; }
+  .proximo-cap a:hover { text-decoration: underline; }
+  @media print { .proximo-cap { display: none } }
   /* letra capitular, como nos livros de família impressos */
   .carta > p:first-of-type::first-letter {
     font-family: 'Cormorant Garamond', Georgia, serif;
@@ -971,32 +992,57 @@
 </nav>
 
 <div id="inicio">
+  <div class="carta">
+    <p>Se você chegou até aqui, é porque faz parte desta história — seja bem-vindo: esta casa também é sua.</p>
+    <p>Este álbum nasceu como a homenagem de uma neta ao vô e à vó — e foi crescendo: as histórias que a vó Maria conta, o livro do primo Reginaldo, as certidões antigas, as fotos e as receitas foram encontrando o seu lugar aqui. Hoje ele é também o guarda-memórias da família — tudo num canto só, para não se perder nunca.</p>
+    <p>Cada espaço vazio que você encontrar é um convite: uma foto que ainda vai chegar, uma história que alguém da família ainda vai contar, um nome que alguém ainda lembra. Aos poucos, as páginas vão se enchendo — do jeito que as coisas boas crescem: devagar e com carinho.</p>
+    <p class="assinatura">Porque este álbum é, antes de tudo, uma homenagem — aos que vieram antes de nós e a todos que ainda vão chegar. Sempre em construção, no ritmo tranquilo das lembranças.</p>
+  </div>
+  <div class="roteiro">
+    <p class="rotulo">O roteiro da viagem</p>
+    <p class="roteiro-abre">Este álbum se lê como um livro, em quatro partes. Pode passear à vontade — mas quem seguir a ordem faz a viagem inteira:</p>
+    <div class="roteiro-parte">
+      <p class="roteiro-tit"><span class="num">I</span>De onde viemos</p>
+      <p class="roteiro-desc">As raízes do vô Vitório, de Belluno, e as da vó Maria, dos Açores — e os antigos que abriram o caminho.</p>
+      <p class="roteiro-caps"><a href="#travessia">🌊 A travessia</a><i>·</i><a href="#caminho">🧭 O caminho</a><i>·</i><a href="#geracoes">👪 As gerações</a><i>·</i><a href="#arvore">🌳 A árvore</a><i>·</i><a href="#bodas-ouro">💛 Bodas de ouro</a></p>
+    </div>
+    <div class="roteiro-parte">
+      <p class="roteiro-tit"><span class="num">II</span>A vida do vô e da vó</p>
+      <p class="roteiro-desc">O encontro nas domingueiras, o engenho de melado, a casa que virou patrimônio e o clube em frente dela.</p>
+      <p class="roteiro-caps"><a href="#encontro">💍 O encontro</a><i>·</i><a href="#engenho">🏠 O engenho e a casa</a><i>·</i><a href="#clube">🏟️ O bairro e o clube</a></p>
+    </div>
+    <div class="roteiro-parte">
+      <p class="roteiro-tit"><span class="num">III</span>O baú da família</p>
+      <p class="roteiro-desc">O que a família guarda para sempre: as fotos, os papéis antigos e os sabores.</p>
+      <p class="roteiro-caps"><a href="#album">📸 Álbum de fotos</a><i>·</i><a href="#documentos">📜 Documentos e lembranças</a><i>·</i><a href="#receitas">🍰 Receitas &amp; ditados</a></p>
+    </div>
+    <div class="roteiro-parte">
+      <p class="roteiro-tit"><span class="num">IV</span>Agora é com você</p>
+      <p class="roteiro-desc">As perguntas que ainda faltam e o espaço do seu recado — porque esta história também é sua.</p>
+      <p class="roteiro-caps"><a href="#quem-lembra">❓ Quem lembra?</a><i>·</i><a href="#recados">💬 Deixe seu recado</a></p>
+    </div>
+  </div>
   <p class="abre-inicio">Este é o nosso álbum de família. Toque num assunto para abrir — e volte ao início quando quiser.</p>
   <p class="link-guia"><a href="#como-usar">Primeira vez por aqui? Veja como usar o álbum</a></p>
   <p class="dica-arraste" aria-hidden="true">↔ arraste para o lado (ou use a rodinha do mouse) para ver todos os assuntos</p>
   <div class="carrossel-caixa">
     <button type="button" class="seta-carrossel seta-esq" aria-label="Ver assuntos anteriores">‹</button>
     <nav class="carrossel" aria-label="Assuntos do álbum">
+    <a class="cartao-link" href="#travessia"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_travessia.jpg" alt=""><span class="badge" aria-hidden="true">🌊</span></span><span class="corpo"><span class="tit">A travessia</span><span class="teaser">A viagem da Itália para o Brasil.</span></span></a>
+    <a class="cartao-link" href="#caminho"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_caminho.jpg" alt=""><span class="badge" aria-hidden="true">🧭</span></span><span class="corpo"><span class="tit">O caminho</span><span class="teaser">O mapa: da Itália e dos Açores até nós.</span></span></a>
     <a class="cartao-link" href="#geracoes"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_geracoes.jpg" alt=""><span class="badge" aria-hidden="true">👪</span></span><span class="corpo"><span class="tit">As gerações</span><span class="teaser">Dos mais antigos aos ramos de hoje.</span></span></a>
     <a class="cartao-link" href="#arvore"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_arvore.jpg" alt=""><span class="badge" aria-hidden="true">🌳</span></span><span class="corpo"><span class="tit">A árvore</span><span class="teaser">A família desenhada, de Belluno até nós.</span></span></a>
-    <a class="cartao-link" href="#caminho"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_caminho.jpg" alt=""><span class="badge" aria-hidden="true">🧭</span></span><span class="corpo"><span class="tit">O caminho</span><span class="teaser">O mapa: da Itália e dos Açores até nós.</span></span></a>
-    <a class="cartao-link" href="#travessia"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_travessia.jpg" alt=""><span class="badge" aria-hidden="true">🌊</span></span><span class="corpo"><span class="tit">A travessia</span><span class="teaser">A viagem da Itália para o Brasil.</span></span></a>
+    <a class="cartao-link" href="#bodas-ouro"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_bodas.jpg" alt=""><span class="badge" aria-hidden="true">💛</span></span><span class="corpo"><span class="tit">Bodas de ouro</span><span class="teaser">Os 50 anos do nono e da nona.</span></span></a>
     <a class="cartao-link" href="#encontro"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_encontro.jpg" alt=""><span class="badge" aria-hidden="true">💍</span></span><span class="corpo"><span class="tit">O encontro</span><span class="teaser">O namoro e o casamento do vô e da vó.</span></span></a>
     <a class="cartao-link" href="#engenho"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_engenho.jpg" alt=""><span class="badge" aria-hidden="true">🏠</span></span><span class="corpo"><span class="tit">O engenho e a casa</span><span class="teaser">O melado, os doces e a casa tombada.</span></span></a>
     <a class="cartao-link" href="#clube"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_clube.jpg" alt=""><span class="badge" aria-hidden="true">🏟️</span></span><span class="corpo"><span class="tit">O bairro e o clube</span><span class="teaser">O nosso clube, em frente à casa da família.</span></span></a>
     <a class="cartao-link" href="#album"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_album.jpg" alt=""><span class="badge" aria-hidden="true">📸</span></span><span class="corpo"><span class="tit">Álbum de fotos</span><span class="teaser">As nossas fotos de família.</span></span></a>
-    <a class="cartao-link" href="#bodas-ouro"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_bodas.jpg" alt=""><span class="badge" aria-hidden="true">💛</span></span><span class="corpo"><span class="tit">Bodas de ouro</span><span class="teaser">Os 50 anos do nono e da nona.</span></span></a>
     <a class="cartao-link" href="#documentos"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_documentos.jpg" alt=""><span class="badge" aria-hidden="true">📜</span></span><span class="corpo"><span class="tit">Documentos e lembranças</span><span class="teaser">Certidões e lembrancinhas guardadas.</span></span></a>
-    <a class="cartao-link" href="#quem-lembra"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_quemlembra.jpg" alt=""><span class="badge" aria-hidden="true">❓</span></span><span class="corpo"><span class="tit">Quem lembra?</span><span class="teaser">Perguntas que a família ajuda a responder.</span></span></a>
     <a class="cartao-link" href="#receitas"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_receitas.jpg" alt=""><span class="badge" aria-hidden="true">🍰</span></span><span class="corpo"><span class="tit">Receitas &amp; ditados</span><span class="teaser">A cuca, a nega maluca e o jeito de falar.</span></span></a>
+    <a class="cartao-link" href="#quem-lembra"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_quemlembra.jpg" alt=""><span class="badge" aria-hidden="true">❓</span></span><span class="corpo"><span class="tit">Quem lembra?</span><span class="teaser">Perguntas que a família ajuda a responder.</span></span></a>
     <a class="cartao-link" href="#recados"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_recados.jpg" alt=""><span class="badge" aria-hidden="true">💬</span></span><span class="corpo"><span class="tit">Deixe seu recado</span><span class="teaser">Mande um carinho, uma foto, uma história.</span></span></a>
     </nav>
     <button type="button" class="seta-carrossel seta-dir" aria-label="Ver mais assuntos">›</button>
-  </div>
-  <div class="carta">
-    <p>Se você chegou até aqui, é porque faz parte desta história — seja bem-vindo: esta casa também é sua.</p>
-    <p>Cada espaço vazio que você encontrar é um convite: uma foto que ainda vai chegar, uma história que alguém da família ainda vai contar, um nome que alguém ainda lembra. Aos poucos, as páginas vão se enchendo — do jeito que as coisas boas crescem: devagar e com carinho.</p>
-    <p class="assinatura">Porque este álbum é, antes de tudo, uma homenagem — aos que vieram antes de nós e a todos que ainda vão chegar. Sempre em construção, no ritmo tranquilo das lembranças.</p>
   </div>
   <div class="compartilhar-zap">
     <p class="pergunta-zap">Conhece alguém da família que ia gostar de ver este álbum?</p>
@@ -1010,7 +1056,7 @@
 <main class="pagina">
 
   <section id="geracoes">
-    <p class="rotulo">Capítulo primeiro</p>
+    <p class="rotulo">Parte I · De onde viemos</p>
     <h2>As gerações</h2>
     <p class="abertura-secao">A família contada de cima para baixo: dos mais antigos, que abriram o caminho, até os ramos de hoje. (No assunto “A árvore” ela aparece também desenhada.)</p>
 
@@ -1136,6 +1182,7 @@
         </div>
       </div>
     </article>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#arvore">🌳 A árvore →</a></p>
   </section>
 
   <section id="arvore">
@@ -1292,10 +1339,11 @@
         <p class="arvore-sub" style="font-size:0.82rem;opacity:0.8;margin-top:18px">Linhagem Garcia levantada a partir de registros da Cúria de Florianópolis, do Arquivo de Angra do Heroísmo (Açores) e da Torre do Tombo (Lisboa).</p>
       </div>
     </div>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#bodas-ouro">💛 Bodas de ouro →</a></p>
   </section>
 
   <section id="caminho">
-    <p class="rotulo">Para se situar</p>
+    <p class="rotulo">Parte I · De onde viemos</p>
     <h2>O caminho da família</h2>
     <p class="abertura-secao">Antes dos capítulos, o mapa: quatro lugares contam de onde viemos e onde criamos raiz. As linhas pontilhadas são as viagens de navio — repare que elas se movem devagarinho, como o mar.</p>
     <!-- MAPA:INICIO (este trecho é gerado pelo gera_mapas; editar lá) -->
@@ -1408,10 +1456,11 @@
       <li><p><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#4E9B63"/><path d="M 15,3 L 26,10 L 15,17 L 4,10 Z" fill="#D8B54A"/><circle cx="15" cy="10" r="4" fill="#35507A"/></svg><strong>Corupá</strong> — onde a vó Maria nasceu e onde o vô e a vó casaram, na Igreja São José, em 1965.</p></li>
       <li><p><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#4E9B63"/><path d="M 15,3 L 26,10 L 15,17 L 4,10 Z" fill="#D8B54A"/><circle cx="15" cy="10" r="4" fill="#35507A"/></svg><strong>Jaraguá do Sul</strong> — onde fica a casa tombada, em Nereu Ramos, e onde a família vive até hoje.</p></li>
     </ol>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#geracoes">👪 As gerações →</a></p>
   </section>
 
   <section id="travessia">
-    <p class="rotulo">Capítulo segundo</p>
+    <p class="rotulo">Parte I · De onde viemos</p>
     <h2>A travessia</h2>
     <p class="abertura-secao">Como a família cruzou o oceano — a história guardada no livro genealógico dos Schiocchet, escrito por um primo do vô: o Reginaldo Schiocchet, neto do Vittore.</p>
     <p>Tudo começa em <strong>Lentiai, na província de Belluno</strong>, nas montanhas do norte da Itália. Ali vivia <strong>Bernardino Schiocchet</strong>, o tronco mais antigo que a família conhece. Foi um filho dele, <strong>Giovanni Schiocchet</strong> — casado com <strong>Antônia de Zulian</strong> —, quem tomou a decisão que mudaria tudo: atravessar o mar com a família inteira, rumo ao Brasil.</p>
@@ -1436,10 +1485,11 @@
       </div>
       <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">A homenagem à Família Schiochet — Nereu Ramos, 22 de abril de 2007. <em>“Com um passado valoroso, construir-se-á um futuro venturoso.”</em></figcaption>
     </figure>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#caminho">🧭 O caminho →</a></p>
   </section>
 
   <section id="encontro">
-    <p class="rotulo">Capítulo terceiro</p>
+    <p class="rotulo">Parte II · A vida do vô e da vó</p>
     <h2>O encontro</h2>
     <p class="abertura-secao">Antes de tudo isto existir, houve uma <strong>domingueira</strong> — as tardes dançantes de domingo. Foi ali, à tarde, que o vô Vitório e a vó Maria se encontraram — a primeira grande história que este álbum queria contar. A vó contou.</p>
     <div class="encontro-palco">
@@ -1460,10 +1510,11 @@
     <p>Foi nas <strong>domingueiras</strong>, as tardes dançantes de domingo. Elas aconteciam no clube do <strong>senhor Silveira</strong>, ali na esquina do Ribeirão Grande — que tinha um bar e uma vendinha. Foi ali, dançando, que os dois se acharam.</p>
     <p>“Eu escolhi ele”, ela conta com simplicidade. “Não sei bem por quê — quando a gente escolhe, é porque gostou.” E completa, com um sorriso na voz: o vô nunca foi assanhadão, era um moço comportado.</p>
     <p>Namoro daquele tempo tinha suas regras: não se namorava antes dos dezesseis, e sempre dentro de casa, com os mais velhos de olho; às cinco da tarde, todo mundo recolhido. Ainda assim, deu certo. Casaram quando ela tinha dezessete anos — faltavam poucos dias para os dezoito. O vestido de noiva foi costurado pela Tia Cíli, irmã do vô; e a <strong>tiara</strong> que prendia o véu a vó ganhou de uma senhora de noventa anos, lá do Ribeirão Grande. A festa foi em casa, com barraquinha e tudo.</p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#engenho">🏠 O engenho e a casa →</a></p>
   </section>
 
   <section id="engenho">
-    <p class="rotulo">Capítulo quarto</p>
+    <p class="rotulo">Parte II · A vida do vô e da vó</p>
     <h2>O engenho e a casa</h2>
     <p class="abertura-secao">O trabalho, a terra e a casa que ficou de pé para contar a história sozinha.</p>
     <p>O trabalho da família era o <strong>engenho</strong>. Ali se fazia <strong>melado</strong> — de cana e de banana — e uma fartura de doces. A vó Maria explica o preparo com a naturalidade de quem viu tudo: moía a cana, tirava a garapa e fervia no tacho, no fogo de lenha, até dar o ponto. Deixando o caminho natural, virava açúcar mascavo; para ficar aquele melado escuro e brilhante, sem açucarar, era preciso o ponto certo — o melado mais grosso a vó chama de <em>“açucarão”</em>. E do próprio melado saíam os doces. O vô Vitório foi quem, com o tempo, modernizou tudo — trocou o fogo pela caldeira grande — e, em <strong>1970</strong>, formalizou a fábrica com o nome dele. Dirigiu caminhão por muitos anos e tinha fama de bom de conta: fazia matemática de cabeça, sem errar.</p>
@@ -1484,10 +1535,11 @@
       </div>
       <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">A mesma casa virou arte: a aquarela “Casa Schiochet”, da artista Arlete Schwedler, nos <em>Postais da história de Jaraguá do Sul</em>.</figcaption>
     </figure>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#clube">🏟️ O bairro e o clube →</a></p>
   </section>
 
   <section id="clube">
-    <p class="rotulo">O nosso bairro</p>
+    <p class="rotulo">Parte II · A vida do vô e da vó</p>
     <h2>O bairro e o clube</h2>
     <p class="abertura-secao">Toda essa história aconteceu num lugar: o bairro de <strong>Nereu Ramos</strong>, em Jaraguá do Sul. E, no coração dele, sempre teve futebol e festa.</p>
 
@@ -1516,10 +1568,11 @@
     </div>
 
     <p class="nota-album" style="margin-top:18px">Esta é só a primeira página desta história — aos poucos, com as lembranças e as fotos de quem viveu tudo isso, as próximas vão se escrevendo.</p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#album">📸 Álbum de fotos →</a></p>
   </section>
 
   <section id="album">
-    <p class="rotulo">Capítulo quinto</p>
+    <p class="rotulo">Parte III · O baú da família</p>
     <h2>Álbum de fotos</h2>
     <p class="abertura-secao">As fotos da família. Aqui em cima, algumas das mais queridas — e, logo abaixo, o botão que abre a pasta com todas as outras.</p>
     <div class="grade-album">
@@ -1997,10 +2050,11 @@
     </details>
 
     <p class="nota-album">As fotos antigas de papel não precisam de scanner: uma foto tirada com o celular, com boa luz e sem sombra, já fica ótima aqui.</p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#documentos">📜 Documentos e lembranças →</a></p>
   </section>
 
   <section id="bodas-ouro">
-    <p class="rotulo">Um capítulo à parte</p>
+    <p class="rotulo">Parte I · De onde viemos</p>
     <h2>Bodas de ouro do nono Arlindo e da nona Maria</h2>
     <p class="abertura-secao">Os 50 anos de casados do nono Arlindo e da nona Maria Moretti Schiochet — os pais do vô Vitório. Foi em <strong>18 de junho de 1988</strong> — cinquenta anos, dia por dia, depois do casamento deles, celebrado em 18 de junho de 1938 —, com missa de ação de graças na igreja de Santo Antônio, em Nereu Ramos. Um dia de festa, guardado nas fotos e nos cartões que parentes e amigos enviaram.</p>
     <div class="grade-album">
@@ -2057,10 +2111,11 @@
         <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_11.jpg" alt="Lembrança da missa de bodas de ouro"></div><figcaption>A lembrança da missa em ação de graças — Igreja de Santo Antônio, Nereu Ramos, 18 de junho de 1988.</figcaption></figure>
       </div>
     </details>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#encontro">💍 O encontro →</a></p>
   </section>
 
   <section id="documentos">
-    <p class="rotulo">Guardados com carinho</p>
+    <p class="rotulo">Parte III · O baú da família</p>
     <h2>Documentos e lembranças</h2>
     <p class="abertura-secao">Papéis que a família guardou por décadas: as lembrancinhas de batizado, primeira comunhão e crisma, e alguns documentos antigos dos avós. Cada um deles é um pedaço de história — uma data, um nome, uma prova de que tudo isso realmente aconteceu.</p>
     <div class="grade-album">
@@ -2126,10 +2181,11 @@
         <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/vo_molde2.jpg" alt="Páginas de moldes de costura da vó Maria no papel quadriculado"></div><figcaption>Página após página de moldes, no capricho do papel quadriculado — o ofício da vó Maria.</figcaption></figure>
       </div>
     </details>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#receitas">🍰 Receitas &amp; ditados →</a></p>
   </section>
 
   <section id="quem-lembra">
-    <p class="rotulo">Capítulo sexto</p>
+    <p class="rotulo">Parte IV · Agora é com você</p>
     <h2>Quem lembra?</h2>
     <p class="abertura-secao">Muitas respostas já chegaram — a vó Maria contou, e o livro genealógico do primo Reginaldo Schiocchet revelou o resto. Estas são as que ainda faltam. Se você souber uma delas, ou um pedacinho, conte para quem guarda este álbum.</p>
     <ul class="perguntas">
@@ -2148,10 +2204,11 @@
       <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/misterio_casamento3.jpg" alt="Casamento da Tereza, filha do tio Oreste, com o nono e a nona à esquerda"></div><figcaption>Mistério resolvido, pela vó Maria: é o casamento da <strong>Tereza, filha do tio Oreste</strong> — sobrinha da nona. E o casal que aparece primeiro, à esquerda, é o nono Arlindo e a nona Maria Moretti.</figcaption></figure>
       <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/misterio_senhoras.jpg" alt="A roda do lado Moretti numa festa: a nona Maria Moretti, as irmãs dela e o nono Arlindo"></div><figcaption>Mistério resolvido, com a ajuda da vó Maria: é o lado Moretti em festa! Sentada, a nona Maria Moretti; com ela, as irmãs — tia Clara, tia Paulina, tia Helena e tia Palmira. Na roda ainda: o nono Arlindo e, ao lado dele, a Maria do tio Cláudio; de branco, a tia Elza do tio Faustino; e, de rosa, a Gertrude, filha mais velha do Otávio Moretti.</figcaption></figure>
     </div>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#recados">💬 Deixe seu recado →</a></p>
   </section>
 
   <section id="receitas">
-    <p class="rotulo">Capítulo sétimo</p>
+    <p class="rotulo">Parte III · O baú da família</p>
     <h2>Receitas &amp; ditados</h2>
     <p class="abertura-secao">Porque família também é o que se come e o que se diz.</p>
     <div class="duas-colunas">
@@ -2173,10 +2230,11 @@
         <p class="verbete"><strong>“Chacramenta!”</strong> — quando a coisa aperta, ela solta esse xingamento herdado do italiano. A própria vó explicou de onde vem: lá na Itália, os antigos resmungavam “sacramenta!” — e, atravessando o oceano e as gerações, o “sacramenta” foi virando o nosso “chacramenta”, que hoje chega mansinho na cozinha dela.</p>
       </div>
     </div>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#quem-lembra">❓ Quem lembra? →</a></p>
   </section>
 
   <section id="recados">
-    <p class="rotulo">Participe</p>
+    <p class="rotulo">Parte IV · Agora é com você</p>
     <h2>Deixe seu recado</h2>
     <p class="recado-intro">Este álbum é de todos nós. Sua lembrança, sua história e suas fotos são muito bem-vindas — cada uma faz este legado crescer.</p>
     <div class="recado-botoes">
@@ -2192,6 +2250,7 @@
         Mandar o álbum pelo WhatsApp
       </a>
     </div>
+      <p class="proximo-cap"><span>Fim da viagem — que é sempre um começo.</span> <a href="#" onclick="history.back();return false;">← Voltar ao início</a></p>
   </section>
 
   <section id="como-usar">
