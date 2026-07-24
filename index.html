@@ -378,6 +378,24 @@
   .proximo-cap a { color: var(--latao-texto); text-decoration: none; font-weight: 600; font-size: 1.05rem; }
   .proximo-cap a:hover { text-decoration: underline; }
   @media print { .proximo-cap { display: none } }
+
+  /* ── A linha do tempo ── */
+  .tempo { list-style: none; margin: 26px 0 0; padding: 0; position: relative; }
+  .tempo::before { content: ""; position: absolute; left: 107px; top: 10px; bottom: 10px; width: 1px; background: var(--cantoneira); }
+  .tempo li { position: relative; display: flex; gap: 26px; padding: 9px 0; }
+  .tempo .ano { flex: 0 0 92px; text-align: right; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 600; font-size: 1.15rem; color: var(--latao-texto); line-height: 1.5; }
+  .tempo li::before { content: ""; position: absolute; left: 103.5px; top: 19px; width: 8px; height: 8px; border-radius: 50%; background: var(--latao); box-shadow: 0 0 0 3px var(--papel); }
+  .tempo li p { margin: 0; flex: 1; }
+  .tempo li p a { color: var(--latao-texto); text-decoration: none; white-space: nowrap; }
+  .tempo li p a:hover { text-decoration: underline; }
+
+  /* ── O que floresceu por último (novidades) ── */
+  .novidades { max-width: 760px; margin: 12px auto 4px; padding: 14px 26px 10px; border: 1px dashed var(--cantoneira); }
+  .novidades > .rotulo { text-align: center; margin-bottom: 6px; }
+  .novidades ul { list-style: none; margin: 0; padding: 0; }
+  .novidades li { padding: 4px 0; }
+  .novidades .quando { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; color: var(--latao-texto); margin-right: 10px; white-space: nowrap; }
+  .novidades a { color: var(--latao-texto); }
   /* letra capitular, como nos livros de família impressos */
   .carta > p:first-of-type::first-letter {
     font-family: 'Cormorant Garamond', Georgia, serif;
@@ -1004,7 +1022,7 @@
     <div class="roteiro-parte">
       <p class="roteiro-tit"><span class="num">I</span>De onde viemos</p>
       <p class="roteiro-desc">As raízes do vô Vitório, de Belluno, e as da vó Maria, dos Açores — e os antigos que abriram o caminho.</p>
-      <p class="roteiro-caps"><a href="#travessia">🌊 A travessia</a><i>·</i><a href="#caminho">🧭 O caminho</a><i>·</i><a href="#geracoes">👪 As gerações</a><i>·</i><a href="#arvore">🌳 A árvore</a><i>·</i><a href="#bodas-ouro">💛 Bodas de ouro</a></p>
+      <p class="roteiro-caps"><a href="#travessia">🌊 A travessia</a><i>·</i><a href="#caminho">🧭 O caminho</a><i>·</i><a href="#linha-do-tempo">🕰️ A linha do tempo</a><i>·</i><a href="#geracoes">👪 As gerações</a><i>·</i><a href="#arvore">🌳 A árvore</a><i>·</i><a href="#bodas-ouro">💛 Bodas de ouro</a></p>
     </div>
     <div class="roteiro-parte">
       <p class="roteiro-tit"><span class="num">II</span>A vida do vô e da vó</p>
@@ -1022,6 +1040,14 @@
       <p class="roteiro-caps"><a href="#quem-lembra">❓ Quem lembra?</a><i>·</i><a href="#recados">💬 Deixe seu recado</a></p>
     </div>
   </div>
+  <div class="novidades">
+    <p class="rotulo">O que floresceu por último</p>
+    <ul>
+      <li><span class="quando">jul/2026</span> A história ganhou uma <a href="#linha-do-tempo">linha do tempo</a> — e o álbum, um roteiro em quatro partes.</li>
+      <li><span class="quando">jul/2026</span> A capa do <a href="#travessia">livro do primo Reginaldo</a> entrou na Travessia, em reconhecimento ao trabalho dele.</li>
+      <li><span class="quando">jul/2026</span> Os filhos de coração, Gelinda e Virgílio, ganharam o seu lugar nas <a href="#geracoes">gerações</a> e na <a href="#arvore">árvore</a>.</li>
+    </ul>
+  </div>
   <p class="abre-inicio">Este é o nosso álbum de família. Toque num assunto para abrir — e volte ao início quando quiser.</p>
   <p class="link-guia"><a href="#como-usar">Primeira vez por aqui? Veja como usar o álbum</a></p>
   <p class="dica-arraste" aria-hidden="true">↔ arraste para o lado (ou use a rodinha do mouse) para ver todos os assuntos</p>
@@ -1030,6 +1056,7 @@
     <nav class="carrossel" aria-label="Assuntos do álbum">
     <a class="cartao-link" href="#travessia"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_travessia.jpg" alt=""><span class="badge" aria-hidden="true">🌊</span></span><span class="corpo"><span class="tit">A travessia</span><span class="teaser">A viagem da Itália para o Brasil.</span></span></a>
     <a class="cartao-link" href="#caminho"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_caminho.jpg" alt=""><span class="badge" aria-hidden="true">🧭</span></span><span class="corpo"><span class="tit">O caminho</span><span class="teaser">O mapa: da Itália e dos Açores até nós.</span></span></a>
+    <a class="cartao-link" href="#linha-do-tempo"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_tempo.jpg" alt=""><span class="badge" aria-hidden="true">🕰️</span></span><span class="corpo"><span class="tit">A linha do tempo</span><span class="teaser">A história toda, ano a ano.</span></span></a>
     <a class="cartao-link" href="#geracoes"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_geracoes.jpg" alt=""><span class="badge" aria-hidden="true">👪</span></span><span class="corpo"><span class="tit">As gerações</span><span class="teaser">Dos mais antigos aos ramos de hoje.</span></span></a>
     <a class="cartao-link" href="#arvore"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_arvore.jpg" alt=""><span class="badge" aria-hidden="true">🌳</span></span><span class="corpo"><span class="tit">A árvore</span><span class="teaser">A família desenhada, de Belluno até nós.</span></span></a>
     <a class="cartao-link" href="#bodas-ouro"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_bodas.jpg" alt=""><span class="badge" aria-hidden="true">💛</span></span><span class="corpo"><span class="tit">Bodas de ouro</span><span class="teaser">Os 50 anos do nono e da nona.</span></span></a>
@@ -1456,7 +1483,38 @@
       <li><p><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#4E9B63"/><path d="M 15,3 L 26,10 L 15,17 L 4,10 Z" fill="#D8B54A"/><circle cx="15" cy="10" r="4" fill="#35507A"/></svg><strong>Corupá</strong> — onde a vó Maria nasceu e onde o vô e a vó casaram, na Igreja São José, em 1965.</p></li>
       <li><p><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#4E9B63"/><path d="M 15,3 L 26,10 L 15,17 L 4,10 Z" fill="#D8B54A"/><circle cx="15" cy="10" r="4" fill="#35507A"/></svg><strong>Jaraguá do Sul</strong> — onde fica a casa tombada, em Nereu Ramos, e onde a família vive até hoje.</p></li>
     </ol>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#geracoes">👪 As gerações →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#linha-do-tempo">🕰️ A linha do tempo →</a></p>
+  </section>
+
+  <section id="linha-do-tempo">
+    <p class="rotulo">Parte I · De onde viemos</p>
+    <h2>A linha do tempo</h2>
+    <p class="abertura-secao">Se o mapa conta os lugares, esta linha conta os anos: a história da família inteira, data por data — e as datas grandes levam ao capítulo que as conta por inteiro.</p>
+    <ol class="tempo">
+      <li><span class="ano">1875/76</span><p>Num 19 de abril nasce <strong>Vittore Schiocchet</strong>, em Lentiai, Belluno — o ano, cada papel conta de um jeito, e o álbum guarda os dois. <a href="#travessia">→ A travessia</a></p></li>
+      <li><span class="ano">1888</span><p>Os primeiros da família cruzam o oceano, no navio <em>Liban</em>.</p></li>
+      <li><span class="ano">1890</span><p>Em 17 de abril, o navio <em>Adria</em> toca o Brasil com catorze da família — entre eles o Vittore, de 14 anos.</p></li>
+      <li><span class="ano">1914</span><p>Em 6 de dezembro nasce o <strong>nono Arlindo</strong>.</p></li>
+      <li><span class="ano">1917</span><p>Em 25 de março nasce a <strong>nona Maria Moretti</strong>. <a href="#geracoes">→ As gerações</a></p></li>
+      <li><span class="ano">anos 1920</span><p>O Vittore e a Ângelica erguem a <strong>casa de tijolos</strong> — tijolos feitos um a um, na olaria da própria família. <a href="#engenho">→ O engenho e a casa</a></p></li>
+      <li><span class="ano">1938</span><p>Em 18 de junho, casam o nono e a nona — guarde a data, que ela volta dourada mais adiante.</p></li>
+      <li><span class="ano">1941</span><p>Em 19 de agosto nasce o <strong>vô Vitório</strong> — com o nome dos dois avôs.</p></li>
+      <li><span class="ano">1947</span><p>Em setembro nasce a <strong>vó Maria</strong>; em novembro, descansa o Vittore, em casa, em Nereu Ramos <span class="em-memoria">(em memória, sempre)</span>.</p></li>
+      <li><span class="ano">1965</span><p>Em 4 de setembro, o vô e a vó casam na Igreja São José, em Corupá. <a href="#encontro">→ O encontro</a></p></li>
+      <li><span class="ano">1966–1981</span><p>Chegam os cinco filhos: Carlos, Nevia, Marcos, Rosemari e João Vitor.</p></li>
+      <li><span class="ano">1970</span><p>O vô registra a fábrica de melado com o nome dele.</p></li>
+      <li><span class="ano">1985</span><p>O vô vende o terreno em frente de casa para o clube erguer a praça de esportes. <a href="#clube">→ O bairro e o clube</a></p></li>
+      <li><span class="ano">1988</span><p>Em 18 de junho — cinquenta anos, dia por dia —, as <strong>bodas de ouro</strong> do nono e da nona. <a href="#bodas-ouro">→ Bodas de ouro</a></p></li>
+      <li><span class="ano">1990</span><p>As bodas de prata do vô e da vó — «essa eu fiz festão», conta ela.</p></li>
+      <li><span class="ano">1998</span><p>A casa é <strong>tombada</strong> como patrimônio histórico; e o nono e a nona celebram as bodas de diamante.</p></li>
+      <li><span class="ano">2000</span><p>A geada negra queima o bananal — a época mais dura. E passou.</p></li>
+      <li><span class="ano">2006</span><p>Descansa o nono Arlindo <span class="em-memoria">(em memória, sempre)</span>.</p></li>
+      <li><span class="ano">2007</span><p>Os bellunenses entregam a placa de homenagem à família — o abraço de volta da Itália.</p></li>
+      <li><span class="ano">2019</span><p>O Estrella, o clube histórico do bairro, completa cem anos.</p></li>
+      <li><span class="ano">2025</span><p>Em setembro, as <strong>bodas de diamante</strong> do vô e da vó — sessenta anos de casados, com a bênção do padre em casa.</p></li>
+      <li><span class="ano">2026</span><p>Nasce este álbum — para que nada disso se perca nunca. 🌱</p></li>
+    </ol>
+    <p class="proximo-cap"><span>A viagem continua:</span> <a href="#geracoes">👪 As gerações →</a></p>
   </section>
 
   <section id="travessia">
