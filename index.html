@@ -1124,8 +1124,12 @@
     max-width: 720px; margin: 32px auto 0; padding: 14px 20px 4px;
     border-top: 1px dashed var(--cantoneira);
   }
-  .datas-mes > .rotulo { text-align: center; margin-bottom: 10px; }
+  .datas-mes > .rotulo { text-align: center; margin-bottom: 2px; }
   .datas-mes > .rotulo .ico { width: 1em; height: 1em; }
+  .datas-abre {
+    text-align: center; font-style: italic; color: var(--tinta-suave);
+    font-size: 0.92rem; margin: 0 0 12px;
+  }
   .datas-mes ul { list-style: none; margin: 0; padding: 0; }
   .datas-mes li { padding: 6px 0; display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: baseline; }
   .datas-mes .quando {
@@ -1134,8 +1138,6 @@
     font-size: 1.1rem; color: var(--latao-texto);
   }
   .datas-mes .oque { flex: 1 1 14em; font-size: 0.96rem; }
-  .datas-mes .ano-data { font-style: italic; color: var(--tinta-suave); }
-  .datas-mes .ano-data::before { content: "· "; }
   .datas-mes .oque a::before { content: "· "; border: 0; }
   .datas-mes .oque a { color: var(--latao-texto); text-decoration: none; border-bottom: 1px dotted var(--cantoneira); white-space: nowrap; }
   .datas-mes .e-hoje .quando { color: var(--tinta); }
@@ -1210,9 +1212,9 @@
 <div id="inicio">
   <div class="carta">
     <p>Se você chegou até aqui, é porque faz parte desta história — seja bem-vindo: esta casa também é sua.</p>
-    <p>Este álbum nasceu como a homenagem de uma neta ao vô e à vó — e foi crescendo: as histórias da vó Maria, o livro do primo Reginaldo, as certidões, as fotos e as receitas foram encontrando o seu lugar aqui. Hoje ele é o guarda-memórias da família — tudo num canto só, para não se perder nunca.</p>
-    <p>Cada espaço vazio que você encontrar é um convite: uma foto que ainda vai chegar, uma história que alguém da família ainda vai contar, um nome que alguém ainda lembra. Aos poucos, as páginas vão se enchendo — do jeito que as coisas boas crescem: devagar e com carinho.</p>
-    <p class="assinatura">Porque este álbum é, antes de tudo, uma homenagem — aos que vieram antes de nós e a todos que ainda vão chegar. Sempre em construção, no ritmo tranquilo das lembranças.</p>
+    <p>Nasceu como a homenagem de uma neta ao vô e à vó, e foi crescendo: as histórias da vó Maria, o livro do primo Reginaldo, as certidões, as fotos, as receitas. Hoje é o guarda-memórias da família — tudo num canto só, para não se perder nunca.</p>
+    <p>Cada espaço vazio é um convite: uma foto que ainda vai chegar, uma história que alguém ainda vai contar. As páginas vão se enchendo devagar, do jeito que as coisas boas crescem.</p>
+    <p class="assinatura">Uma homenagem aos que vieram antes de nós — e a todos que ainda vão chegar.</p>
     <div class="divisor-carta" aria-hidden="true"></div>
     <div class="roteiro">
       <p class="rotulo">O roteiro da viagem</p>
@@ -1265,6 +1267,7 @@
   </div>
   <div class="datas-mes" id="datas-mes" hidden>
     <p class="rotulo"><svg class="ico" aria-hidden="true"><use href="#i-datas"/></svg><span id="datas-titulo">As datas deste mês</span></p>
+    <p class="datas-abre">As datas que este mês guarda.</p>
     <ul id="datas-lista"></ul>
     <p class="datas-nota" id="datas-nota" hidden></p>
   </div>
@@ -2882,38 +2885,41 @@
   var MESES = ["janeiro","fevereiro","março","abril","maio","junho","julho",
                "agosto","setembro","outubro","novembro","dezembro"];
   var DATAS = [
-      {d:1,m:1,ano:"1919",txt:"o Estrella, o clube do bairro, nasce numa noite de céu estrelado",onde:"#clube"},
-      {d:5,m:2,ano:"2006",txt:"descansa o nono Arlindo",onde:"#geracoes"},
-      {d:26,m:2,ano:"1985",txt:"o vô vende o terreno em frente de casa para o clube erguer a praça de esportes",onde:"#clube"},
-      {d:25,m:3,ano:"1917",txt:"nasce a nona Maria Moretti",onde:"#geracoes"},
-      {d:17,m:4,ano:"1890",txt:"o navio Adria toca o Brasil com catorze da família",onde:"#travessia"},
-      {d:19,m:4,ano:"1875/76",txt:"nasce o bisavô Vittore, em Lentiai, Belluno",onde:"#travessia"},
-      {d:22,m:4,ano:"2007",txt:"os bellunenses entregam a placa de homenagem à família",onde:"#travessia"},
-      {d:27,m:4,ano:"1920",txt:"nasce o bisavô João da Silva, pai da vó Maria",onde:"#geracoes"},
-      {d:18,m:6,ano:"1938 e 1988",txt:"casam o nono e a nona — e, cinquenta anos depois, dia por dia, as bodas de ouro",onde:"#bodas-ouro"},
-      {d:21,m:6,ano:"1998",txt:"as bodas de diamante do nono e da nona",onde:"#bodas-ouro"},
-      {d:22,m:7,ano:"1956",txt:"a Primeira Comunhão da vó Maria, na Igreja Santo Antônio",onde:"#documentos"},
-      {d:19,m:8,ano:"1941",txt:"nasce o vô Vitório, com o nome dos dois avôs",onde:"#geracoes"},
-      {d:4,m:9,ano:"1965",txt:"casam o vô Vitório e a vó Maria, na Igreja São José, em Corupá",onde:"#encontro"},
-      {d:4,m:11,ano:"1924",txt:"nasce a bisavó Lucinda, a “Zita”",onde:"#geracoes"},
-      {d:21,m:11,ano:"1947",txt:"descansa o bisavô Vittore, em casa, em Nereu Ramos",onde:"#travessia"},
-      {d:6,m:12,ano:"1914",txt:"nasce o nono Arlindo",onde:"#geracoes"},
-      {d:30,m:12,ano:"2000",txt:"descansa a nona Maria Moretti",onde:"#geracoes"}
+      {d:1,m:1,txt:"o Estrella, o clube do bairro, foi fundado numa noite de céu estrelado, em 1919.",onde:"#clube"},
+      {d:5,m:2,txt:"o nono Arlindo descansou, em 2006 — em memória, sempre.",onde:"#geracoes"},
+      {d:26,m:2,txt:"o vô vendeu o terreno em frente de casa para o clube erguer a praça de esportes, em 1985.",onde:"#clube"},
+      {d:25,m:3,txt:"nasceu a nona Maria Moretti, em 1917.",onde:"#geracoes"},
+      {d:17,m:4,txt:"o navio Adria chegou ao Brasil com catorze da nossa família, em 1890.",onde:"#travessia"},
+      {d:19,m:4,txt:"nasceu o bisavô Vittore, em Lentiai, na Itália — em 1875 ou 1876, que cada papel conta de um jeito.",onde:"#travessia"},
+      {d:22,m:4,txt:"os bellunenses entregaram a placa de homenagem à família, em 2007.",onde:"#travessia"},
+      {d:27,m:4,txt:"nasceu o bisavô João da Silva, pai da vó Maria, em 1920.",onde:"#geracoes"},
+      {d:18,m:6,txt:"casaram o nono Arlindo e a nona Maria, em 1938.",onde:"#bodas-ouro"},
+      {d:18,m:6,txt:"as bodas de ouro do nono e da nona — cinquenta anos, dia por dia, em 1988.",onde:"#bodas-ouro"},
+      {d:21,m:6,txt:"as bodas de diamante do nono e da nona, em 1998.",onde:"#bodas-ouro"},
+      {d:22,m:7,txt:"a vó Maria fez a Primeira Comunhão na Igreja Santo Antônio, em 1956.",onde:"#documentos"},
+      {d:19,m:8,txt:"nasceu o vô Vitório, com o nome dos dois avôs, em 1941.",onde:"#geracoes"},
+      {d:4,m:9,txt:"casaram o vô Vitório e a vó Maria na Igreja São José, em Corupá — em 1965.",onde:"#encontro"},
+      {d:4,m:11,txt:"nasceu a bisavó Lucinda, a “Zita”, em 1924.",onde:"#geracoes"},
+      {d:21,m:11,txt:"o bisavô Vittore descansou, em casa, em 1947 — em memória, sempre.",onde:"#travessia"},
+      {d:6,m:12,txt:"nasceu o nono Arlindo, em 1914.",onde:"#geracoes"},
+      {d:30,m:12,txt:"a nona Maria Moretti descansou, em 2000 — em memória, sempre.",onde:"#geracoes"}
   ];
   var caixa = document.getElementById("datas-mes");
   if (caixa) {
     var agora = new Date(), mes = agora.getMonth() + 1, hoje = agora.getDate();
     var doMes = DATAS.filter(function (x) { return x.m === mes; })
                      .sort(function (a, b) { return a.d - b.d; });
-    document.getElementById("datas-titulo").textContent = "As datas de " + MESES[mes - 1];
+    var nomeMes = MESES[mes - 1];
+    document.getElementById("datas-titulo").textContent =
+      nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1) + " na nossa família";
     var ul = document.getElementById("datas-lista");
     if (doMes.length) {
       doMes.forEach(function (x) {
         var li = document.createElement("li");
         if (x.d === hoje) li.className = "e-hoje";
-        li.innerHTML = '<span class="quando">' + x.d + " de " + MESES[mes - 1] +
+        li.innerHTML = '<span class="quando">' + x.d + " de " + nomeMes +
           (x.d === hoje ? ' <span class="hoje-marca">é hoje</span>' : "") + "</span>" +
-          '<span class="oque">' + x.txt + ' <span class="ano-data">' + x.ano + "</span>" +
+          '<span class="oque">' + x.txt +
           ' <a href="' + x.onde + '">ver no álbum</a></span>';
         ul.appendChild(li);
       });
@@ -2927,7 +2933,7 @@
       }
       var nota = document.getElementById("datas-nota");
       nota.hidden = false;
-      nota.innerHTML = "Em " + MESES[mes - 1] + " não há datas guardadas por aqui. A próxima é <strong>" +
+      nota.innerHTML = "Este mês não guarda nenhuma data por aqui. A próxima é <strong>" +
         prox.d + " de " + MESES[prox.m - 1] + "</strong>: " + prox.txt +
         ' <a href="' + prox.onde + '">ver no álbum</a>';
     }
