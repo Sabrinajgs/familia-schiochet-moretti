@@ -1880,7 +1880,7 @@
     </div>
     <figure style="max-width:620px;margin:6px auto 26px">
       <img loading="lazy" decoding="async" src="img/casamento_grupo.jpg" alt="Foto do casamento do vô Vitório e da vó Maria com a família e os padrinhos" style="width:100%;display:block;border:1px solid var(--cantoneira)">
-      <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">O vô Vitório e a vó Maria no dia do casamento, cercados pela família e pelos padrinhos. E a vó reconheceu um a um: o tio Belo e a tia Helena, o tio Lídio e a tia Nena (a Deumira), a tia Cíli — a Cecília — com o Arlindo, seu marido (em memória), e o tio Vicente com a tia Nézia. Na frente, as meninas: a Nice e a tia Salete, irmã da vó, ainda criança.</figcaption>
+      <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">O vô Vitório e a vó Maria no dia do casamento, cercados pela família e pelos padrinhos. E a vó reconheceu um a um: o tio Belo e a tia Helena, o tio Lidio e a tia Nena (a Deumira), a tia Cíli — a Cecília — com o Arlindo, seu marido (em memória), e o tio Vicente com a tia Nézia. Na frente, as meninas: a Nice e a tia Salete, irmã da vó, ainda criança.</figcaption>
     </figure>
     <p>Foi nas <strong>domingueiras</strong>, as tardes dançantes de domingo. Elas aconteciam no clube do <strong>senhor Silveira</strong>, ali na esquina do Ribeirão Grande — que tinha um bar e uma vendinha. Foi ali, dançando, que os dois se acharam.</p>
     <p>“Eu escolhi ele”, ela conta com simplicidade. “Não sei bem por quê — quando a gente escolhe, é porque gostou.” E completa, com um sorriso na voz: o vô nunca foi assanhadão, era um moço comportado.</p>
@@ -2994,6 +2994,8 @@
                         .sort(function (a, b) { return a.d - b.d; });
         if (cand.length) prox = cand[0];
       }
+      var abre = document.querySelector(".datas-abre");
+      if (abre) abre.hidden = true;   // não faz sentido dizer "as datas que este mês guarda" se não há nenhuma
       var nota = document.getElementById("datas-nota");
       nota.hidden = false;
       nota.innerHTML = "Este mês não guarda nenhuma data por aqui. A próxima é <strong>" +
