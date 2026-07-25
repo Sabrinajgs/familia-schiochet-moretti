@@ -368,18 +368,22 @@
   .roteiro { margin: 18px 0 0; }
   .roteiro > .rotulo { text-align: center; }
   .roteiro-abre { text-align: center; font-style: italic; color: var(--tinta-suave); margin: 4px 0 2px; }
-  .roteiro-grade { display: grid; grid-template-columns: 1fr; gap: 0 36px; }
+  .roteiro-grade { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 36px; }
   @media (min-width: 760px) { .roteiro-grade { grid-template-columns: 1fr 1fr; } }
-  .roteiro-parte { padding: 12px 2px 10px; border-top: 1px dashed var(--cantoneira); }
+  .roteiro-parte { padding: 12px 2px 10px; border-top: 1px dashed var(--cantoneira); min-width: 0; }
   .roteiro-grade .roteiro-parte:first-child { border-top: 0; }
   @media (min-width: 760px) { .roteiro-grade .roteiro-parte:nth-child(2) { border-top: 0; } }
   .roteiro-tit { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.28rem; font-weight: 600; margin: 0; color: var(--tinta); }
   .roteiro-tit .num { display: inline-block; min-width: 1.5em; color: var(--latao-texto); font-style: italic; }
   .roteiro-desc { margin: 2px 0 6px; color: var(--tinta-suave); font-size: 0.9rem; }
-  .roteiro-caps { margin: 0; line-height: 1.95; font-size: 0.97rem; }
+  .roteiro-caps {
+    margin: 0; font-size: 0.97rem; line-height: 1.5;
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px;
+    min-width: 0;
+  }
   .roteiro-caps a { color: var(--latao-texto); text-decoration: none; border-bottom: 1px dotted var(--cantoneira); white-space: nowrap; }
   .roteiro-caps a:hover { border-bottom-style: solid; }
-  .roteiro-caps i { font-style: normal; color: var(--cantoneira); margin: 0 9px; }
+  .roteiro-caps i { font-style: normal; color: var(--cantoneira); margin: 0; }
 
   /* ── "A viagem continua" — a ponte pro próximo capítulo ── */
   .proximo-cap { text-align: right; margin: 36px 0 0; padding-top: 14px; border-top: 1px dashed var(--cantoneira); }
@@ -1165,7 +1169,7 @@
     font-style: italic;
     color: var(--tinta-suave);
   }
-  .fonte .ver-fonte { white-space: nowrap; }
+  .fonte .ver-fonte { overflow-wrap: anywhere; }
   .fonte a { color: var(--latao-texto); text-decoration: none; border-bottom: 1px dotted var(--cantoneira); font-style: normal; }
   .fonte a:hover { border-bottom-style: solid; }
   @media print {
@@ -1195,6 +1199,13 @@
   @media (max-width: 340px) {
     .barra-voltar .barra-titulo { display: none; }   /* tela muito estreita: o nome sai */
   }
+
+  /* ── Trava de segurança para telas estreitas (o Safari do iPhone é mais
+        exigente que o Chrome na hora de quebrar linha) ─────────────────── */
+  #inicio, .carta, .roteiro, .roteiro-grade, .roteiro-parte, .roteiro-caps,
+  .datas-mes, .quem-lista, .ramo, .lista-quem { max-width: 100%; min-width: 0; }
+  .lista-quem .onde { overflow-wrap: anywhere; }
+  .tempo li p { overflow-wrap: anywhere; }
 
 </style>
 <script>document.documentElement.classList.add('js');</script>
