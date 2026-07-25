@@ -175,7 +175,7 @@
   }
   .capa-moldura-interna {
     border: 1px solid rgba(201, 160, 80, 0.3);
-    padding: clamp(48px, 9vw, 96px) clamp(20px, 5vw, 64px);
+    padding: clamp(28px, 5vw, 54px) clamp(20px, 5vw, 56px);
     text-align: center;
     /* cantoneiras de latão, como as dos álbuns antigos (8 traços, 2 por canto) */
     background:
@@ -206,8 +206,9 @@
   }
   .capa .rotulo { color: var(--latao-capa); }
   .capa h1 {
-    font-size: clamp(2.9rem, 10vw, 5.4rem);
-    margin: 18px 0 10px;
+    font-size: clamp(3.05rem, 11.5vw, 4.4rem);
+    line-height: 1.03;
+    margin: 16px 0 12px;
   }
   .capa h1 .e-comercial { font-style: italic; font-weight: 500; color: var(--latao-capa); }
   .capa-sub {
@@ -258,7 +259,7 @@
     opacity: 0.75;
   }
   .capa-data {
-    margin-top: 14px;
+    margin-top: 10px;
     font-size: 0.9rem;
     opacity: 0.75;
   }
@@ -352,22 +353,30 @@
   .carta {
     background: var(--papel-carta);
     border: 1px solid var(--linha);
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
     padding: clamp(24px, 5vw, 40px);
-    margin-top: clamp(40px, 7vw, 64px);
+    margin-top: clamp(26px, 5vw, 44px);
   }
   .carta p { margin: 0.6em 0; }
   .carta .assinatura { font-style: italic; color: var(--tinta-suave); margin-top: 1.2em; }
 
-  /* ── O roteiro da viagem (o sumário do álbum) ── */
-  .roteiro { max-width: 760px; margin: 26px auto 4px; padding: 22px 26px 10px; background: var(--papel-carta); border: 1px solid var(--cantoneira); }
+  /* ── O roteiro da viagem (o sumário do álbum, dentro da carta) ── */
+  .divisor-carta { width: 150px; height: 1px; background: var(--cantoneira); margin: 26px auto 4px; position: relative; }
+  .divisor-carta::after { content: "❧"; position: absolute; left: 50%; top: -0.72em; transform: translateX(-50%); background: var(--papel-carta); padding: 0 10px; color: var(--latao); font-size: 0.95rem; }
+  .roteiro { margin: 18px 0 0; }
   .roteiro > .rotulo { text-align: center; }
-  .roteiro-abre { text-align: center; font-style: italic; color: var(--tinta-suave); margin: 6px 0 6px; }
-  .roteiro-parte { padding: 13px 2px 12px; }
-  .roteiro-parte + .roteiro-parte { border-top: 1px dashed var(--cantoneira); }
-  .roteiro-tit { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.4rem; font-weight: 600; margin: 0; color: var(--tinta); }
+  .roteiro-abre { text-align: center; font-style: italic; color: var(--tinta-suave); margin: 4px 0 2px; }
+  .roteiro-grade { display: grid; grid-template-columns: 1fr; gap: 0 36px; }
+  @media (min-width: 760px) { .roteiro-grade { grid-template-columns: 1fr 1fr; } }
+  .roteiro-parte { padding: 12px 2px 10px; border-top: 1px dashed var(--cantoneira); }
+  .roteiro-grade .roteiro-parte:first-child { border-top: 0; }
+  @media (min-width: 760px) { .roteiro-grade .roteiro-parte:nth-child(2) { border-top: 0; } }
+  .roteiro-tit { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.28rem; font-weight: 600; margin: 0; color: var(--tinta); }
   .roteiro-tit .num { display: inline-block; min-width: 1.5em; color: var(--latao-texto); font-style: italic; }
-  .roteiro-desc { margin: 2px 0 8px; color: var(--tinta-suave); font-size: 0.95rem; }
-  .roteiro-caps { margin: 0; line-height: 2.1; }
+  .roteiro-desc { margin: 2px 0 6px; color: var(--tinta-suave); font-size: 0.9rem; }
+  .roteiro-caps { margin: 0; line-height: 1.95; font-size: 0.97rem; }
   .roteiro-caps a { color: var(--latao-texto); text-decoration: none; border-bottom: 1px dotted var(--cantoneira); white-space: nowrap; }
   .roteiro-caps a:hover { border-bottom-style: solid; }
   .roteiro-caps i { font-style: normal; color: var(--cantoneira); margin: 0 9px; }
@@ -389,13 +398,6 @@
   .tempo li p a { color: var(--latao-texto); text-decoration: none; white-space: nowrap; }
   .tempo li p a:hover { text-decoration: underline; }
 
-  /* ── O que floresceu por último (novidades) ── */
-  .novidades { max-width: 760px; margin: 12px auto 4px; padding: 14px 26px 10px; border: 1px dashed var(--cantoneira); }
-  .novidades > .rotulo { text-align: center; margin-bottom: 6px; }
-  .novidades ul { list-style: none; margin: 0; padding: 0; }
-  .novidades li { padding: 4px 0; }
-  .novidades .quando { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; color: var(--latao-texto); margin-right: 10px; white-space: nowrap; }
-  .novidades a { color: var(--latao-texto); }
   /* letra capitular, como nos livros de família impressos */
   .carta > p:first-of-type::first-letter {
     font-family: 'Cormorant Garamond', Georgia, serif;
@@ -729,8 +731,9 @@
   #inicio { padding-bottom: 8px; }
   .abre-inicio {
     text-align: center; color: var(--tinta-suave); font-style: italic;
-    max-width: 34em; margin: clamp(26px,5vw,42px) auto 2px; padding: 0 18px;
+    max-width: 40em; margin: 26px auto 10px; padding: 0 18px;
   }
+  .abre-inicio a { color: var(--latao-texto); }
   .dica-arraste {
     text-align: center; color: var(--tinta-suave);
     font-size: .8rem; opacity: .7; margin: 6px 0 0;
@@ -975,8 +978,203 @@
     .foto, figure { break-inside: avoid; page-break-inside: avoid; }
     .so-impressao { display: block; font-size: 0.85rem; color: var(--tinta-suave); }
   }
+  /* ── Desenhinhos de latão (no lugar dos emojis) ─────────────────── */
+  .ico {
+    display: inline-block;
+    width: 1.12em; height: 1.12em;
+    vertical-align: -0.19em;
+    margin-right: 0.34em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.92;
+  }
+  .proximo-cap .ico { width: 1.2em; height: 1.2em; }
+  .ico-semente { color: var(--latao-texto); margin: 0 0 0 0.2em; }
+  .cartao-link .badge {
+    display: grid; place-items: center;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(20, 42, 30, 0.55);
+    border: 1px solid rgba(201, 160, 80, 0.75);
+    color: #F0E4C6;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.45));
+  }
+  .cartao-link .badge .ico { width: 19px; height: 19px; margin: 0; opacity: 1; }
+
+  /* ── A voz da vó em destaque ─────────────────────────────────────── */
+  .voz {
+    margin: 30px auto 32px;
+    max-width: 27em;
+    padding: 0 18px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(1.42rem, 3.6vw, 1.92rem);
+    line-height: 1.32;
+    color: var(--tinta);
+  }
+  .voz::before {
+    content: "“";
+    display: block;
+    font-size: 3rem;
+    line-height: 0.55;
+    color: var(--latao);
+    margin-bottom: 10px;
+  }
+  .voz cite {
+    display: block;
+    margin-top: 14px;
+    font-family: 'Segoe UI', -apple-system, Roboto, sans-serif;
+    font-style: normal;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--latao-texto);
+  }
+  .voz--palavra {
+    font-size: clamp(1.9rem, 6vw, 2.9rem);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Fotinhas da linha do tempo ──────────────────────────────────── */
+  .tempo li { align-items: flex-start; }
+  .tempo-foto {
+    flex: 0 0 104px;
+    align-self: flex-start;
+    margin-top: 2px;
+    padding: 4px;
+    background: var(--papel-carta);
+    border: 1px solid var(--cantoneira);
+    line-height: 0;
+  }
+  .tempo-foto img { width: 100%; height: 78px; object-fit: cover; display: block; cursor: zoom-in; }
+  @media (max-width: 620px) {
+    .tempo li { flex-wrap: wrap; gap: 14px; }
+    .tempo .ano { flex: 0 0 60px; }
+    .tempo::before { left: 74px; }
+    .tempo li::before { left: 70.5px; }
+    .tempo li p { flex: 1 1 60%; min-width: 12em; }
+    .tempo-foto { flex: 0 0 82px; }
+    .tempo-foto img { height: 62px; }
+  }
+
+  /* ── Capa com mais ar no celular ─────────────────────────────────── */
+  @media (max-width: 480px) {
+    .capa { padding: 24px 12px 30px; }
+    .capa-moldura { max-width: 96vw; }
+    .capa-moldura-interna { padding: 34px 15px 32px; }
+    .capa-sub { font-size: 1.14rem; }
+  }
+
+  /* ── Quem é quem ─────────────────────────────────────────────────── */
+  [hidden] { display: none !important; }
+  .busca-caixa { margin: 22px 0 6px; }
+  .busca-caixa label {
+    display: block;
+    font-family: 'Segoe UI', -apple-system, Roboto, sans-serif;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--latao-texto); margin-bottom: 6px;
+  }
+  .busca-caixa input {
+    width: 100%; max-width: 26em;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.18rem;
+    padding: 10px 14px;
+    color: var(--tinta);
+    background: var(--papel-carta);
+    border: 1px solid var(--cantoneira);
+    border-radius: 2px;
+  }
+  .busca-caixa input:focus-visible { outline: 2px solid var(--latao); outline-offset: 2px; }
+  .busca-vazio { font-style: italic; color: var(--tinta-suave); margin: 10px 0 0; }
+  .quem-lista {
+    columns: 2 320px;
+    column-gap: 44px;
+    margin-top: 18px;
+  }
+  .ramo { break-inside: avoid; padding: 14px 0 6px; border-top: 1px dashed var(--cantoneira); }
+  .ramo h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.3rem; font-weight: 600; margin: 0 0 8px; color: var(--latao-texto);
+  }
+  .lista-quem { list-style: none; margin: 0; padding: 0; }
+  .lista-quem li { margin: 0 0 13px; line-height: 1.45; }
+  .lista-quem .nome {
+    display: block;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.15rem; font-weight: 600; color: var(--tinta);
+  }
+  .lista-quem .quem { display: block; color: var(--tinta-suave); font-size: 0.94rem; }
+  .lista-quem .onde {
+    display: block; margin-top: 2px;
+    font-family: 'Segoe UI', -apple-system, Roboto, sans-serif; font-size: 0.79rem;
+    color: var(--tinta-suave);
+  }
+  .lista-quem .onde a { color: var(--latao-texto); text-decoration: none; border-bottom: 1px dotted var(--cantoneira); }
+  .lista-quem .onde a:hover { border-bottom-style: solid; }
+  .lista-quem .onde i { font-style: normal; color: var(--cantoneira); margin: 0 4px; }
+
+  /* ── As datas do mês ─────────────────────────────────────────────── */
+  .datas-mes {
+    max-width: 720px; margin: 32px auto 0; padding: 14px 20px 4px;
+    border-top: 1px dashed var(--cantoneira);
+  }
+  .datas-mes > .rotulo { text-align: center; margin-bottom: 10px; }
+  .datas-mes > .rotulo .ico { width: 1em; height: 1em; }
+  .datas-mes ul { list-style: none; margin: 0; padding: 0; }
+  .datas-mes li { padding: 6px 0; display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: baseline; }
+  .datas-mes .quando {
+    flex: 0 0 8.4em;
+    font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 600;
+    font-size: 1.1rem; color: var(--latao-texto);
+  }
+  .datas-mes .oque { flex: 1 1 14em; font-size: 0.96rem; }
+  .datas-mes .ano-data { font-style: italic; color: var(--tinta-suave); }
+  .datas-mes .ano-data::before { content: "· "; }
+  .datas-mes .oque a::before { content: "· "; border: 0; }
+  .datas-mes .oque a { color: var(--latao-texto); text-decoration: none; border-bottom: 1px dotted var(--cantoneira); white-space: nowrap; }
+  .datas-mes .e-hoje .quando { color: var(--tinta); }
+  .datas-mes .hoje-marca {
+    font-family: 'Segoe UI', Roboto, sans-serif; font-style: normal; font-size: 0.62rem;
+    font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--papel); background: var(--latao); padding: 2px 7px; border-radius: 2px;
+    vertical-align: 2px;
+  }
+  .datas-mes .datas-nota { font-size: 0.96rem; text-align: center; color: var(--tinta-suave); margin: 0 0 8px; }
+  .datas-mes .datas-nota strong { color: var(--tinta); font-style: normal; }
+  @media print {
+    .busca-caixa, .datas-mes, .busca-vazio { display: none !important; }
+  }
+
 </style>
 <script>document.documentElement.classList.add('js');</script>
+
+<svg class="latao-sprite" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;overflow:hidden">
+ <defs>
+  <symbol id="i-travessia" viewBox="0 0 24 24"><path d="M3.2 15.6h17.6l-2.4 3.5a2.2 2.2 0 0 1-1.8 1H7.4a2.2 2.2 0 0 1-1.8-1L3.2 15.6z"/><path d="M12 15.6V3.4"/><path d="M13 5.4l4.4 5.9H13z"/><path d="M11 6.8L7.4 11.3H11z"/></symbol>
+  <symbol id="i-caminho" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M15 9l-1.7 4.3-4.3 1.7L10.7 10.7z"/></symbol>
+  <symbol id="i-tempo" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.1"/><path d="M12 9.9v3.6l2.4 1.4"/><path d="M10.4 3.4h3.2"/><path d="M12 3.4v2.9"/></symbol>
+  <symbol id="i-geracoes" viewBox="0 0 24 24"><circle cx="7.4" cy="8" r="2.4"/><circle cx="16.6" cy="8" r="2.4"/><path d="M3.3 19.4c0-2.6 1.8-4.5 4.1-4.5s4.1 1.9 4.1 4.5"/><path d="M12.5 19.4c0-2.6 1.8-4.5 4.1-4.5s4.1 1.9 4.1 4.5"/></symbol>
+  <symbol id="i-arvore" viewBox="0 0 24 24"><path d="M12 20.6v-6.3"/><path d="M12 14.3c-3.6 0-6.4-2.3-6.4-5.4S8.4 3.4 12 3.4s6.4 2.7 6.4 5.5-2.8 5.4-6.4 5.4z"/><path d="M9.5 17.4L12 15.7l2.5 1.7"/></symbol>
+  <symbol id="i-bodas" viewBox="0 0 24 24"><circle cx="9.5" cy="13.6" r="5"/><circle cx="14.5" cy="13.6" r="5"/></symbol>
+  <symbol id="i-encontro" viewBox="0 0 24 24"><circle cx="12" cy="14.6" r="5.1"/><path d="M9.7 8.3L12 5.5l2.3 2.8-2.3 2.1z"/></symbol>
+  <symbol id="i-engenho" viewBox="0 0 24 24"><path d="M3.4 11.7h17.2"/><path d="M4.8 11.7a7.2 7.2 0 0 0 14.4 0"/><path d="M9.4 8.7c0-1.6 1.6-1.6 1.6-3.2"/><path d="M13.4 8.7c0-1.6 1.6-1.6 1.6-3.2"/></symbol>
+  <symbol id="i-clube" viewBox="0 0 24 24"><path d="M12 3.2l7.1 2.4v5.8c0 4.2-3 7.3-7.1 8.8-4.1-1.5-7.1-4.6-7.1-8.8V5.6L12 3.2z"/><circle cx="12" cy="11.4" r="2.5"/></symbol>
+  <symbol id="i-album" viewBox="0 0 24 24"><rect x="3.4" y="5.2" width="17.2" height="13.8" rx="1"/><path d="M6.6 15.4l3.4-3.6 2.6 2.6 2.7-3.1 3.3 4.1"/><circle cx="8.5" cy="9.1" r="1.1"/></symbol>
+  <symbol id="i-documentos" viewBox="0 0 24 24"><path d="M6.3 3.5h7.5l4.3 4.3v12.7H6.3z"/><path d="M13.8 3.5v4.3h4.3"/><path d="M8.9 12.5h6.3M8.9 15.7h6.3"/></symbol>
+  <symbol id="i-receitas" viewBox="0 0 24 24"><ellipse cx="14.7" cy="7.7" rx="2.9" ry="4" transform="rotate(28 14.7 7.7)"/><path d="M12.5 11.5L8.7 20.4"/></symbol>
+  <symbol id="i-quemlembra" viewBox="0 0 24 24"><path d="M4.4 5.3h15.2v9.5h-8.3l-4 3.4v-3.4H4.4z"/><path d="M10.3 8.6a1.9 1.9 0 1 1 2.9 1.6c-.7.5-1.2.9-1.2 1.7"/><circle cx="12" cy="13.1" r=".6" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-recados" viewBox="0 0 24 24"><rect x="3.4" y="6.1" width="17.2" height="11.8" rx="1"/><path d="M3.9 6.9L12 13l8.1-6.1"/></symbol>
+  <symbol id="i-quemequem" viewBox="0 0 24 24"><circle cx="6.6" cy="8" r="2.4"/><path d="M3 14c0-2.2 1.6-3.7 3.6-3.7S10.2 11.8 10.2 14"/><path d="M13.2 7.4h7.4M13.2 11h7.4M13.2 14.6h7.4M13.2 18.2h4.8"/></symbol>
+  <symbol id="i-datas" viewBox="0 0 24 24"><rect x="3.6" y="5.5" width="16.8" height="14.3" rx="1"/><path d="M3.6 9.8h16.8"/><path d="M8 3.6v3.3M16 3.6v3.3"/><circle cx="8.4" cy="13.6" r=".8" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-semente" viewBox="0 0 24 24"><path d="M12 20.5v-6.4"/><path d="M12 14.1c-2.7-.2-4.3-1.7-4.5-4.1 2.5-.2 4.3 1.2 4.5 4.1z"/><path d="M12 14.1c2.7-.2 4.3-1.7 4.5-4.1-2.5-.2-4.3 1.2-4.5 4.1z"/><path d="M10.6 20.5h2.8"/></symbol>
+ </defs>
+</svg>
 
 <header class="capa">
   <div class="capa-moldura">
@@ -984,7 +1182,7 @@
       <p class="rotulo">O legado dos meus avós</p>
       <h1>Maria <span class="e-comercial">&amp;</span> Vitório</h1>
       <p class="capa-sub">A semente de onde brotou toda a nossa família.</p>
-      <svg class="ramo ramo-topo semente-capa" width="76" height="82" viewBox="0 0 72 78" aria-hidden="true" style="display:block;margin:22px auto 8px;opacity:0.95">
+      <svg class="ramo ramo-topo semente-capa" width="56" height="61" viewBox="0 0 72 78" aria-hidden="true" style="display:block;margin:12px auto 4px;opacity:0.95">
         <!-- a sementinha que brota -->
         <path d="M36 64 C 33 69, 29 71, 24 72" stroke="#C9A050" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6"/>
         <path d="M36 64 C 39 69, 43 71, 48 72" stroke="#C9A050" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6"/>
@@ -1012,64 +1210,63 @@
 <div id="inicio">
   <div class="carta">
     <p>Se você chegou até aqui, é porque faz parte desta história — seja bem-vindo: esta casa também é sua.</p>
-    <p>Este álbum nasceu como a homenagem de uma neta ao vô e à vó — e foi crescendo: as histórias que a vó Maria conta, o livro do primo Reginaldo, as certidões antigas, as fotos e as receitas foram encontrando o seu lugar aqui. Hoje ele é também o guarda-memórias da família — tudo num canto só, para não se perder nunca.</p>
+    <p>Este álbum nasceu como a homenagem de uma neta ao vô e à vó — e foi crescendo: as histórias da vó Maria, o livro do primo Reginaldo, as certidões, as fotos e as receitas foram encontrando o seu lugar aqui. Hoje ele é o guarda-memórias da família — tudo num canto só, para não se perder nunca.</p>
     <p>Cada espaço vazio que você encontrar é um convite: uma foto que ainda vai chegar, uma história que alguém da família ainda vai contar, um nome que alguém ainda lembra. Aos poucos, as páginas vão se enchendo — do jeito que as coisas boas crescem: devagar e com carinho.</p>
     <p class="assinatura">Porque este álbum é, antes de tudo, uma homenagem — aos que vieram antes de nós e a todos que ainda vão chegar. Sempre em construção, no ritmo tranquilo das lembranças.</p>
+    <div class="divisor-carta" aria-hidden="true"></div>
+    <div class="roteiro">
+      <p class="rotulo">O roteiro da viagem</p>
+      <p class="roteiro-abre">O álbum se lê como um livro, em quatro partes — quem seguir a ordem faz a viagem inteira:</p>
+      <div class="roteiro-grade">
+        <div class="roteiro-parte">
+          <p class="roteiro-tit"><span class="num">I</span>De onde viemos</p>
+          <p class="roteiro-desc">As raízes do vô Vitório, de Belluno, e as da vó Maria, dos Açores.</p>
+          <p class="roteiro-caps"><a href="#travessia"><svg class="ico" aria-hidden="true"><use href="#i-travessia"/></svg> A travessia</a><i>·</i><a href="#caminho"><svg class="ico" aria-hidden="true"><use href="#i-caminho"/></svg> O caminho</a><i>·</i><a href="#linha-do-tempo"><svg class="ico" aria-hidden="true"><use href="#i-tempo"/></svg> A linha do tempo</a><i>·</i><a href="#geracoes"><svg class="ico" aria-hidden="true"><use href="#i-geracoes"/></svg> As gerações</a><i>·</i><a href="#arvore"><svg class="ico" aria-hidden="true"><use href="#i-arvore"/></svg> A árvore</a><i>·</i><a href="#quem-e-quem"><svg class="ico" aria-hidden="true"><use href="#i-quemequem"/></svg> Quem é quem</a><i>·</i><a href="#bodas-ouro"><svg class="ico" aria-hidden="true"><use href="#i-bodas"/></svg> Bodas de ouro</a></p>
+        </div>
+        <div class="roteiro-parte">
+          <p class="roteiro-tit"><span class="num">II</span>A vida do vô e da vó</p>
+          <p class="roteiro-desc">O encontro, o engenho de melado, a casa e o clube em frente dela.</p>
+          <p class="roteiro-caps"><a href="#encontro"><svg class="ico" aria-hidden="true"><use href="#i-encontro"/></svg> O encontro</a><i>·</i><a href="#engenho"><svg class="ico" aria-hidden="true"><use href="#i-engenho"/></svg> O engenho e a casa</a><i>·</i><a href="#clube"><svg class="ico" aria-hidden="true"><use href="#i-clube"/></svg> O bairro e o clube</a></p>
+        </div>
+        <div class="roteiro-parte">
+          <p class="roteiro-tit"><span class="num">III</span>O baú da família</p>
+          <p class="roteiro-desc">O que guardamos para sempre: fotos, papéis antigos e sabores.</p>
+          <p class="roteiro-caps"><a href="#album"><svg class="ico" aria-hidden="true"><use href="#i-album"/></svg> Álbum de fotos</a><i>·</i><a href="#documentos"><svg class="ico" aria-hidden="true"><use href="#i-documentos"/></svg> Documentos</a><i>·</i><a href="#receitas"><svg class="ico" aria-hidden="true"><use href="#i-receitas"/></svg> Receitas &amp; ditados</a></p>
+        </div>
+        <div class="roteiro-parte">
+          <p class="roteiro-tit"><span class="num">IV</span>Agora é com você</p>
+          <p class="roteiro-desc">As perguntas que faltam e o seu recado — esta história também é sua.</p>
+          <p class="roteiro-caps"><a href="#quem-lembra"><svg class="ico" aria-hidden="true"><use href="#i-quemlembra"/></svg> Quem lembra?</a><i>·</i><a href="#recados"><svg class="ico" aria-hidden="true"><use href="#i-recados"/></svg> Deixe seu recado</a></p>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="roteiro">
-    <p class="rotulo">O roteiro da viagem</p>
-    <p class="roteiro-abre">Este álbum se lê como um livro, em quatro partes. Pode passear à vontade — mas quem seguir a ordem faz a viagem inteira:</p>
-    <div class="roteiro-parte">
-      <p class="roteiro-tit"><span class="num">I</span>De onde viemos</p>
-      <p class="roteiro-desc">As raízes do vô Vitório, de Belluno, e as da vó Maria, dos Açores — e os antigos que abriram o caminho.</p>
-      <p class="roteiro-caps"><a href="#travessia">🌊 A travessia</a><i>·</i><a href="#caminho">🧭 O caminho</a><i>·</i><a href="#linha-do-tempo">🕰️ A linha do tempo</a><i>·</i><a href="#geracoes">👪 As gerações</a><i>·</i><a href="#arvore">🌳 A árvore</a><i>·</i><a href="#bodas-ouro">💛 Bodas de ouro</a></p>
-    </div>
-    <div class="roteiro-parte">
-      <p class="roteiro-tit"><span class="num">II</span>A vida do vô e da vó</p>
-      <p class="roteiro-desc">O encontro nas domingueiras, o engenho de melado, a casa que virou patrimônio e o clube em frente dela.</p>
-      <p class="roteiro-caps"><a href="#encontro">💍 O encontro</a><i>·</i><a href="#engenho">🏠 O engenho e a casa</a><i>·</i><a href="#clube">🏟️ O bairro e o clube</a></p>
-    </div>
-    <div class="roteiro-parte">
-      <p class="roteiro-tit"><span class="num">III</span>O baú da família</p>
-      <p class="roteiro-desc">O que a família guarda para sempre: as fotos, os papéis antigos e os sabores.</p>
-      <p class="roteiro-caps"><a href="#album">📸 Álbum de fotos</a><i>·</i><a href="#documentos">📜 Documentos e lembranças</a><i>·</i><a href="#receitas">🍰 Receitas &amp; ditados</a></p>
-    </div>
-    <div class="roteiro-parte">
-      <p class="roteiro-tit"><span class="num">IV</span>Agora é com você</p>
-      <p class="roteiro-desc">As perguntas que ainda faltam e o espaço do seu recado — porque esta história também é sua.</p>
-      <p class="roteiro-caps"><a href="#quem-lembra">❓ Quem lembra?</a><i>·</i><a href="#recados">💬 Deixe seu recado</a></p>
-    </div>
-  </div>
-  <div class="novidades">
-    <p class="rotulo">O que floresceu por último</p>
-    <ul>
-      <li><span class="quando">jul/2026</span> A história ganhou uma <a href="#linha-do-tempo">linha do tempo</a> — e o álbum, um roteiro em quatro partes.</li>
-      <li><span class="quando">jul/2026</span> A capa do <a href="#travessia">livro do primo Reginaldo</a> entrou na Travessia, em reconhecimento ao trabalho dele.</li>
-      <li><span class="quando">jul/2026</span> Os filhos de coração, Gelinda e Virgílio, ganharam o seu lugar nas <a href="#geracoes">gerações</a> e na <a href="#arvore">árvore</a>.</li>
-    </ul>
-  </div>
-  <p class="abre-inicio">Este é o nosso álbum de família. Toque num assunto para abrir — e volte ao início quando quiser.</p>
-  <p class="link-guia"><a href="#como-usar">Primeira vez por aqui? Veja como usar o álbum</a></p>
-  <p class="dica-arraste" aria-hidden="true">↔ arraste para o lado (ou use a rodinha do mouse) para ver todos os assuntos</p>
+  <p class="abre-inicio">Toque num assunto para abrir · <a href="#como-usar">primeira vez por aqui? veja como usar o álbum</a></p>
   <div class="carrossel-caixa">
     <button type="button" class="seta-carrossel seta-esq" aria-label="Ver assuntos anteriores">‹</button>
     <nav class="carrossel" aria-label="Assuntos do álbum">
-    <a class="cartao-link" href="#travessia"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_travessia.jpg" alt=""><span class="badge" aria-hidden="true">🌊</span></span><span class="corpo"><span class="tit">A travessia</span><span class="teaser">A viagem da Itália para o Brasil.</span></span></a>
-    <a class="cartao-link" href="#caminho"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_caminho.jpg" alt=""><span class="badge" aria-hidden="true">🧭</span></span><span class="corpo"><span class="tit">O caminho</span><span class="teaser">O mapa: da Itália e dos Açores até nós.</span></span></a>
-    <a class="cartao-link" href="#linha-do-tempo"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_tempo.jpg" alt=""><span class="badge" aria-hidden="true">🕰️</span></span><span class="corpo"><span class="tit">A linha do tempo</span><span class="teaser">A história toda, ano a ano.</span></span></a>
-    <a class="cartao-link" href="#geracoes"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_geracoes.jpg" alt=""><span class="badge" aria-hidden="true">👪</span></span><span class="corpo"><span class="tit">As gerações</span><span class="teaser">Dos mais antigos aos ramos de hoje.</span></span></a>
-    <a class="cartao-link" href="#arvore"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_arvore.jpg" alt=""><span class="badge" aria-hidden="true">🌳</span></span><span class="corpo"><span class="tit">A árvore</span><span class="teaser">A família desenhada, de Belluno até nós.</span></span></a>
-    <a class="cartao-link" href="#bodas-ouro"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_bodas.jpg" alt=""><span class="badge" aria-hidden="true">💛</span></span><span class="corpo"><span class="tit">Bodas de ouro</span><span class="teaser">Os 50 anos do nono e da nona.</span></span></a>
-    <a class="cartao-link" href="#encontro"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_encontro.jpg" alt=""><span class="badge" aria-hidden="true">💍</span></span><span class="corpo"><span class="tit">O encontro</span><span class="teaser">O namoro e o casamento do vô e da vó.</span></span></a>
-    <a class="cartao-link" href="#engenho"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_engenho.jpg" alt=""><span class="badge" aria-hidden="true">🏠</span></span><span class="corpo"><span class="tit">O engenho e a casa</span><span class="teaser">O melado, os doces e a casa tombada.</span></span></a>
-    <a class="cartao-link" href="#clube"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_clube.jpg" alt=""><span class="badge" aria-hidden="true">🏟️</span></span><span class="corpo"><span class="tit">O bairro e o clube</span><span class="teaser">O nosso clube, em frente à casa da família.</span></span></a>
-    <a class="cartao-link" href="#album"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_album.jpg" alt=""><span class="badge" aria-hidden="true">📸</span></span><span class="corpo"><span class="tit">Álbum de fotos</span><span class="teaser">As nossas fotos de família.</span></span></a>
-    <a class="cartao-link" href="#documentos"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_documentos.jpg" alt=""><span class="badge" aria-hidden="true">📜</span></span><span class="corpo"><span class="tit">Documentos e lembranças</span><span class="teaser">Certidões e lembrancinhas guardadas.</span></span></a>
-    <a class="cartao-link" href="#receitas"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_receitas.jpg" alt=""><span class="badge" aria-hidden="true">🍰</span></span><span class="corpo"><span class="tit">Receitas &amp; ditados</span><span class="teaser">A cuca, a nega maluca e o jeito de falar.</span></span></a>
-    <a class="cartao-link" href="#quem-lembra"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_quemlembra.jpg" alt=""><span class="badge" aria-hidden="true">❓</span></span><span class="corpo"><span class="tit">Quem lembra?</span><span class="teaser">Perguntas que a família ajuda a responder.</span></span></a>
-    <a class="cartao-link" href="#recados"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_recados.jpg" alt=""><span class="badge" aria-hidden="true">💬</span></span><span class="corpo"><span class="tit">Deixe seu recado</span><span class="teaser">Mande um carinho, uma foto, uma história.</span></span></a>
+    <a class="cartao-link" href="#travessia"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_travessia.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-travessia"/></svg></span></span><span class="corpo"><span class="tit">A travessia</span><span class="teaser">A viagem da Itália para o Brasil.</span></span></a>
+    <a class="cartao-link" href="#caminho"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_caminho.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-caminho"/></svg></span></span><span class="corpo"><span class="tit">O caminho</span><span class="teaser">O mapa: da Itália e dos Açores até nós.</span></span></a>
+    <a class="cartao-link" href="#linha-do-tempo"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_tempo.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-tempo"/></svg></span></span><span class="corpo"><span class="tit">A linha do tempo</span><span class="teaser">A história toda, ano a ano.</span></span></a>
+    <a class="cartao-link" href="#geracoes"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_geracoes.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-geracoes"/></svg></span></span><span class="corpo"><span class="tit">As gerações</span><span class="teaser">Dos mais antigos aos ramos de hoje.</span></span></a>
+    <a class="cartao-link" href="#arvore"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_arvore.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-arvore"/></svg></span></span><span class="corpo"><span class="tit">A árvore</span><span class="teaser">A família desenhada, de Belluno até nós.</span></span></a>
+    <a class="cartao-link" href="#quem-e-quem"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_quemequem.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-quemequem"/></svg></span></span><span class="corpo"><span class="tit">Quem é quem</span><span class="teaser">A lista da família: quem é cada um e onde aparece.</span></span></a>
+    <a class="cartao-link" href="#bodas-ouro"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_bodas.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-bodas"/></svg></span></span><span class="corpo"><span class="tit">Bodas de ouro</span><span class="teaser">Os 50 anos do nono e da nona.</span></span></a>
+    <a class="cartao-link" href="#encontro"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_encontro.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-encontro"/></svg></span></span><span class="corpo"><span class="tit">O encontro</span><span class="teaser">O namoro e o casamento do vô e da vó.</span></span></a>
+    <a class="cartao-link" href="#engenho"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_engenho.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-engenho"/></svg></span></span><span class="corpo"><span class="tit">O engenho e a casa</span><span class="teaser">O melado, os doces e a casa tombada.</span></span></a>
+    <a class="cartao-link" href="#clube"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_clube.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-clube"/></svg></span></span><span class="corpo"><span class="tit">O bairro e o clube</span><span class="teaser">O nosso clube, em frente à casa da família.</span></span></a>
+    <a class="cartao-link" href="#album"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_album.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-album"/></svg></span></span><span class="corpo"><span class="tit">Álbum de fotos</span><span class="teaser">As nossas fotos de família.</span></span></a>
+    <a class="cartao-link" href="#documentos"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_documentos.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-documentos"/></svg></span></span><span class="corpo"><span class="tit">Documentos e lembranças</span><span class="teaser">Certidões e lembrancinhas guardadas.</span></span></a>
+    <a class="cartao-link" href="#receitas"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_receitas.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-receitas"/></svg></span></span><span class="corpo"><span class="tit">Receitas &amp; ditados</span><span class="teaser">A cuca, a nega maluca e o jeito de falar.</span></span></a>
+    <a class="cartao-link" href="#quem-lembra"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_quemlembra.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-quemlembra"/></svg></span></span><span class="corpo"><span class="tit">Quem lembra?</span><span class="teaser">Perguntas que a família ajuda a responder.</span></span></a>
+    <a class="cartao-link" href="#recados"><span class="thumb"><img loading="lazy" decoding="async" src="img/card_recados.jpg" alt=""><span class="badge" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-recados"/></svg></span></span><span class="corpo"><span class="tit">Deixe seu recado</span><span class="teaser">Mande um carinho, uma foto, uma história.</span></span></a>
     </nav>
     <button type="button" class="seta-carrossel seta-dir" aria-label="Ver mais assuntos">›</button>
+  </div>
+  <div class="datas-mes" id="datas-mes" hidden>
+    <p class="rotulo"><svg class="ico" aria-hidden="true"><use href="#i-datas"/></svg><span id="datas-titulo">As datas deste mês</span></p>
+    <ul id="datas-lista"></ul>
+    <p class="datas-nota" id="datas-nota" hidden></p>
   </div>
   <div class="compartilhar-zap">
     <p class="pergunta-zap">Conhece alguém da família que ia gostar de ver este álbum?</p>
@@ -1209,7 +1406,7 @@
         </div>
       </div>
     </article>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#arvore">🌳 A árvore →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#arvore"><svg class="ico" aria-hidden="true"><use href="#i-arvore"/></svg> A árvore →</a></p>
   </section>
 
   <section id="arvore">
@@ -1366,7 +1563,89 @@
         <p class="arvore-sub" style="font-size:0.82rem;opacity:0.8;margin-top:18px">Linhagem Garcia levantada a partir de registros da Cúria de Florianópolis, do Arquivo de Angra do Heroísmo (Açores) e da Torre do Tombo (Lisboa).</p>
       </div>
     </div>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#bodas-ouro">💛 Bodas de ouro →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#quem-e-quem"><svg class="ico" aria-hidden="true"><use href="#i-quemequem"/></svg> Quem é quem →</a></p>
+  </section>
+
+  <section id="quem-e-quem">
+    <p class="rotulo">Parte I · De onde viemos</p>
+    <h2>Quem é quem</h2>
+    <p class="abertura-secao">Uma lista para achar gente rápido: quem é cada um na família e em que páginas do álbum a pessoa aparece. Se faltar alguém — e ainda falta —, é só avisar: a lista cresce junto com o álbum.</p>
+    <div class="busca-caixa">
+      <label for="busca-nome">Procurar um nome</label>
+      <input type="search" id="busca-nome" placeholder="por exemplo: Nevia" autocomplete="off" spellcheck="false">
+    </div>
+    <p class="busca-vazio" id="busca-vazio" hidden>Não achei esse nome aqui. Tente escrever só o comecinho — ou <a href="#recados">deixe um recado</a> para a Sabrina incluir.</p>
+    <div class="quem-lista">
+        <div class="ramo">
+          <h3>A raiz italiana, em Belluno</h3>
+          <ul class="lista-quem">
+          <li><span class="nome">Bernardino Schiocchet e Giovanna Francescon</span><span class="quem">os mais antigos que o livro da família alcança, em Lentiai.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#travessia">A travessia</a></span></li>
+          <li><span class="nome">Giovanni Schiocchet e Antônia de Zulian</span><span class="quem">os pais do Vittore — foi com eles que a família atravessou o oceano.</span><span class="onde">está em: <a href="#travessia">A travessia</a> <i>·</i> <a href="#geracoes">As gerações</a></span></li>
+          <li><span class="nome">Vittore Schiocchet</span><span class="quem">o bisavô que veio da Itália ainda menino, no navio Adria, e ergueu a casa de tijolos.</span><span class="onde">está em: <a href="#travessia">A travessia</a> <i>·</i> <a href="#linha-do-tempo">A linha do tempo</a> <i>·</i> <a href="#engenho">O engenho e a casa</a></span></li>
+          <li><span class="nome">Ângelica Bazzanella</span><span class="quem">mulher do Vittore, já nascida no Brasil, em Ascurra.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#engenho">O engenho e a casa</a></span></li>
+          </ul>
+        </div>
+        <div class="ramo">
+          <h3>O nono e a nona</h3>
+          <ul class="lista-quem">
+          <li><span class="nome">Arlindo Schiochet, o nono</span><span class="quem">o pai do vô Vitório; era dele o engenho de melado.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#bodas-ouro">Bodas de ouro</a> <i>·</i> <a href="#documentos">Documentos e lembranças</a></span></li>
+          <li><span class="nome">Maria Moretti Schiochet, a nona</span><span class="quem">a mãe do vô Vitório; a casa dela era a que sempre cabia mais um.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#bodas-ouro">Bodas de ouro</a></span></li>
+          <li><span class="nome">Vitório Moretti e Emerenciana Zanella Moretti</span><span class="quem">os pais da nona Maria — a outra raiz italiana da família.</span><span class="onde">está em: <a href="#geracoes">As gerações</a></span></li>
+          <li><span class="nome">Paulina, Clara, Palmira e Helena</span><span class="quem">as irmãs da nona.</span><span class="onde">está em: <a href="#bodas-ouro">Bodas de ouro</a></span></li>
+          <li><span class="nome">Oreste, Cláudio, Faustino e Álvaro</span><span class="quem">os irmãos da nona.</span><span class="onde">está em: <a href="#bodas-ouro">Bodas de ouro</a></span></li>
+          </ul>
+        </div>
+        <div class="ramo">
+          <h3>Os irmãos do vô Vitório</h3>
+          <ul class="lista-quem">
+          <li><span class="nome">Líria, Cecília (a tia Cíli), Carmela, Lidio e Cristina</span><span class="quem">os cinco irmãos do vô, filhos do nono e da nona.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#album">Álbum de fotos</a></span></li>
+          <li><span class="nome">Gelinda e Virgílio</span><span class="quem">os filhos de coração que a casa do nono e da nona criou como seus.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#arvore">A árvore</a></span></li>
+          </ul>
+        </div>
+        <div class="ramo">
+          <h3>O vô e a vó</h3>
+          <ul class="lista-quem">
+          <li><span class="nome">Vitório Schiochet, o vô</span><span class="quem">o do engenho de melado: goleiro e presidente do clube, e bom de conta.</span><span class="onde">está em: <a href="#encontro">O encontro</a> <i>·</i> <a href="#engenho">O engenho e a casa</a> <i>·</i> <a href="#clube">O bairro e o clube</a></span></li>
+          <li><span class="nome">Maria da Silva Schiochet, a vó</span><span class="quem">costureira — e a voz que conta boa parte deste álbum.</span><span class="onde">está em: <a href="#encontro">O encontro</a> <i>·</i> <a href="#receitas">Receitas &amp; ditados</a> <i>·</i> <a href="#album">Álbum de fotos</a></span></li>
+          </ul>
+        </div>
+        <div class="ramo">
+          <h3>O lado da vó Maria, dos Açores</h3>
+          <ul class="lista-quem">
+          <li><span class="nome">João da Silva</span><span class="quem">o pai da vó Maria; trabalhou na estrada de ferro.</span><span class="onde">está em: <a href="#geracoes">As gerações</a></span></li>
+          <li><span class="nome">Lucinda Vieira Garcia, a Zita</span><span class="quem">a mãe da vó Maria — costureira, como a filha.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#arvore">A árvore</a></span></li>
+          <li><span class="nome">vó Rosa</span><span class="quem">a mãe da Zita — o rosto mais antigo do lado açoriano no álbum.</span><span class="onde">está em: <a href="#arvore">A árvore</a></span></li>
+          <li><span class="nome">José, Aluísio, Osvaldo, Salete, Alceu, Gilberto e Elizete</span><span class="quem">os irmãos da vó Maria.</span><span class="onde">está em: <a href="#arvore">A árvore</a></span></li>
+          </ul>
+        </div>
+        <div class="ramo">
+          <h3>Os cinco filhos</h3>
+          <ul class="lista-quem">
+          <li><span class="nome">Carlos Alberto Schiochet</span><span class="quem">o filho mais velho; sabia o processo do engenho todo.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#engenho">O engenho e a casa</a></span></li>
+          <li><span class="nome">Nevia Maria Schiochet</span><span class="quem">a segunda filha, mãe da Sabrina.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#album">Álbum de fotos</a></span></li>
+          <li><span class="nome">Marcos Schiochet</span><span class="quem">o terceiro filho — o que carregava a cana; o campo do clube leva o nome dele.</span><span class="onde">está em: <a href="#clube">O bairro e o clube</a> <i>·</i> <a href="#album">Álbum de fotos</a></span></li>
+          <li><span class="nome">Rosemari Schiochet, a tia Rose</span><span class="quem">a quarta filha.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#album">Álbum de fotos</a></span></li>
+          <li><span class="nome">João Vitor Schiochet</span><span class="quem">o filho mais novo.</span><span class="onde">está em: <a href="#geracoes">As gerações</a> <i>·</i> <a href="#album">Álbum de fotos</a></span></li>
+          </ul>
+        </div>
+        <div class="ramo">
+          <h3>Os netos e o bisneto</h3>
+          <ul class="lista-quem">
+          <li><span class="nome">Sabrina Schiochet Amorim</span><span class="quem">filha da Nevia, a primeira neta — e a guardiã deste álbum.</span><span class="onde">está em: <a href="#arvore">A árvore</a> <i>·</i> <a href="#album">Álbum de fotos</a></span></li>
+          <li><span class="nome">Enzo Fernandes Schiochet</span><span class="quem">filho do Carlos.</span><span class="onde">está em: <a href="#arvore">A árvore</a> <i>·</i> <a href="#bodas-ouro">Bodas de ouro</a></span></li>
+          <li><span class="nome">Jhon Freiberg</span><span class="quem">filho de coração da Rosemari, que o criou como seu.</span><span class="onde">está em: <a href="#arvore">A árvore</a></span></li>
+          <li><span class="nome">Luiz Eduardo e Davi Schiochet</span><span class="quem">filhos do João Vitor.</span><span class="onde">está em: <a href="#arvore">A árvore</a> <i>·</i> <a href="#album">Álbum de fotos</a></span></li>
+          <li><span class="nome">Victor Caglioni</span><span class="quem">filho da Sabrina — e no nome dele, um eco do bisavô Vitório.</span><span class="onde">está em: <a href="#arvore">A árvore</a> <i>·</i> <a href="#album">Álbum de fotos</a></span></li>
+          </ul>
+        </div>
+        <div class="ramo">
+          <h3>Da casa do tio Lidio</h3>
+          <ul class="lista-quem">
+          <li><span class="nome">Angela, Leia e Paulinho</span><span class="quem">filhos do tio Lidio, irmão do vô, e da Deumira, a Nena.</span><span class="onde">está em: <a href="#album">Álbum de fotos</a> <i>·</i> <a href="#clube">O bairro e o clube</a></span></li>
+          </ul>
+        </div>
+    </div>
+    <p class="proximo-cap"><span>A viagem continua:</span> <a href="#bodas-ouro"><svg class="ico" aria-hidden="true"><use href="#i-bodas"/></svg> Bodas de ouro →</a></p>
   </section>
 
   <section id="caminho">
@@ -1483,7 +1762,7 @@
       <li><p><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#4E9B63"/><path d="M 15,3 L 26,10 L 15,17 L 4,10 Z" fill="#D8B54A"/><circle cx="15" cy="10" r="4" fill="#35507A"/></svg><strong>Corupá</strong> — onde a vó Maria nasceu e onde o vô e a vó casaram, na Igreja São José, em 1965.</p></li>
       <li><p><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#4E9B63"/><path d="M 15,3 L 26,10 L 15,17 L 4,10 Z" fill="#D8B54A"/><circle cx="15" cy="10" r="4" fill="#35507A"/></svg><strong>Jaraguá do Sul</strong> — onde fica a casa tombada, em Nereu Ramos, e onde a família vive até hoje.</p></li>
     </ol>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#linha-do-tempo">🕰️ A linha do tempo →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#linha-do-tempo"><svg class="ico" aria-hidden="true"><use href="#i-tempo"/></svg> A linha do tempo →</a></p>
   </section>
 
   <section id="linha-do-tempo">
@@ -1491,30 +1770,30 @@
     <h2>A linha do tempo</h2>
     <p class="abertura-secao">Se o mapa conta os lugares, esta linha conta os anos: a história da família inteira, data por data — e as datas grandes levam ao capítulo que as conta por inteiro.</p>
     <ol class="tempo">
-      <li><span class="ano">1875/76</span><p>Num 19 de abril nasce <strong>Vittore Schiocchet</strong>, em Lentiai, Belluno — o ano, cada papel conta de um jeito, e o álbum guarda os dois. <a href="#travessia">→ A travessia</a></p></li>
+      <li><span class="ano">1875/76</span><p>Num 19 de abril nasce <strong>Vittore Schiocchet</strong>, em Lentiai, Belluno — o ano, cada papel conta de um jeito, e o álbum guarda os dois. <a href="#travessia">→ A travessia</a></p><span class="tempo-foto"><img loading="lazy" decoding="async" src="img/nono_nona_retrato.jpg" alt="Retrato do Vittore e da Ângelica" loading="lazy"></span></li>
       <li><span class="ano">1888</span><p>Os primeiros da família cruzam o oceano, no navio <em>Liban</em>.</p></li>
       <li><span class="ano">1890</span><p>Em 17 de abril, o navio <em>Adria</em> toca o Brasil com catorze da família — entre eles o Vittore, de 14 anos.</p></li>
       <li><span class="ano">1914</span><p>Em 6 de dezembro nasce o <strong>nono Arlindo</strong>.</p></li>
       <li><span class="ano">1917</span><p>Em 25 de março nasce a <strong>nona Maria Moretti</strong>. <a href="#geracoes">→ As gerações</a></p></li>
-      <li><span class="ano">anos 1920</span><p>O Vittore e a Ângelica erguem a <strong>casa de tijolos</strong> — tijolos feitos um a um, na olaria da própria família. <a href="#engenho">→ O engenho e a casa</a></p></li>
+      <li><span class="ano">anos 1920</span><p>O Vittore e a Ângelica erguem a <strong>casa de tijolos</strong> — tijolos feitos um a um, na olaria da própria família. <a href="#engenho">→ O engenho e a casa</a></p><span class="tempo-foto"><img loading="lazy" decoding="async" src="img/casa_aquarela.jpg" alt="A casa de tijolos, em aquarela" loading="lazy"></span></li>
       <li><span class="ano">1938</span><p>Em 18 de junho, casam o nono e a nona — guarde a data, que ela volta dourada mais adiante.</p></li>
       <li><span class="ano">1941</span><p>Em 19 de agosto nasce o <strong>vô Vitório</strong> — com o nome dos dois avôs.</p></li>
       <li><span class="ano">1947</span><p>Em setembro nasce a <strong>vó Maria</strong>; em novembro, descansa o Vittore, em casa, em Nereu Ramos <span class="em-memoria">(em memória, sempre)</span>.</p></li>
-      <li><span class="ano">1965</span><p>Em 4 de setembro, o vô e a vó casam na Igreja São José, em Corupá. <a href="#encontro">→ O encontro</a></p></li>
+      <li><span class="ano">1965</span><p>Em 4 de setembro, o vô e a vó casam na Igreja São José, em Corupá. <a href="#encontro">→ O encontro</a></p><span class="tempo-foto"><img loading="lazy" decoding="async" src="img/casamento.jpg" alt="O casamento do vô Vitório e da vó Maria, em 1965" loading="lazy"></span></li>
       <li><span class="ano">1966–1981</span><p>Chegam os cinco filhos: Carlos, Nevia, Marcos, Rosemari e João Vitor.</p></li>
       <li><span class="ano">1970</span><p>O vô registra a fábrica de melado com o nome dele.</p></li>
       <li><span class="ano">1985</span><p>O vô vende o terreno em frente de casa para o clube erguer a praça de esportes. <a href="#clube">→ O bairro e o clube</a></p></li>
-      <li><span class="ano">1988</span><p>Em 18 de junho — cinquenta anos, dia por dia —, as <strong>bodas de ouro</strong> do nono e da nona. <a href="#bodas-ouro">→ Bodas de ouro</a></p></li>
+      <li><span class="ano">1988</span><p>Em 18 de junho — cinquenta anos, dia por dia —, as <strong>bodas de ouro</strong> do nono e da nona. <a href="#bodas-ouro">→ Bodas de ouro</a></p><span class="tempo-foto"><img loading="lazy" decoding="async" src="img/bodas_principal.jpg" alt="O nono e a nona nas bodas de ouro" loading="lazy"></span></li>
       <li><span class="ano">1990</span><p>As bodas de prata do vô e da vó — «essa eu fiz festão», conta ela.</p></li>
-      <li><span class="ano">1998</span><p>A casa é <strong>tombada</strong> como patrimônio histórico; e o nono e a nona celebram as bodas de diamante.</p></li>
+      <li><span class="ano">1998</span><p>A casa é <strong>tombada</strong> como patrimônio histórico; e o nono e a nona celebram as bodas de diamante.</p><span class="tempo-foto"><img loading="lazy" decoding="async" src="img/casa_tombada.jpg" alt="A casa tombada como patrimônio" loading="lazy"></span></li>
       <li><span class="ano">2000</span><p>A geada negra queima o bananal — a época mais dura. E passou.</p></li>
       <li><span class="ano">2006</span><p>Descansa o nono Arlindo <span class="em-memoria">(em memória, sempre)</span>.</p></li>
-      <li><span class="ano">2007</span><p>Os bellunenses entregam a placa de homenagem à família — o abraço de volta da Itália.</p></li>
+      <li><span class="ano">2007</span><p>Os bellunenses entregam a placa de homenagem à família — o abraço de volta da Itália.</p><span class="tempo-foto"><img loading="lazy" decoding="async" src="img/placa_belluno.jpg" alt="A placa de homenagem dos bellunenses" loading="lazy"></span></li>
       <li><span class="ano">2019</span><p>O Estrella, o clube histórico do bairro, completa cem anos.</p></li>
-      <li><span class="ano">2025</span><p>Em setembro, as <strong>bodas de diamante</strong> do vô e da vó — sessenta anos de casados, com a bênção do padre em casa.</p></li>
-      <li><span class="ano">2026</span><p>Nasce este álbum — para que nada disso se perca nunca. 🌱</p></li>
+      <li><span class="ano">2025</span><p>Em setembro, as <strong>bodas de diamante</strong> do vô e da vó — sessenta anos de casados, com a bênção do padre em casa.</p><span class="tempo-foto"><img loading="lazy" decoding="async" src="img/bodas_60_anos.jpg" alt="As bodas de diamante do vô e da vó" loading="lazy"></span></li>
+      <li><span class="ano">2026</span><p>Nasce este álbum — para que nada disso se perca nunca. <svg class="ico ico-semente" aria-hidden="true"><use href="#i-semente"/></svg></p></li>
     </ol>
-    <p class="proximo-cap"><span>A viagem continua:</span> <a href="#geracoes">👪 As gerações →</a></p>
+    <p class="proximo-cap"><span>A viagem continua:</span> <a href="#geracoes"><svg class="ico" aria-hidden="true"><use href="#i-geracoes"/></svg> As gerações →</a></p>
   </section>
 
   <section id="travessia">
@@ -1543,7 +1822,7 @@
       </div>
       <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">A homenagem à Família Schiochet — Nereu Ramos, 22 de abril de 2007. <em>“Com um passado valoroso, construir-se-á um futuro venturoso.”</em></figcaption>
     </figure>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#caminho">🧭 O caminho →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#caminho"><svg class="ico" aria-hidden="true"><use href="#i-caminho"/></svg> O caminho →</a></p>
   </section>
 
   <section id="encontro">
@@ -1568,17 +1847,13 @@
     <p>Foi nas <strong>domingueiras</strong>, as tardes dançantes de domingo. Elas aconteciam no clube do <strong>senhor Silveira</strong>, ali na esquina do Ribeirão Grande — que tinha um bar e uma vendinha. Foi ali, dançando, que os dois se acharam.</p>
     <p>“Eu escolhi ele”, ela conta com simplicidade. “Não sei bem por quê — quando a gente escolhe, é porque gostou.” E completa, com um sorriso na voz: o vô nunca foi assanhadão, era um moço comportado.</p>
     <p>Namoro daquele tempo tinha suas regras: não se namorava antes dos dezesseis, e sempre dentro de casa, com os mais velhos de olho; às cinco da tarde, todo mundo recolhido. Ainda assim, deu certo. Casaram quando ela tinha dezessete anos — faltavam poucos dias para os dezoito. O vestido de noiva foi costurado pela Tia Cíli, irmã do vô; e a <strong>tiara</strong> que prendia o véu a vó ganhou de uma senhora de noventa anos, lá do Ribeirão Grande. A festa foi em casa, com barraquinha e tudo.</p>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#engenho">🏠 O engenho e a casa →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#engenho"><svg class="ico" aria-hidden="true"><use href="#i-engenho"/></svg> O engenho e a casa →</a></p>
   </section>
 
   <section id="engenho">
     <p class="rotulo">Parte II · A vida do vô e da vó</p>
     <h2>O engenho e a casa</h2>
     <p class="abertura-secao">O trabalho, a terra e a casa que ficou de pé para contar a história sozinha.</p>
-    <p>O trabalho da família era o <strong>engenho</strong>. Ali se fazia <strong>melado</strong> — de cana e de banana — e uma fartura de doces. A vó Maria explica o preparo com a naturalidade de quem viu tudo: moía a cana, tirava a garapa e fervia no tacho, no fogo de lenha, até dar o ponto. Deixando o caminho natural, virava açúcar mascavo; para ficar aquele melado escuro e brilhante, sem açucarar, era preciso o ponto certo — o melado mais grosso a vó chama de <em>“açucarão”</em>. E do próprio melado saíam os doces. O vô Vitório foi quem, com o tempo, modernizou tudo — trocou o fogo pela caldeira grande — e, em <strong>1970</strong>, formalizou a fábrica com o nome dele. Dirigiu caminhão por muitos anos e tinha fama de bom de conta: fazia matemática de cabeça, sem errar.</p>
-    <p>E que fartura de <strong>doces de fruta</strong>! A banana era o carro-chefe, o ano inteiro; e ainda goiaba, laranja, pera, carambola, tangerina — cada uma na sua época. A goiaba tinha até nome de festa: a <strong>“safra da goiaba”</strong>, lá por fevereiro e março, quando o vô chamava a vizinhança toda para colher. Era gente descascando fruta, fazendo as massas, enchendo as caixas — e o vô saía vendendo os doces pela região — de Nereu a Santa Luzia, Ribeirão Grande, a Estrada Velha e até Jaraguá. A vó faz questão do detalhe: naquele tempo não era supermercado, era bodega — e ele vendia por tudo. Os doces eram cozidos dentro das latas, em banho-maria, no capricho de quem fazia comida de verdade — primeiro vendidos nas próprias latas, depois nos potes de rótulo, tudo registrado, “na lei”. E os filhos ajudavam: o <strong>tio Carlos</strong> sabia o processo todo, e o <strong>tio Marcos</strong>, lembrado sempre com carinho, era o que carregava a cana — forte, jogava os feixes no caminhão de uma vez só.</p>
-    <p>Nem tudo foi fácil. Na virada do ano 2000, uma <strong>geada negra</strong> queimou o bananal inteiro de uma vez. A família se segurou como pôde: na costura da vó, já aposentada, e no trabalho de todos. Foi a época mais dura — e passou.</p>
-    <p>E tem a <strong>casa</strong>. Antes dela, a família teve até uma <strong>olaria</strong> — faziam os próprios tijolos, um a um, para levantar tudo. Começaram pela cozinha, a “cozinhona” onde todos dormiam no início, e só depois ergueram a casa grande. Foi o bisavô <strong>Vittore</strong> — o que veio da Itália — com a <strong>Ângelica Bazzanella</strong> quem a construiu. Hoje, com mais de cem anos, ela foi <strong>tombada como patrimônio histórico</strong>: não pode mais ser desmanchada. É cuidada por outra família, mas segue de pé — com as arcadas, as colunas amarelas e os tijolos à mostra — guardando um bom pedaço da nossa história.</p>
     <figure style="max-width:640px;margin:28px auto 0">
       <div class="foto foto--paisagem">
         <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
@@ -1586,6 +1861,11 @@
       </div>
       <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">A casa do vô Vitório, em Nereu — tombada como patrimônio histórico.</figcaption>
     </figure>
+    <p>O trabalho da família era o <strong>engenho</strong>. Ali se fazia <strong>melado</strong> — de cana e de banana — e uma fartura de doces. A vó Maria explica o preparo com a naturalidade de quem viu tudo: moía a cana, tirava a garapa e fervia no tacho, no fogo de lenha, até dar o ponto. Deixando o caminho natural, virava açúcar mascavo; para ficar aquele melado escuro e brilhante, sem açucarar, era preciso o ponto certo — o melado mais grosso a vó chama de <em>“açucarão”</em>. E do próprio melado saíam os doces. O vô Vitório foi quem, com o tempo, modernizou tudo — trocou o fogo pela caldeira grande — e, em <strong>1970</strong>, formalizou a fábrica com o nome dele. Dirigiu caminhão por muitos anos e tinha fama de bom de conta: fazia matemática de cabeça, sem errar.</p>
+    <blockquote class="voz voz--palavra">açucarão<cite>a palavra da vó Maria para o melado mais grosso</cite></blockquote>
+    <p>E que fartura de <strong>doces de fruta</strong>! A banana era o carro-chefe, o ano inteiro; e ainda goiaba, laranja, pera, carambola, tangerina — cada uma na sua época. A goiaba tinha até nome de festa: a <strong>“safra da goiaba”</strong>, lá por fevereiro e março, quando o vô chamava a vizinhança toda para colher. Era gente descascando fruta, fazendo as massas, enchendo as caixas — e o vô saía vendendo os doces pela região — de Nereu a Santa Luzia, Ribeirão Grande, a Estrada Velha e até Jaraguá. A vó faz questão do detalhe: naquele tempo não era supermercado, era bodega — e ele vendia por tudo. Os doces eram cozidos dentro das latas, em banho-maria, no capricho de quem fazia comida de verdade — primeiro vendidos nas próprias latas, depois nos potes de rótulo, tudo registrado, “na lei”. E os filhos ajudavam: o <strong>tio Carlos</strong> sabia o processo todo, e o <strong>tio Marcos</strong>, lembrado sempre com carinho, era o que carregava a cana — forte, jogava os feixes no caminhão de uma vez só.</p>
+    <p>Nem tudo foi fácil. Na virada do ano 2000, uma <strong>geada negra</strong> queimou o bananal inteiro de uma vez. A família se segurou como pôde: na costura da vó, já aposentada, e no trabalho de todos. Foi a época mais dura — e passou.</p>
+    <p>E tem a <strong>casa</strong>. Antes dela, a família teve até uma <strong>olaria</strong> — faziam os próprios tijolos, um a um, para levantar tudo. Começaram pela cozinha, a “cozinhona” onde todos dormiam no início, e só depois ergueram a casa grande. Foi o bisavô <strong>Vittore</strong> — o que veio da Itália — com a <strong>Ângelica Bazzanella</strong> quem a construiu. Hoje, com mais de cem anos, ela foi <strong>tombada como patrimônio histórico</strong>: não pode mais ser desmanchada. É cuidada por outra família, mas segue de pé — com as arcadas, as colunas amarelas e os tijolos à mostra — guardando um bom pedaço da nossa história.</p>
     <figure style="max-width:640px;margin:28px auto 0">
       <div class="foto foto--paisagem">
         <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
@@ -1593,7 +1873,7 @@
       </div>
       <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">A mesma casa virou arte: a aquarela “Casa Schiochet”, da artista Arlete Schwedler, nos <em>Postais da história de Jaraguá do Sul</em>.</figcaption>
     </figure>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#clube">🏟️ O bairro e o clube →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#clube"><svg class="ico" aria-hidden="true"><use href="#i-clube"/></svg> O bairro e o clube →</a></p>
   </section>
 
   <section id="clube">
@@ -1626,7 +1906,7 @@
     </div>
 
     <p class="nota-album" style="margin-top:18px">Esta é só a primeira página desta história — aos poucos, com as lembranças e as fotos de quem viveu tudo isso, as próximas vão se escrevendo.</p>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#album">📸 Álbum de fotos →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#album"><svg class="ico" aria-hidden="true"><use href="#i-album"/></svg> Álbum de fotos →</a></p>
   </section>
 
   <section id="album">
@@ -1688,7 +1968,7 @@
           <i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i>
           <img loading="lazy" decoding="async" src="img/carmela_nono_nona.jpg" alt="O nono Arlindo e a nona Maria na igreja com a filha Carmela, de hábito religioso">
         </div>
-        <figcaption>O nono Arlindo e a nona Maria com a filha Carmela, a irmã religiosa do vô Vitório. No álbum antigo, a legenda escrita à mão diz: “Arlindo e Maria com a filha religiosa, Carmélia”.</figcaption>
+        <figcaption>O nono Arlindo e a nona Maria com a filha Carmela, irmã do vô Vitório, que seguiu a vida religiosa como freira católica. No álbum antigo, a legenda escrita à mão diz: “Arlindo e Maria com a filha religiosa, Carmélia”.</figcaption>
       </figure>
     </div>
 
@@ -2108,7 +2388,7 @@
     </details>
 
     <p class="nota-album">As fotos antigas de papel não precisam de scanner: uma foto tirada com o celular, com boa luz e sem sombra, já fica ótima aqui.</p>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#documentos">📜 Documentos e lembranças →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#documentos"><svg class="ico" aria-hidden="true"><use href="#i-documentos"/></svg> Documentos e lembranças →</a></p>
   </section>
 
   <section id="bodas-ouro">
@@ -2169,7 +2449,7 @@
         <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/cartao_11.jpg" alt="Lembrança da missa de bodas de ouro"></div><figcaption>A lembrança da missa em ação de graças — Igreja de Santo Antônio, Nereu Ramos, 18 de junho de 1988.</figcaption></figure>
       </div>
     </details>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#encontro">💍 O encontro →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#encontro"><svg class="ico" aria-hidden="true"><use href="#i-encontro"/></svg> O encontro →</a></p>
   </section>
 
   <section id="documentos">
@@ -2239,7 +2519,7 @@
         <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/vo_molde2.jpg" alt="Páginas de moldes de costura da vó Maria no papel quadriculado"></div><figcaption>Página após página de moldes, no capricho do papel quadriculado — o ofício da vó Maria.</figcaption></figure>
       </div>
     </details>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#receitas">🍰 Receitas &amp; ditados →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#receitas"><svg class="ico" aria-hidden="true"><use href="#i-receitas"/></svg> Receitas &amp; ditados →</a></p>
   </section>
 
   <section id="quem-lembra">
@@ -2262,7 +2542,7 @@
       <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/misterio_casamento3.jpg" alt="Casamento da Tereza, filha do tio Oreste, com o nono e a nona à esquerda"></div><figcaption>Mistério resolvido, pela vó Maria: é o casamento da <strong>Tereza, filha do tio Oreste</strong> — sobrinha da nona. E o casal que aparece primeiro, à esquerda, é o nono Arlindo e a nona Maria Moretti.</figcaption></figure>
       <figure><div class="foto"><i class="pc pc-1"></i><i class="pc pc-2"></i><i class="pc pc-3"></i><i class="pc pc-4"></i><img loading="lazy" decoding="async" src="img/misterio_senhoras.jpg" alt="A roda do lado Moretti numa festa: a nona Maria Moretti, as irmãs dela e o nono Arlindo"></div><figcaption>Mistério resolvido, com a ajuda da vó Maria: é o lado Moretti em festa! Sentada, a nona Maria Moretti; com ela, as irmãs — tia Clara, tia Paulina, tia Helena e tia Palmira. Na roda ainda: o nono Arlindo e, ao lado dele, a Maria do tio Cláudio; de branco, a tia Elza do tio Faustino; e, de rosa, a Gertrude, filha mais velha do Otávio Moretti.</figcaption></figure>
     </div>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#recados">💬 Deixe seu recado →</a></p>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#recados"><svg class="ico" aria-hidden="true"><use href="#i-recados"/></svg> Deixe seu recado →</a></p>
   </section>
 
   <section id="receitas">
@@ -2276,7 +2556,6 @@
         <p class="verbete"><em>Massa:</em> 3 ovos, meia xícara de óleo, 1 xícara de açúcar e 1 xícara de café quente — ou leite, ou água, «como quiser». Aí 1 xícara de chocolate, 2 xícaras de trigo e 1 colher de fermento — «fermento por último, sempre». Mistura tudo, bota na forma e leva ao forno.</p>
         <p class="verbete"><em>Cobertura:</em> na panela, 5 ou 6 colheres de açúcar, 1 colher bem cheia de manteiga ou margarina — «tem que ser gordura» —, meia xícara de leite e 5 ou 6 colheres de chocolate. Leva ao fogo até dar o ponto.</p>
         <p class="verbete">O ponto, no jeito dela: quando está espumando bem, pinga uma colherada num pratinho — se sentir que está meio durinha e estica um pouquinho ao pegar, está pronta. Senão, fica dura.</p>
-        <p class="verbete">E o arremate, na voz da vó, rindo: «Eu fiz uma nega maluca pequenininha… e tu já comeu a metade!»</p>
         <p class="verbete"><strong>A cuca da vó</strong> — essa ela também ditou, com xícara e colher:</p>
         <p class="verbete"><em>Massa:</em> 3 ovos, 1 xícara de açúcar e 1 xícara de leite, bem batidos. Canela e baunilha a gosto, 2 xícaras de trigo e 1 colher de fermento.</p>
         <p class="verbete"><em>Farofa:</em> 1 colher de manteiga e 1 de banha, 1 xícara de açúcar, baunilha e 1 xícara de trigo — amassar até virar um farelo soltinho e jogar por cima.</p>
@@ -2288,7 +2567,8 @@
         <p class="verbete"><strong>“Chacramenta!”</strong> — quando a coisa aperta, ela solta esse xingamento herdado do italiano. A própria vó explicou de onde vem: lá na Itália, os antigos resmungavam “sacramenta!” — e, atravessando o oceano e as gerações, o “sacramenta” foi virando o nosso “chacramenta”, que hoje chega mansinho na cozinha dela.</p>
       </div>
     </div>
-      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#quem-lembra">❓ Quem lembra? →</a></p>
+    <blockquote class="voz">Eu fiz uma nega maluca pequenininha… e tu já comeu a metade!<cite>o arremate da vó Maria, rindo, no fim da receita</cite></blockquote>
+      <p class="proximo-cap"><span>A viagem continua:</span> <a href="#quem-lembra"><svg class="ico" aria-hidden="true"><use href="#i-quemlembra"/></svg> Quem lembra? →</a></p>
   </section>
 
   <section id="recados">
@@ -2594,6 +2874,88 @@
 
   window.addEventListener('hashchange', parar);
   window.addEventListener('beforeunload', function () { try { sint.cancel(); } catch (e) {} });
+})();
+</script>
+<script>
+(function () {
+  /* ── As datas do mês ─────────────────────────────────────────── */
+  var MESES = ["janeiro","fevereiro","março","abril","maio","junho","julho",
+               "agosto","setembro","outubro","novembro","dezembro"];
+  var DATAS = [
+      {d:1,m:1,ano:"1919",txt:"o Estrella, o clube do bairro, nasce numa noite de céu estrelado",onde:"#clube"},
+      {d:5,m:2,ano:"2006",txt:"descansa o nono Arlindo",onde:"#geracoes"},
+      {d:26,m:2,ano:"1985",txt:"o vô vende o terreno em frente de casa para o clube erguer a praça de esportes",onde:"#clube"},
+      {d:25,m:3,ano:"1917",txt:"nasce a nona Maria Moretti",onde:"#geracoes"},
+      {d:17,m:4,ano:"1890",txt:"o navio Adria toca o Brasil com catorze da família",onde:"#travessia"},
+      {d:19,m:4,ano:"1875/76",txt:"nasce o bisavô Vittore, em Lentiai, Belluno",onde:"#travessia"},
+      {d:22,m:4,ano:"2007",txt:"os bellunenses entregam a placa de homenagem à família",onde:"#travessia"},
+      {d:27,m:4,ano:"1920",txt:"nasce o bisavô João da Silva, pai da vó Maria",onde:"#geracoes"},
+      {d:18,m:6,ano:"1938 e 1988",txt:"casam o nono e a nona — e, cinquenta anos depois, dia por dia, as bodas de ouro",onde:"#bodas-ouro"},
+      {d:21,m:6,ano:"1998",txt:"as bodas de diamante do nono e da nona",onde:"#bodas-ouro"},
+      {d:22,m:7,ano:"1956",txt:"a Primeira Comunhão da vó Maria, na Igreja Santo Antônio",onde:"#documentos"},
+      {d:19,m:8,ano:"1941",txt:"nasce o vô Vitório, com o nome dos dois avôs",onde:"#geracoes"},
+      {d:4,m:9,ano:"1965",txt:"casam o vô Vitório e a vó Maria, na Igreja São José, em Corupá",onde:"#encontro"},
+      {d:4,m:11,ano:"1924",txt:"nasce a bisavó Lucinda, a “Zita”",onde:"#geracoes"},
+      {d:21,m:11,ano:"1947",txt:"descansa o bisavô Vittore, em casa, em Nereu Ramos",onde:"#travessia"},
+      {d:6,m:12,ano:"1914",txt:"nasce o nono Arlindo",onde:"#geracoes"},
+      {d:30,m:12,ano:"2000",txt:"descansa a nona Maria Moretti",onde:"#geracoes"}
+  ];
+  var caixa = document.getElementById("datas-mes");
+  if (caixa) {
+    var agora = new Date(), mes = agora.getMonth() + 1, hoje = agora.getDate();
+    var doMes = DATAS.filter(function (x) { return x.m === mes; })
+                     .sort(function (a, b) { return a.d - b.d; });
+    document.getElementById("datas-titulo").textContent = "As datas de " + MESES[mes - 1];
+    var ul = document.getElementById("datas-lista");
+    if (doMes.length) {
+      doMes.forEach(function (x) {
+        var li = document.createElement("li");
+        if (x.d === hoje) li.className = "e-hoje";
+        li.innerHTML = '<span class="quando">' + x.d + " de " + MESES[mes - 1] +
+          (x.d === hoje ? ' <span class="hoje-marca">é hoje</span>' : "") + "</span>" +
+          '<span class="oque">' + x.txt + ' <span class="ano-data">' + x.ano + "</span>" +
+          ' <a href="' + x.onde + '">ver no álbum</a></span>';
+        ul.appendChild(li);
+      });
+    } else {
+      var prox = null;
+      for (var passo = 1; passo <= 12 && !prox; passo++) {
+        var m2 = ((mes - 1 + passo) % 12) + 1;
+        var cand = DATAS.filter(function (x) { return x.m === m2; })
+                        .sort(function (a, b) { return a.d - b.d; });
+        if (cand.length) prox = cand[0];
+      }
+      var nota = document.getElementById("datas-nota");
+      nota.hidden = false;
+      nota.innerHTML = "Em " + MESES[mes - 1] + " não há datas guardadas por aqui. A próxima é <strong>" +
+        prox.d + " de " + MESES[prox.m - 1] + "</strong>: " + prox.txt +
+        ' <a href="' + prox.onde + '">ver no álbum</a>';
+    }
+    caixa.hidden = false;
+  }
+
+  /* ── Procurar um nome no Quem é quem ─────────────────────────── */
+  var campo = document.getElementById("busca-nome");
+  if (campo) {
+    var limpa = function (t) {
+      return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    };
+    var itens = [].slice.call(document.querySelectorAll("#quem-e-quem .lista-quem li"));
+    var ramos = [].slice.call(document.querySelectorAll("#quem-e-quem .ramo"));
+    var vazio = document.getElementById("busca-vazio");
+    itens.forEach(function (li) { li.dataset.busca = limpa(li.textContent); });
+    campo.addEventListener("input", function () {
+      var q = limpa(campo.value.trim());
+      var achou = 0;
+      itens.forEach(function (li) {
+        var bate = !q || li.dataset.busca.indexOf(q) >= 0;
+        li.hidden = !bate;
+        if (bate) achou++;
+      });
+      ramos.forEach(function (r) { r.hidden = !r.querySelector(".lista-quem li:not([hidden])"); });
+      vazio.hidden = !!achou;
+    });
+  }
 })();
 </script>
 
