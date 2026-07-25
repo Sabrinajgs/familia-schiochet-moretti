@@ -1391,6 +1391,45 @@
     margin-top: 8px; font-size: 0.9rem;
   }
 
+  /* ══════════ AS PORTAS (os botões da abertura) ══════════ */
+  .portas {
+    width: min(94vw, 880px); margin: 34px auto 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: 14px;
+  }
+  .porta {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px; border-radius: 14px;
+    background: var(--papel-carta); border: 1px solid var(--cantoneira);
+    color: var(--tinta); text-decoration: none;
+    transition: border-color .18s ease, transform .18s ease;
+  }
+  .porta .ico {
+    width: 26px; height: 26px; margin: 0; flex: 0 0 26px;
+    color: var(--latao-texto); opacity: 1;
+  }
+  .porta span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .porta b {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.28rem; font-weight: 600; line-height: 1.15; color: var(--tinta);
+  }
+  .porta small { font-size: .84rem; color: var(--tinta-suave); }
+  .porta:hover { border-color: var(--latao); transform: translateY(-2px); }
+  .porta:focus-visible { outline: 2px solid var(--latao); outline-offset: 3px; }
+  .porta--forte {
+    background: var(--latao); border-color: var(--latao);
+  }
+  .porta--forte b { color: #23331F; }
+  .porta--forte small { color: rgba(35,51,31,.78); }
+  .porta--forte .ico { color: #23331F; }
+  .porta--forte:hover { filter: brightness(1.05); }
+  .rotulo-vitrine { text-align: center; margin: 40px 0 2px; }
+  .abre-inicio { margin-top: 10px; }
+  @media (max-width: 460px) {
+    .portas { margin-top: 26px; gap: 11px; }
+    .porta { padding: 15px 16px; }
+  }
+
 </style>
 <script>document.documentElement.classList.add('js');</script>
 
@@ -1494,43 +1533,29 @@
 <div id="inicio">
   <div class="carta">
     <p>Se você chegou até aqui, é porque faz parte desta história — seja bem-vindo: esta casa também é sua.</p>
-    <p>Ele nasceu como a homenagem de uma neta ao vô e à vó, e foi crescendo: as histórias da vó Maria, o livro do primo Reginaldo, as certidões, as fotos, as receitas. Hoje é o guarda-memórias da família — e cada espaço vazio é um convite para quem tiver uma foto ou uma lembrança.</p>
     <p class="assinatura">Uma homenagem aos que vieram antes de nós — e a todos que ainda vão chegar.</p>
   </div>
 
-  <section class="viagem" aria-label="A viagem em quatro partes">
-    <p class="rotulo">A viagem em quatro partes</p>
-    <p class="viagem-abre">O álbum se lê como um livro. Quem seguir a ordem faz a viagem inteira — de Belluno e dos Açores até a casa de hoje.</p>
-    <div class="roteiro">
-      <div class="roteiro-grade">
-        <div class="roteiro-parte">
-          <p class="roteiro-tit"><span class="num">I</span>De onde viemos</p>
-          <p class="roteiro-desc">As raízes do vô Vitório, de Belluno, e as da vó Maria, dos Açores.</p>
-          <p class="roteiro-caps"><a href="#travessia"><svg class="ico" aria-hidden="true"><use href="#i-travessia"/></svg> A travessia</a><i>·</i><a href="#caminho"><svg class="ico" aria-hidden="true"><use href="#i-caminho"/></svg> O caminho</a><i>·</i><a href="#linha-do-tempo"><svg class="ico" aria-hidden="true"><use href="#i-tempo"/></svg> A linha do tempo</a><i>·</i><a href="#geracoes"><svg class="ico" aria-hidden="true"><use href="#i-geracoes"/></svg> As gerações</a><i>·</i><a href="#arvore"><svg class="ico" aria-hidden="true"><use href="#i-arvore"/></svg> A árvore</a><i>·</i><a href="#quem-e-quem"><svg class="ico" aria-hidden="true"><use href="#i-quemequem"/></svg> Quem é quem</a><i>·</i><a href="#bodas-ouro"><svg class="ico" aria-hidden="true"><use href="#i-bodas"/></svg> Bodas de ouro</a></p>
-        </div>
-        <div class="roteiro-parte">
-          <p class="roteiro-tit"><span class="num">II</span>A vida do vô e da vó</p>
-          <p class="roteiro-desc">O encontro, o engenho de melado, a casa e o clube em frente dela.</p>
-          <p class="roteiro-caps"><a href="#encontro"><svg class="ico" aria-hidden="true"><use href="#i-encontro"/></svg> O encontro</a><i>·</i><a href="#engenho"><svg class="ico" aria-hidden="true"><use href="#i-engenho"/></svg> O engenho e a casa</a><i>·</i><a href="#clube"><svg class="ico" aria-hidden="true"><use href="#i-clube"/></svg> O bairro e o clube</a></p>
-        </div>
-        <div class="roteiro-parte">
-          <p class="roteiro-tit"><span class="num">III</span>O baú da família</p>
-          <p class="roteiro-desc">O que guardamos para sempre: fotos, papéis antigos e sabores.</p>
-          <p class="roteiro-caps"><a href="#album"><svg class="ico" aria-hidden="true"><use href="#i-album"/></svg> Álbum de fotos</a><i>·</i><a href="#documentos"><svg class="ico" aria-hidden="true"><use href="#i-documentos"/></svg> Documentos</a><i>·</i><a href="#receitas"><svg class="ico" aria-hidden="true"><use href="#i-receitas"/></svg> Receitas &amp; ditados</a></p>
-        </div>
-        <div class="roteiro-parte">
-          <p class="roteiro-tit"><span class="num">IV</span>Agora é com você</p>
-          <p class="roteiro-desc">As perguntas que faltam e o seu recado — esta história também é sua.</p>
-          <p class="roteiro-caps"><a href="#quem-lembra"><svg class="ico" aria-hidden="true"><use href="#i-quemlembra"/></svg> Quem lembra?</a><i>·</i><a href="#recados"><svg class="ico" aria-hidden="true"><use href="#i-recados"/></svg> Deixe seu recado</a></p>
-        </div>
-      </div>
-    </div>
-    <p class="viagem-ordem">
-      <a class="btn-ordem" href="#travessia">Começar pelo começo</a>
-      <a class="btn-ordem btn-ordem--calmo" href="#linha-do-tempo">Ou ver a história ano a ano</a>
-    </p>
-  </section>
-  <p class="abre-inicio">Toque num assunto para abrir · <a href="#como-usar">primeira vez por aqui? veja como usar o álbum</a></p>
+  <nav class="portas" aria-label="Por onde começar">
+    <a class="porta porta--forte" href="#travessia">
+      <svg class="ico" aria-hidden="true"><use href="#i-travessia"/></svg>
+      <span><b>Começar pelo começo</b><small>a travessia, da Itália ao Brasil</small></span>
+    </a>
+    <a class="porta" href="#linha-do-tempo">
+      <svg class="ico" aria-hidden="true"><use href="#i-tempo"/></svg>
+      <span><b>A história ano a ano</b><small>de 1875 até hoje</small></span>
+    </a>
+    <a class="porta" href="#album">
+      <svg class="ico" aria-hidden="true"><use href="#i-album"/></svg>
+      <span><b>As fotos da família</b><small>68 fotos e 5 vídeos</small></span>
+    </a>
+    <a class="porta" href="#quem-e-quem">
+      <svg class="ico" aria-hidden="true"><use href="#i-quemequem"/></svg>
+      <span><b>Quem é quem</b><small>ache qualquer pessoa da família</small></span>
+    </a>
+  </nav>
+  <p class="abre-inicio"><a href="#como-usar">Primeira vez por aqui? Veja como usar o álbum</a></p>
+  <p class="rotulo rotulo-vitrine">Todos os assuntos</p>
   <div class="carrossel-caixa">
     <button type="button" class="seta-carrossel seta-esq" aria-label="Ver assuntos anteriores">‹</button>
     <nav class="carrossel" aria-label="Assuntos do álbum">
