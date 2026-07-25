@@ -764,8 +764,8 @@
   }
   .seta-carrossel:hover { background: var(--papel); filter: brightness(1.04); }
   .seta-carrossel:disabled { opacity: 0; pointer-events: none; }
-  .seta-esq { left: -6px; }
-  .seta-dir { right: -6px; }
+  .seta-esq { left: 2px; }
+  .seta-dir { right: 2px; }   /* dentro da caixa: nada vaza da tela */
   @media (hover: hover) and (pointer: fine) {
     .seta-carrossel { display: flex; }
     .carrossel { scrollbar-width: none; }
@@ -1207,8 +1207,214 @@
   .lista-quem .onde { overflow-wrap: anywhere; }
   .tempo li p { overflow-wrap: anywhere; }
 
+  /* ══════════ MENU LATERAL (a gaveta de assuntos) ══════════ */
+  .btn-menu {
+    position: fixed; top: 14px; right: 14px; z-index: 60;
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--papel-carta); color: var(--latao-texto);
+    border: 1px solid var(--latao); border-radius: 999px;
+    padding: 10px 16px; cursor: pointer;
+    font-family: 'Segoe UI', -apple-system, Roboto, sans-serif;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    box-shadow: 0 3px 14px rgba(0,0,0,.28);
+  }
+  .btn-menu .ico { width: 1.2em; height: 1.2em; margin: 0; }
+  .btn-menu:hover { background: #fff; }
+  .btn-menu:focus-visible { outline: 2px solid var(--latao); outline-offset: 3px; }
+  .no-js .btn-menu { display: none; }
+
+  .menu-fundo {
+    position: fixed; inset: 0; z-index: 70;
+    background: rgba(12, 22, 16, .55); backdrop-filter: blur(2px);
+  }
+  .menu-lateral {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 80;
+    width: min(86vw, 340px); overflow-y: auto;
+    background:
+      repeating-linear-gradient(0deg, rgba(239,232,213,.02) 0 1px, transparent 1px 3px),
+      radial-gradient(ellipse at 30% 10%, var(--capa-a), var(--capa-b) 80%);
+    color: var(--sobre-capa);
+    padding: 18px 22px 30px;
+    box-shadow: 6px 0 40px rgba(0,0,0,.45);
+    border-right: 1px solid rgba(201,160,80,.45);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .menu-lateral { animation: gaveta .28s ease-out both; }
+    @keyframes gaveta { from { transform: translateX(-14px); opacity: .4; } to { transform: none; opacity: 1; } }
+  }
+  .menu-topo { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .menu-marca {
+    font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.4rem; font-weight: 600;
+    color: var(--sobre-capa);
+  }
+  .menu-marca .e { color: var(--latao-capa); font-style: italic; }
+  .fechar-menu {
+    background: none; border: 0; color: var(--latao-capa);
+    font-size: 2rem; line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  .fechar-menu:focus-visible { outline: 2px solid var(--latao-capa); outline-offset: 2px; }
+  .menu-capa {
+    display: block; margin: 16px 0 4px; padding-bottom: 12px;
+    border-bottom: 1px dashed rgba(201,160,80,.4);
+    color: var(--latao-capa); text-decoration: none;
+    font-family: 'Segoe UI', Roboto, sans-serif; font-size: .78rem;
+    letter-spacing: .14em; text-transform: uppercase;
+  }
+  .menu-parte { margin-top: 18px; }
+  .menu-num {
+    margin: 0 0 6px; font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.12rem; color: rgba(239,232,213,.72);
+  }
+  .menu-num span {
+    display: inline-block; min-width: 1.6em; color: var(--latao-capa); font-style: italic;
+  }
+  .menu-parte a {
+    display: block; padding: 9px 0 9px 2.1em; position: relative;
+    color: var(--sobre-capa); text-decoration: none;
+    font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.16rem;
+    border-bottom: 1px solid rgba(239,232,213,.08);
+  }
+  .menu-parte a:hover { color: var(--latao-capa); }
+  .menu-parte a.atual { color: var(--latao-capa); }
+  .menu-parte a.atual::before {
+    content: ""; position: absolute; left: .55em; top: 50%; transform: translateY(-50%);
+    width: 7px; height: 7px; border-radius: 50%; background: var(--latao-capa);
+  }
+  .menu-parte a:focus-visible, .menu-capa:focus-visible, .menu-pe a:focus-visible {
+    outline: 2px solid var(--latao-capa); outline-offset: 2px;
+  }
+  .menu-pe { margin-top: 26px; padding-top: 14px; border-top: 1px dashed rgba(201,160,80,.4); }
+  .menu-pe a {
+    display: block; padding: 7px 0; color: rgba(239,232,213,.85); text-decoration: none;
+    font-family: 'Segoe UI', Roboto, sans-serif; font-size: .84rem;
+  }
+  .menu-pe a:hover { color: var(--latao-capa); }
+  body.menu-aberto { overflow: hidden; }
+  @media (max-width: 460px) {
+    .btn-menu { padding: 9px 12px; }
+    .btn-menu .rot-menu { display: none; }
+    .js body.navegando .btn-menu { top: 9px; right: 10px; }
+  }
+
+  /* ══════════ RODAPÉ ══════════ */
+  .rodape {
+    margin-top: 54px; padding: 40px clamp(16px,4vw,48px) 0;
+    border-top: 1px solid var(--cantoneira);
+    background: linear-gradient(180deg, rgba(165,119,42,.05), transparent 60%);
+  }
+  .rodape-grade {
+    max-width: 1000px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 28px 40px; text-align: left;
+  }
+  .rodape-bloco p, .rodape-bloco li { color: var(--tinta-suave); font-size: .93rem; line-height: 1.55; }
+  .rodape-bloco .rodape-marca {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.5rem !important; font-weight: 600; color: var(--tinta) !important;
+    line-height: 1.15; margin: 0 0 10px;
+  }
+  .rodape-marca .e { color: var(--latao-texto); font-style: italic; }
+  .rodape-titulo {
+    font-family: 'Segoe UI', Roboto, sans-serif; font-size: .72rem; font-weight: 600;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--latao-texto) !important;
+    margin: 0 0 10px;
+  }
+  .rodape-bloco ul { list-style: none; margin: 0; padding: 0; }
+  .rodape-bloco li { padding: 4px 0; }
+  .rodape-bloco a { color: var(--tinta); text-decoration: none; border-bottom: 1px solid transparent; }
+  .rodape-bloco a:hover { color: var(--latao-texto); border-bottom-color: var(--cantoneira); }
+  .rodape-fim {
+    max-width: 760px; margin: 34px auto 0; padding: 22px 0 30px;
+    border-top: 1px dashed var(--cantoneira); text-align: center;
+  }
+  .rodape-fim .ramo { margin-bottom: 10px; }
+  .rodape-fontes { font-size: .84rem; font-style: italic; color: var(--tinta-suave); margin: 0 auto 10px; max-width: 60ch; }
+  .rodape-data { font-size: .86rem; color: var(--tinta-suave); margin: 0; }
+  .rodape .voltar-rodape {
+    display: none; margin-top: 16px; color: var(--latao-texto); text-decoration: none;
+    border-bottom: 1px solid rgba(165,119,42,.4); padding-bottom: 2px;
+  }
+  @media print {
+    .btn-menu, .menu-lateral, .menu-fundo, .rodape-grade { display: none !important; }
+    .rodape { border-top: 0; padding-top: 0; }
+  }
+
+  /* ══════════ A viagem em quatro partes (o sumário, agora seção própria) ══════════ */
+  .viagem {
+    width: min(94vw, 980px); margin: 40px auto 0;
+    padding-top: 30px; border-top: 1px solid var(--cantoneira);
+  }
+  .viagem > .rotulo { text-align: center; }
+  .viagem-abre {
+    text-align: center; font-style: italic; color: var(--tinta-suave);
+    max-width: 46ch; margin: 6px auto 22px;
+  }
+  .viagem .roteiro { margin: 0; }
+  .viagem-ordem {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: 12px 16px; margin: 28px 0 0;
+    padding-top: 22px; border-top: 1px dashed var(--cantoneira);
+  }
+  .btn-ordem {
+    display: inline-block; padding: 13px 26px; border-radius: 999px;
+    background: var(--latao); color: #23331F; text-decoration: none;
+    font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.14rem; font-weight: 600;
+    border: 1px solid var(--latao);
+  }
+  .btn-ordem:hover { filter: brightness(1.06); }
+  .btn-ordem--calmo { background: transparent; color: var(--latao-texto); }
+  .btn-ordem--calmo:hover { background: rgba(201,160,80,.12); filter: none; }
+  .btn-ordem:focus-visible { outline: 2px solid var(--latao); outline-offset: 3px; }
+  @media (max-width: 460px) {
+    .viagem { margin-top: 30px; padding-top: 24px; }
+    .btn-ordem { width: 100%; text-align: center; }
+  }
+
 </style>
 <script>document.documentElement.classList.add('js');</script>
+
+<button type="button" class="btn-menu" id="btn-menu" aria-expanded="false" aria-controls="menu-lateral" title="Ver todos os assuntos">
+  <svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg><span class="rot-menu">Assuntos</span>
+</button>
+<div class="menu-fundo" id="menu-fundo" hidden></div>
+<nav class="menu-lateral" id="menu-lateral" aria-label="Todos os assuntos do álbum" hidden>
+  <div class="menu-topo">
+    <span class="menu-marca">Maria <span class="e">&amp;</span> Vitório</span>
+    <button type="button" class="fechar-menu" id="fechar-menu" aria-label="Fechar os assuntos">×</button>
+  </div>
+  <a class="menu-capa" href="." id="menu-capa">Começo do álbum</a>
+    <div class="menu-parte">
+      <p class="menu-num"><span>I</span>De onde viemos</p>
+      <a href="#travessia">A travessia</a>
+      <a href="#caminho">O caminho</a>
+      <a href="#linha-do-tempo">A linha do tempo</a>
+      <a href="#geracoes">As gerações</a>
+      <a href="#arvore">A árvore</a>
+      <a href="#quem-e-quem">Quem é quem</a>
+      <a href="#bodas-ouro">Bodas de ouro</a>
+    </div>
+    <div class="menu-parte">
+      <p class="menu-num"><span>II</span>A vida do vô e da vó</p>
+      <a href="#encontro">O encontro</a>
+      <a href="#engenho">O engenho e a casa</a>
+      <a href="#clube">O bairro e o clube</a>
+    </div>
+    <div class="menu-parte">
+      <p class="menu-num"><span>III</span>O baú da família</p>
+      <a href="#album">Álbum de fotos</a>
+      <a href="#documentos">Documentos e lembranças</a>
+      <a href="#receitas">Receitas & ditados</a>
+    </div>
+    <div class="menu-parte">
+      <p class="menu-num"><span>IV</span>Agora é com você</p>
+      <a href="#quem-lembra">Quem lembra?</a>
+      <a href="#recados">Deixe seu recado</a>
+    </div>
+  <div class="menu-pe">
+    <a href="#como-usar">Como usar o álbum</a>
+    <a href="https://wa.me/?text=Venha%20conhecer%20o%20%C3%A1lbum%20da%20nossa%20fam%C3%ADlia%20Schiochet%20e%20Moretti%20%F0%9F%92%9B%20As%20fotos%20e%20as%20hist%C3%B3rias%20do%20v%C3%B4%20Vit%C3%B3rio%20e%20da%20v%C3%B3%20Maria%20est%C3%A3o%20aqui%3A%20https%3A%2F%2Ffamilia-schiochet.github.io%2F" target="_blank" rel="noopener">Mandar pelo WhatsApp</a>
+  </div>
+</nav>
 
 <svg class="latao-sprite" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;overflow:hidden">
  <defs>
@@ -1227,6 +1433,7 @@
   <symbol id="i-quemlembra" viewBox="0 0 24 24"><path d="M4.4 5.3h15.2v9.5h-8.3l-4 3.4v-3.4H4.4z"/><path d="M10.3 8.6a1.9 1.9 0 1 1 2.9 1.6c-.7.5-1.2.9-1.2 1.7"/><circle cx="12" cy="13.1" r=".6" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-recados" viewBox="0 0 24 24"><rect x="3.4" y="6.1" width="17.2" height="11.8" rx="1"/><path d="M3.9 6.9L12 13l8.1-6.1"/></symbol>
   <symbol id="i-quemequem" viewBox="0 0 24 24"><circle cx="6.6" cy="8" r="2.4"/><path d="M3 14c0-2.2 1.6-3.7 3.6-3.7S10.2 11.8 10.2 14"/><path d="M13.2 7.4h7.4M13.2 11h7.4M13.2 14.6h7.4M13.2 18.2h4.8"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
   <symbol id="i-datas" viewBox="0 0 24 24"><rect x="3.6" y="5.5" width="16.8" height="14.3" rx="1"/><path d="M3.6 9.8h16.8"/><path d="M8 3.6v3.3M16 3.6v3.3"/><circle cx="8.4" cy="13.6" r=".8" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-semente" viewBox="0 0 24 24"><path d="M12 20.5v-6.4"/><path d="M12 14.1c-2.7-.2-4.3-1.7-4.5-4.1 2.5-.2 4.3 1.2 4.5 4.1z"/><path d="M12 14.1c2.7-.2 4.3-1.7 4.5-4.1-2.5-.2-4.3 1.2-4.5 4.1z"/><path d="M10.6 20.5h2.8"/></symbol>
  </defs>
@@ -1269,10 +1476,12 @@
     <p>Nasceu como a homenagem de uma neta ao vô e à vó, e foi crescendo: as histórias da vó Maria, o livro do primo Reginaldo, as certidões, as fotos, as receitas. Hoje é o guarda-memórias da família — tudo num canto só, para não se perder nunca.</p>
     <p>Cada espaço vazio é um convite: uma foto que ainda vai chegar, uma história que alguém ainda vai contar. As páginas vão se enchendo devagar, do jeito que as coisas boas crescem.</p>
     <p class="assinatura">Uma homenagem aos que vieram antes de nós — e a todos que ainda vão chegar.</p>
-    <div class="divisor-carta" aria-hidden="true"></div>
+  </div>
+
+  <section class="viagem" aria-label="A viagem em quatro partes">
+    <p class="rotulo">A viagem em quatro partes</p>
+    <p class="viagem-abre">O álbum se lê como um livro. Quem seguir a ordem faz a viagem inteira — de Belluno e dos Açores até a casa de hoje.</p>
     <div class="roteiro">
-      <p class="rotulo">O roteiro da viagem</p>
-      <p class="roteiro-abre">O álbum se lê como um livro, em quatro partes — quem seguir a ordem faz a viagem inteira:</p>
       <div class="roteiro-grade">
         <div class="roteiro-parte">
           <p class="roteiro-tit"><span class="num">I</span>De onde viemos</p>
@@ -1296,7 +1505,11 @@
         </div>
       </div>
     </div>
-  </div>
+    <p class="viagem-ordem">
+      <a class="btn-ordem" href="#travessia">Começar pelo começo</a>
+      <a class="btn-ordem btn-ordem--calmo" href="#linha-do-tempo">Ou ver a história ano a ano</a>
+    </p>
+  </section>
   <p class="abre-inicio">Toque num assunto para abrir · <a href="#como-usar">primeira vez por aqui? veja como usar o álbum</a></p>
   <div class="carrossel-caixa">
     <button type="button" class="seta-carrossel seta-esq" aria-label="Ver assuntos anteriores">‹</button>
@@ -2708,19 +2921,49 @@
 
 </main>
 
-<footer>
-  <svg class="ramo" width="140" height="26" viewBox="0 0 140 26" fill="none" aria-hidden="true">
-    <line x1="0" y1="13" x2="52" y2="13" stroke="#A5772A" stroke-width="1" opacity="0.5"/>
-    <line x1="88" y1="13" x2="140" y2="13" stroke="#A5772A" stroke-width="1" opacity="0.5"/>
-    <path d="M70 13 Q62 3 52 6 Q58 15 70 13 Z" fill="#A5772A" opacity="0.7"/>
-    <path d="M70 13 Q78 3 88 6 Q82 15 70 13 Z" fill="#A5772A" opacity="0.7"/>
-    <circle cx="70" cy="17" r="2" fill="#A5772A" opacity="0.7"/>
-  </svg>
-  <p>Um álbum vivo, sempre em construção — feito pela família, com amor.</p>
-  <p>Feito com carinho, devagarinho, como se guarda o que importa.</p>
-  <p>Última atualização: 25 de julho de 2026</p>
-  <p class="so-impressao">Página impressa do álbum da família Schiochet &amp; Moretti — familia-schiochet.github.io</p>
-  <p style="margin-top:18px"><a href="#" onclick="history.back();return false;" class="voltar-rodape" style="display:none;color:var(--latao-texto);text-decoration:none;border-bottom:1px solid rgba(165,119,42,.4);padding-bottom:2px">↑ Voltar ao início</a></p>
+<footer class="rodape">
+  <div class="rodape-grade">
+    <div class="rodape-bloco rodape-marca-bloco">
+      <p class="rodape-marca">Família Schiochet <span class="e">&amp;</span> Moretti</p>
+      <p>Um álbum vivo, sempre em construção — feito pela família, com amor.</p>
+      <p>Feito com carinho, devagarinho, como se guarda o que importa.</p>
+    </div>
+    <div class="rodape-bloco">
+      <p class="rodape-titulo">Capítulos</p>
+      <ul>
+        <li><a href="#travessia">A travessia</a></li>
+        <li><a href="#linha-do-tempo">A linha do tempo</a></li>
+        <li><a href="#geracoes">As gerações</a></li>
+        <li><a href="#quem-e-quem">Quem é quem</a></li>
+        <li><a href="#engenho">O engenho e a casa</a></li>
+        <li><a href="#clube">O bairro e o clube</a></li>
+        <li><a href="#album">Álbum de fotos</a></li>
+        <li><a href="#receitas">Receitas & ditados</a></li>
+      </ul>
+    </div>
+    <div class="rodape-bloco">
+      <p class="rodape-titulo">Participe</p>
+      <ul>
+        <li><a href="#recados">Deixe um recado</a></li>
+        <li><a href="#quem-lembra">Responda uma pergunta</a></li>
+        <li><a href="#como-usar">Como usar o álbum</a></li>
+        <li><a href="https://wa.me/?text=Venha%20conhecer%20o%20%C3%A1lbum%20da%20nossa%20fam%C3%ADlia%20Schiochet%20e%20Moretti%20%F0%9F%92%9B%20As%20fotos%20e%20as%20hist%C3%B3rias%20do%20v%C3%B4%20Vit%C3%B3rio%20e%20da%20v%C3%B3%20Maria%20est%C3%A3o%20aqui%3A%20https%3A%2F%2Ffamilia-schiochet.github.io%2F" target="_blank" rel="noopener">Mandar pelo WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rodape-fim">
+    <svg class="ramo" width="140" height="26" viewBox="0 0 140 26" fill="none" aria-hidden="true">
+      <line x1="0" y1="13" x2="52" y2="13" stroke="#A5772A" stroke-width="1" opacity="0.5"/>
+      <line x1="88" y1="13" x2="140" y2="13" stroke="#A5772A" stroke-width="1" opacity="0.5"/>
+      <path d="M70 13 Q62 3 52 6 Q58 15 70 13 Z" fill="#A5772A" opacity="0.7"/>
+      <path d="M70 13 Q78 3 88 6 Q82 15 70 13 Z" fill="#A5772A" opacity="0.7"/>
+      <circle cx="70" cy="17" r="2" fill="#A5772A" opacity="0.7"/>
+    </svg>
+    <p class="rodape-fontes">Os nomes, as datas e as histórias vêm das conversas com a vó Maria, do livro genealógico do primo Reginaldo Schiocchet, dos registros civis de Jaraguá do Sul e de Corupá e do índice de imigrantes do Arquivo Público de Santa Catarina.</p>
+    <p class="rodape-data">Última atualização: 25 de julho de 2026</p>
+    <p class="so-impressao">Página impressa do álbum da família Schiochet &amp; Moretti — familia-schiochet.github.io</p>
+    <p><a href="#" onclick="history.back();return false;" class="voltar-rodape">↑ Voltar ao início</a></p>
+  </div>
 </footer>
 
 <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -3076,6 +3319,48 @@
       vazio.hidden = !!achou;
     });
   }
+})();
+</script>
+<script>
+(function () {
+  // A gaveta de assuntos: abre em qualquer tela, e marca onde a pessoa está.
+  var btn = document.getElementById('btn-menu');
+  var gaveta = document.getElementById('menu-lateral');
+  var fundo = document.getElementById('menu-fundo');
+  var fechar = document.getElementById('fechar-menu');
+  if (!btn || !gaveta || !fundo) return;
+
+  function marcar() {
+    var atual = location.hash.slice(1);
+    gaveta.querySelectorAll('.menu-parte a').forEach(function (a) {
+      a.classList.toggle('atual', !!atual && a.getAttribute('href') === '#' + atual);
+    });
+  }
+  function abrir() {
+    marcar();
+    gaveta.hidden = false; fundo.hidden = false;
+    document.body.classList.add('menu-aberto');
+    btn.setAttribute('aria-expanded', 'true');
+    var primeiro = gaveta.querySelector('.menu-capa');
+    if (primeiro) primeiro.focus({ preventScroll: true });
+  }
+  function fecha() {
+    gaveta.hidden = true; fundo.hidden = true;
+    document.body.classList.remove('menu-aberto');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+  btn.addEventListener('click', function () { gaveta.hidden ? abrir() : fecha(); });
+  fundo.addEventListener('click', fecha);
+  if (fechar) fechar.addEventListener('click', fecha);
+  gaveta.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a') : null;
+    if (a && a.getAttribute('href') && a.getAttribute('href').charAt(0) === '#') fecha();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !gaveta.hidden) { fecha(); btn.focus(); }
+  });
+  window.addEventListener('hashchange', function () { marcar(); if (!gaveta.hidden) fecha(); });
+  marcar();
 })();
 </script>
 
