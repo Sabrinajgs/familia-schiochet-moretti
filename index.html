@@ -855,6 +855,7 @@
   .barra-voltar .barra-titulo {
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 1.25rem; color: var(--sobre-capa);
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .barra-titulo .e { color: var(--latao-capa); font-style: italic; }
 
@@ -1181,6 +1182,20 @@
   .ver-fonte:hover { border-bottom-style: solid; }
   .ver-fonte .ico { width: 1em; height: 1em; margin-right: 0.22em; }
 
+  /* ── Celular: a barra de cima nunca estoura a tela ───────────────── */
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  .barra-voltar { max-width: 100%; }
+  @media (max-width: 460px) {
+    .barra-voltar { gap: 8px; padding: 8px 10px; }
+    .barra-voltar .btn-voltar { padding: 10px 16px; font-size: 1rem; }
+    .barra-voltar .barra-titulo { font-size: 1.1rem; }
+    .btn-imprimir { padding: 8px 11px; }
+    .btn-imprimir .txt-imprimir { display: none; }   /* fica só o desenho da impressora */
+  }
+  @media (max-width: 340px) {
+    .barra-voltar .barra-titulo { display: none; }   /* tela muito estreita: o nome sai */
+  }
+
 </style>
 <script>document.documentElement.classList.add('js');</script>
 
@@ -1234,7 +1249,7 @@
 <nav class="barra-voltar" aria-label="Voltar ao início">
   <a class="btn-voltar" href="#" onclick="history.back();return false;">← Início</a>
   <span class="barra-titulo">Maria <span class="e">&amp;</span> Vitório</span>
-  <button type="button" class="btn-imprimir" onclick="window.print()" title="Imprimir este capítulo">🖨&nbsp;Imprimir</button>
+  <button type="button" class="btn-imprimir" onclick="window.print()" title="Imprimir este capítulo" aria-label="Imprimir este capítulo">🖨<span class="txt-imprimir">&nbsp;Imprimir</span></button>
 </nav>
 
 <div id="inicio">
