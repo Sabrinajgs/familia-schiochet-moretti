@@ -1150,14 +1150,18 @@
     font-size: 0.92rem; margin: 0 0 12px;
   }
   .datas-mes ul { list-style: none; margin: 0; padding: 0; }
-  .datas-mes li { padding: 6px 0; display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: baseline; }
+  .datas-mes ul { max-width: 700px; margin: 0 auto; }
+  .datas-mes li {
+    padding: 10px 0; display: flex; flex-direction: column; align-items: center;
+    gap: 1px; text-align: center;
+  }
   .datas-mes .quando {
-    flex: 0 0 8.4em;
+    flex: 0 0 auto;
     font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 600;
     font-size: 1.1rem; color: var(--latao-texto);
   }
-  .datas-mes .oque { flex: 1 1 14em; font-size: 0.96rem; }
-  .datas-mes .oque a::before { content: "· "; border: 0; }
+  .datas-mes .oque { flex: 0 1 auto; font-size: 0.96rem; max-width: 54ch; }
+  .datas-mes .oque a { margin-left: 6px; }
   .datas-mes .oque a { color: var(--latao-texto); text-decoration: none; border-bottom: 1px dotted var(--cantoneira); white-space: nowrap; }
   .datas-mes .e-hoje .quando { color: var(--tinta); }
   .datas-mes .hoje-marca {
@@ -1217,7 +1221,12 @@
   /* ── Trava de segurança para telas estreitas (o Safari do iPhone é mais
         exigente que o Chrome na hora de quebrar linha) ─────────────────── */
   #inicio, .carta, .roteiro, .roteiro-grade, .roteiro-parte, .roteiro-caps,
-  .datas-mes, .quem-lista, .ramo, .lista-quem { max-width: 100%; min-width: 0; }
+  .datas-mes, .quem-lista, .ramo, .lista-quem { min-width: 0; }
+  #inicio, .roteiro, .roteiro-grade, .roteiro-parte, .roteiro-caps,
+  .quem-lista, .ramo, .lista-quem { max-width: 100%; }
+  /* estes dois têm largura própria: a trava respeita, mas não deixa passar da tela */
+  .carta { max-width: min(880px, 100%); }
+  .datas-mes { max-width: min(880px, 100%); }
   .lista-quem .onde { overflow-wrap: anywhere; }
   .tempo li p { overflow-wrap: anywhere; }
 
