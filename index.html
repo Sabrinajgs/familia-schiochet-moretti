@@ -686,7 +686,7 @@
   /* ── Rodapé ──────────────────────────────────── */
   /* ── Árvore da família ─────────────────────────── */
   .arvore { margin-top: clamp(44px, 8vw, 68px); border-top: 1px solid var(--linha); padding-top: clamp(34px, 6vw, 52px); }
-  .arvore h3 { font-size: clamp(1.6rem, 4.5vw, 2.1rem); text-align: center; }
+  .arvore h2 { font-size: clamp(1.6rem, 4.5vw, 2.1rem); text-align: center; margin: 8px 0 14px; }
   .arvore > .rotulo { display: block; text-align: center; color: var(--latao-texto); margin-bottom: 8px; }
   .arvore-sub { text-align: center; color: var(--tinta-suave); font-style: italic; max-width: 34em; margin: 4px auto 30px; }
   /* copa (folhagem) no topo da árvore */
@@ -1211,7 +1211,8 @@
     .barra-voltar { gap: 8px; padding: 8px 10px; }
     .barra-voltar .btn-voltar { padding: 10px 16px; font-size: 1rem; }
     .barra-voltar .barra-titulo { font-size: 1.1rem; }
-    .btn-imprimir { padding: 8px 11px; }
+    /* sem o rótulo o botão virava 39x38; o dedo pede 44x44 */
+    .btn-imprimir { padding: 8px 11px; min-width: 44px; min-height: 44px; }
     .btn-imprimir .txt-imprimir { display: none; }   /* fica só o desenho da impressora */
   }
   @media (max-width: 340px) {
@@ -1277,7 +1278,8 @@
   }
   .fechar-menu:focus-visible { outline: 2px solid var(--latao-capa); outline-offset: 2px; }
   .menu-capa {
-    display: block; margin: 16px 0 4px; padding-bottom: 12px;
+    /* o dedo pede 44 px de altura: tinha 35 */
+    display: block; margin: 16px 0 4px; padding: 12px 0;
     border-bottom: 1px dashed rgba(201,160,80,.4);
     color: var(--latao-capa); text-decoration: none;
     font-family: 'Alegreya Sans', 'Segoe UI', -apple-system, Roboto, sans-serif; font-size: .78rem;
@@ -1308,13 +1310,15 @@
   }
   .menu-pe { margin-top: 26px; padding-top: 14px; border-top: 1px dashed rgba(201,160,80,.4); }
   .menu-pe a {
-    display: block; padding: 7px 0; color: rgba(239,232,213,.85); text-decoration: none;
+    /* o dedo pede 44 px de altura: tinha 38 */
+    display: block; padding: 13px 0; color: rgba(239,232,213,.85); text-decoration: none;
     font-family: 'Alegreya Sans', 'Segoe UI', -apple-system, Roboto, sans-serif; font-size: .84rem;
   }
   .menu-pe a:hover { color: var(--latao-capa); }
   body.menu-aberto { overflow: hidden; }
   @media (max-width: 460px) {
-    .btn-menu { padding: 9px 12px; }
+    /* o dedo pede 44x44: sem o rótulo, o botão virava 42x36 */
+    .btn-menu { padding: 9px 12px; min-width: 44px; min-height: 44px; justify-content: center; }
     .btn-menu .rot-menu { display: none; }
     .js body.navegando .btn-menu { top: 9px; right: 10px; }
   }
@@ -1345,6 +1349,11 @@
   .rodape-bloco ul { list-style: none; margin: 0; padding: 0; }
   .rodape-bloco li { padding: 4px 0; }
   .rodape-bloco a { color: var(--tinta); text-decoration: none; border-bottom: 1px solid transparent; }
+  /* no celular, cada link do rodapé precisa caber no dedo (tinha 19 px de altura) */
+  @media (max-width: 640px) {
+    .rodape-bloco li { padding: 0; }
+    .rodape-bloco a { display: inline-block; padding: 13px 0; }
+  }
   .rodape-bloco a:hover { color: var(--latao-texto); border-bottom-color: var(--cantoneira); }
   .rodape-fim {
     max-width: 760px; margin: 34px auto 0; padding: 22px 0 30px;
@@ -1358,7 +1367,8 @@
     border-bottom: 1px solid rgba(165,119,42,.4); padding-bottom: 2px;
   }
   @media print {
-    .btn-menu, .menu-lateral, .menu-fundo, .rodape-grade { display: none !important; }
+    .btn-menu, .menu-lateral, .menu-fundo, .rodape-grade,
+    .carrossel-caixa, .btn-imprimir { display: none !important; }
     .rodape { border-top: 0; padding-top: 0; }
   }
 
@@ -1631,7 +1641,7 @@
             <dt>Com quem ele casou</dt>
             <dd>Com <strong>Ângelica Bazzanella</strong> (1873–1959), já nascida no Brasil, em Ascurra (SC), filha dos italianos Giuseppe Bazzanella e Madalena Ciresa. São os dois do retrato aqui ao lado — foi a vó Maria quem os reconheceu.</dd>
             <dt>E antes dele, a raiz</dt>
-            <dd>Vittore era filho de <strong>Giovanni Schiocchet</strong> e <strong>Antônia de Zulian</strong>, também de Lentiai–Belluno; e antes deles, <strong>Bernardino Schiocchet</strong> e Giovana Francescon. É daqui, das montanhas do Vêneto, que descem todas as páginas deste álbum. <em style="color:var(--tinta-suave)">(Naquele tempo, na Itália, o sobrenome se escrevia Schiocchet, com dois C.)</em></dd>
+            <dd>Vittore era filho de <strong>Giovanni Schiocchet</strong> e <strong>Antônia de Zulian</strong>, também de Lentiai–Belluno; e antes deles, <strong>Bernardino Schiocchet</strong> e Giovanna Francescon. É daqui, das montanhas do Vêneto, que descem todas as páginas deste álbum. <em style="color:var(--tinta-suave)">(Naquele tempo, na Itália, o sobrenome se escrevia Schiocchet, com dois C.)</em></dd>
             <dt>E o lado da vó Maria</dt>
             <dd>Também tem sangue italiano — mas pelo lado do pai: a avó paterna da vó Maria (a mãe do bisavô João da Silva) veio de Nova Trento, a terra da Madre Paulina, a primeira santa do Brasil. A família até conta que uma tia andava com a Madre Paulina por lá.</dd>
           </dl>
@@ -1659,7 +1669,7 @@
             <dt>O que os livros de cartório contaram</dt>
             <dd>Em julho de 2026 a gente foi atrás dos registros, e eles contaram o resto desta página. Os pais da nona, <strong>Vitório Moretti</strong> e <strong>Emerenciana Zanella</strong>, casaram-se em <strong>10 de junho de 1916</strong>. Ela nasceu em <strong>23 de janeiro de 1897</strong>, em Blumenau, e partiu em <strong>23 de setembro de 1978</strong>, em casa, em Nereu Ramos, com oitenta e um anos; descansa no cemitério de Santo Antônio, ali mesmo. Ele, lavrador, também nascido em Blumenau, partiu em <strong>9 de janeiro de 1963</strong>, igualmente em casa. <span class="fonte">fontes: <a class="ver-fonte" href="#" data-src="img/doc_obito_emerenciana.jpg" data-legenda="Registro de óbito nº 8.352 — Emerenciana Zanella Moretti, Jaraguá do Sul, 25 de setembro de 1978"><svg class="ico" aria-hidden="true"><use href="#i-documentos"/></svg>ver o registro dela</a> <i>·</i> <a class="ver-fonte" href="#" data-src="img/doc_obito_victorio.jpg" data-legenda="Registro de óbito nº 4.720 — Victorio Moretti, Jaraguá do Sul, 12 de janeiro de 1963"><svg class="ico" aria-hidden="true"><use href="#i-documentos"/></svg>ver o registro dele</a></span></dd>
             <dt>E uma raiz que faltava: os Moretti vieram da Itália</dt>
-            <dd>Foi num desses papéis que apareceu o que a família não sabia. No registro de 1963 está escrito, com a letra do escrivão, que o Vitório era <strong>filho de Antônio Moretti, lavrador, e Madalena Barbariga, ambos naturais da Itália</strong>. É por eles que os <strong>Moretti</strong> entram na nossa história — e agora já sabemos quando: chegaram em <strong>1889</strong>, com destino a Blumenau, o Antônio com 34 anos, a Magdalena com 32 e três filhos pequenos. O Vitório, pai da nona, nasceu já aqui — e os irmãos mais velhos, <strong>Romano</strong> e <strong>Ângelo</strong>, aparecem nos papéis como <em>“naturais da Itália”</em>. A <strong>Madalena</strong> descansa no cemitério da Comunidade Santo Antônio, em Corupá (1855–1936). (De que canto da Itália eles saíram, isso ainda falta — a história inteira está no capítulo <a href="#travessia">A travessia</a>.) Do lado da Emerenciana, o mesmo registro dá os pais dela: <strong>Vitório Zanella</strong> e <strong>Giacomina Tremea</strong> — e o Tremea é mais um sobrenome daquelas bandas de Belluno, de onde vieram os Schiochet.</dd>
+            <dd>Foi num desses papéis que apareceu o que a família não sabia. No registro de 1963 está escrito, com a letra do escrivão, que o Vitório era <strong>filho de Antônio Moretti, lavrador, e Madalena Barbariga, ambos naturais da Itália</strong> <em style="color:var(--tinta-suave)">(nos papéis antigos o nome dela vem escrito dos dois jeitos: Madalena e Magdalena)</em><strong></strong>. É por eles que os <strong>Moretti</strong> entram na nossa história — e agora já sabemos quando: chegaram em <strong>1889</strong>, com destino a Blumenau, o Antônio com 34 anos, a Magdalena com 32 e três filhos pequenos. O Vitório, pai da nona, nasceu já aqui — e os irmãos mais velhos, <strong>Romano</strong> e <strong>Ângelo</strong>, aparecem nos papéis como <em>“naturais da Itália”</em>. A <strong>Madalena</strong> descansa no cemitério da Comunidade Santo Antônio, em Corupá (1855–1936). (De que canto da Itália eles saíram, isso ainda falta — a história inteira está no capítulo <a href="#travessia">A travessia</a>.) Do lado da Emerenciana, o mesmo registro dá os pais dela: <strong>Vitório Zanella</strong> e <strong>Giacomina Tremea</strong> — e o Tremea é mais um sobrenome daquelas bandas de Belluno, de onde vieram os Schiochet.</dd>
             <dt>Uma coisa que os documentos contaram sem querer</dt>
             <dd>Quem foi ao cartório nas duas vezes — em 1963 pelo sogro, em 1978 pela sogra — foi o <strong>nono Arlindo</strong>. As duas assinaturas estão lá, no fim de cada registro, feitas pela mão dele. E ele assinou, das duas vezes, <em>Arlindo</em> — com o R que o cartório teimava em esquecer. <span class="fonte">as datas desta página vêm dos registros civis de Jaraguá do Sul de 1938, 1963 e 1978</span></dd>
             <dt>Uma casa que sempre cabia mais um</dt>
@@ -1748,7 +1758,7 @@
   <section id="arvore">
     <div class="arvore">
       <p class="rotulo">O lado do vô Vitório · de Belluno, na Itália</p>
-      <h3>A árvore da família</h3>
+      <h2>A árvore da família</h2>
       <p class="arvore-sub">A nossa família tem <strong>duas raízes</strong>, vindas de dois cantos do mundo. Esta primeira desce das montanhas de <strong>Belluno</strong>, na Itália, até o <strong>vô Vitório</strong> — e floresce nos filhos, netos e bisnetos. (Logo abaixo vem a outra raiz: a da vó Maria, que veio dos Açores.)</p>
 
       <svg class="copa" viewBox="0 0 240 150" fill="none" aria-hidden="true">
@@ -1773,7 +1783,7 @@
 
       <div class="figura-arvore">
         <ol class="tronco">
-          <li><div class="casal"><strong>Bernardino Schiocchet</strong> &amp; Giovana Francescon<span class="lugar">ficaram em Lentiai, na Itália</span></div></li>
+          <li><div class="casal"><strong>Bernardino Schiocchet</strong> &amp; Giovanna Francescon<span class="lugar">ficaram em Lentiai, na Itália</span></div></li>
           <li><div class="casal"><strong>Giovanni Schiocchet</strong> &amp; Antônia de Zulian<span class="lugar">de Lentiai · Belluno · Itália</span><span class="lugar">descansam em Timbó · SC</span></div></li>
           <li><div class="casal"><strong>Vittore Schiocchet</strong> &amp; Ângelica Bazzanella<span class="lugar">ele chegou da Itália em 1890</span></div></li>
           <li><div class="casal"><strong>Arlindo Schiocchet</strong> &amp; Maria Moretti<span class="lugar">o nono e a nona</span></div></li>
@@ -2162,9 +2172,9 @@
       </div>
       <figcaption style="font-style:italic;color:var(--tinta-suave);text-align:center;margin-top:8px;font-size:0.9rem">O livro do primo Reginaldo Schiocchet — anos de pesquisa guardados num só volume, para que ninguém da família ficasse sem nome, sem data ou sem lugar.</figcaption>
     </figure>
-    <p>Tudo começa em <strong>Lentiai, na província de Belluno</strong>, nas montanhas do norte da Itália. Ali vivia <strong>Bernardino Schiocchet</strong>, o tronco mais antigo que a família conhece. Ele casou duas vezes: primeiro com <strong>Maria Marsch</strong>, mãe da Antônia e da Flora; e, depois de viúvo, com <strong>Giovana Francescon</strong> — e é dessa segunda casa que descemos todos. Bernardino e Giovana não atravessaram o mar: ficaram em Lentiai, e o livro da família não registra onde eles descansam. Foi um filho deles, <strong>Giovanni Schiocchet</strong> — casado com <strong>Antônia de Zulian</strong> —, quem tomou a decisão que mudaria tudo: atravessar o mar com a família inteira, rumo ao Brasil.</p>
+    <p>Tudo começa em <strong>Lentiai, na província de Belluno</strong>, nas montanhas do norte da Itália. Ali vivia <strong>Bernardino Schiocchet</strong>, o tronco mais antigo que a família conhece. Ele casou duas vezes: primeiro com <strong>Maria Marsch</strong>, mãe da Antônia e da Flora; e, depois de viúvo, com <strong>Giovanna Francescon</strong> — e é dessa segunda casa que descemos todos. Bernardino e Giovana não atravessaram o mar: ficaram em Lentiai, e o livro da família não registra onde eles descansam. Foi um filho deles, <strong>Giovanni Schiocchet</strong> — casado com <strong>Antônia de Zulian</strong> —, quem tomou a decisão que mudaria tudo: atravessar o mar com a família inteira, rumo ao Brasil.</p>
     <p>A travessia aconteceu em duas ondas. Primeiro, em <strong>1888</strong>, vieram na frente os filhos mais velhos — entre eles Giovanni Filho, Giuseppe e Antônio, que desembarcaram no Rio de Janeiro pelo navio <em>Liban</em>, vindos do porto de Gênova. Dois anos depois, em <strong>17 de abril de 1890</strong>, chegou o resto da família a bordo do navio <em>Adria</em>: <strong>catorze pessoas</strong>, nos registros de número 42 a 55 da lista de passageiros.</p>
-    <p>E não eram catorze filhos — eram <strong>três gerações no mesmo navio</strong>. Vinham o casal, <strong>Giovanni</strong> e <strong>Antônia de Zulian</strong>. Vinham dois filhos já casados, cada um com a sua família: <strong>Bernardo</strong>, com a esposa — outra <strong>Antônia de Zulian</strong>, o mesmo nome da sogra — e os três filhos, <strong>Giuseppina</strong>, <strong>Gabrielle</strong> e <strong>Eugênio</strong>; e <strong>Bortolo</strong>, com a esposa <strong>Marina Zampieri</strong> e os dois filhos, <strong>Ângela</strong> e <strong>Giovanni Maria</strong>. E vinham mais três filhos do casal, ainda moços: <strong>Ângelo</strong>, <strong>Luigi</strong> e o nosso <strong>Vittore</strong>, que pisou no Brasil com <strong>13 anos</strong> e fez catorze dois dias depois, já em terra nova.</p>
+    <p>E não eram catorze filhos — eram <strong>três gerações no mesmo navio</strong>. Vinham o casal, <strong>Giovanni</strong> e <strong>Antônia de Zulian</strong>. Vinham dois filhos já casados, cada um com a sua família: <strong>Bernardo</strong> (que herdou quase o nome do avô, Bernardino), com a esposa — outra <strong>Antônia de Zulian</strong>, o mesmo nome da sogra — e os três filhos, <strong>Giuseppina</strong>, <strong>Gabrielle</strong> e <strong>Eugênio</strong>; e <strong>Bortolo</strong>, com a esposa <strong>Marina Zampieri</strong> e os dois filhos, <strong>Ângela</strong> e <strong>Giovanni Maria</strong>. E vinham mais três filhos do casal, ainda moços: <strong>Ângelo</strong>, <strong>Luigi</strong> e o nosso <strong>Vittore</strong>, que pisou no Brasil com <strong>13 anos</strong> e fez catorze dois dias depois, já em terra nova.</p>
     <p>Nas listas de passageiros, os funcionários da época anotaram tudo trocado: homens viraram mulheres, crianças pequenas foram registradas como casadas. Talvez por isso a família tenha procurado em vão nas listas de mais de duzentos navios — até que um documento do próprio Vittore chegou às mãos do pesquisador e revelou o registro certo. Ele não chamou aquilo de sorte: chamou de <em>auxílio espiritual</em>, como se os antigos, do outro lado, tivessem ajudado a encontrar o caminho de volta a eles.</p>
     <p>E que homem foi esse Vittore. Além de bom agricultor, era <strong>artesão de mão cheia</strong>: trabalhava a madeira com instrumentos simples e uma perfeição de sobra. Encaixava pregos de madeira tão firmes que, para tirá-los, só serrando; fazia tábuas de lavar roupa e tamancos — e um par desses tamancos existe até hoje, guardado por um primo da família. Ao lado dele, a vida inteira, <strong>Ângelica Bazzanella</strong> — que assinava Ângelica, embora alguns livros a chamem de Angelina.</p>
     <p>O Vittore partiu em <strong>21 de novembro de 1947</strong>, em casa, em Nereu Ramos — o coração, que trabalhou a vida inteira, foi quem pediu descanso. Quem levou a notícia ao cartório foi um genro, o Alberto Murara. E a certidão guarda uma ternura que quase se perdeu no tempo: o aniversário do Vittore era <strong>19 de abril</strong> — o navio Adria tocou o Brasil dois dias antes do dia dele.</p>
