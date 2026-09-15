@@ -1452,10 +1452,17 @@ function telaCondicoes(primeira) {
     ${campoVoz("cad-outras", "Outras coisas sobre a saúde da vó, pra lembrar (uma por linha)", (p.outras || []).join("\n"), true)}
     <button class="seguir" id="cad-guardar">Guardar</button>`;
   ligaMicrofones();
+  const marcadasAgora = () => [...app.querySelectorAll(".marca input:checked")].map(i => i.value);
+  // marcou, já guarda (antes só guardava no botão lá do fim, e quem saía sem tocar nele perdia as marcas)
+  app.querySelectorAll(".marca input").forEach(caixa => caixa.onchange = async () => {
+    const condicoes = marcadasAgora();
+    if (await guardarComCalma(salvarPerfil({condicoes})) === "erro") { caixa.checked = !caixa.checked; return; }
+    CAD.perfil = {...(CAD.perfil || p), condicoes};
+  });
   porId("cad-guardar").onclick = async () => {
-    const dados = {condicoes: [...app.querySelectorAll(".marca input:checked")].map(i => i.value), outras: linhasDe("cad-outras")};
-    await guardarComCalma(salvarPerfil(dados));
-    CAD.perfil = {...p, ...dados};
+    const dados = {condicoes: marcadasAgora(), outras: linhasDe("cad-outras")};
+    if (await guardarComCalma(salvarPerfil(dados)) === "erro") return;   // não sai da tela se não guardou
+    CAD.perfil = {...(CAD.perfil || p), ...dados};
     primeira ? rota() : voltar("caderneta");
   };
 }
