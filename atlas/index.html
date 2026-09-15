@@ -1353,6 +1353,12 @@ const CONDICOES = {
     "Mostrar esta caderneta nas consultas: a médica gosta de saber o que aconteceu desde a última vez.",
     "Uma caminhadinha leve, se a médica liberar, faz bem pro corpo e pra cabeça."]}
 };
+// o que a família escreve em "O que a vó tem" puxa as dicas certas (palavras já sem acento)
+const PALAVRAS_CONDICAO = {estomago: /estomago|gastrit|azia|refluxo/, lactose: /lactose/, postura: /postura|engasg/};
+function condicoesDoTexto(linhas) {
+  const t = (linhas || []).join(" ").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return Object.keys(PALAVRAS_CONDICAO).filter(k => PALAVRAS_CONDICAO[k].test(t));
+}
 function recomendacoesDaMedica(registros) {
   return registros.flatMap(r => (r.recomendacoes || []).map(t => ({texto: t, data: r.data, quem: r.medico || r.especialidade || ""})));
 }
@@ -1435,41 +1441,40 @@ function telaCadInicio() {
     ${bloco("caderneta/dicas", "💡", "#FFE7A8", "Dicas de saúde pra vó", "Do jeito que a médica recomenda")}
     ${bloco("caderneta/lista", "📋", "#D6E8F1", "Tudo o que já foi anotado", regs.length ? `${regs.length} ${regs.length > 1 ? "anotações" : "anotação"} · a última em ${dataBonita(ult.data)}` : "Ainda nada anotado")}
     ${bloco("caderneta/exames", "🧪", "#DCEFD3", "Exames", CAD.exames.length ? `${CAD.exames.length} ${CAD.exames.length > 1 ? "guardados" : "guardado"}` : "Guarde fotos e PDFs dos exames")}
-    ${bloco("caderneta/condicoes", "🩺", "#FBE0D2", "O que a vó tem", "Marque pra ajustar as dicas")}
+    ${bloco("caderneta/condicoes", "🩺", "#FBE0D2", "O que a vó tem", "Escreva do seu jeito pra ajustar as dicas")}
     <div class="ajustes"><button id="cad-sair">Sair da caderneta</button></div>`;
   porId("cad-sair").onclick = async () => {
     if (confirm("Sair da caderneta neste celular? Pra entrar de novo vai precisar da senha.")) { await sair(); rota(); }
   };
 }
 
+// o que a vó tem: a família escreve do seu jeito (antes eram opções fixas de marcar, que ficavam sempre ali sem sentido)
 function telaCondicoes(primeira) {
-  const p = CAD.perfil || {}, marcadas = new Set(p.condicoes || []);
+  const p = CAD.perfil || {};
+  const antigas = (p.condicoes || []).map(k => CONDICOES[k] && CONDICOES[k].t).filter(Boolean);   // o que foi marcado nas opções antigas vira texto, nada se perde
+  const linhas = (p.outras || []).length ? p.outras : antigas;
   app.innerHTML = topo("O que a vó tem", primeira ? "" : "caderneta") + `
-    ${primeira ? `<div class="recado"><h2>Bem-vinda à caderneta! 🩺</h2><p>Primeiro, marque o que vale pra vó. As dicas de saúde vão seguir isso.</p></div>`
-               : `<p class="ajuda">Marque o que vale pra vó. As dicas mudam junto.</p>`}
-    ${Object.entries(CONDICOES).filter(([, c]) => !c.sempre).map(([k, c]) => `<label class="bloco marca"><input type="checkbox" value="${k}" ${marcadas.has(k) ? "checked" : ""}>
-      <span class="ic" style="background:#FBE0D2">${c.ic}</span><span><b>${c.t}</b></span></label>`).join("")}
-    ${campoVoz("cad-outras", "Outras coisas sobre a saúde da vó, pra lembrar (uma por linha)", (p.outras || []).join("\n"), true)}
+    ${primeira ? `<div class="recado"><h2>Bem-vinda à caderneta! 🩺</h2><p>Primeiro, escreva o que a família já sabe da saúde da vó. As dicas vão seguir isso.</p></div>` : ""}
+    <p class="ajuda">Escreva do seu jeito, uma coisa por linha. Fica guardado só na caderneta e aparece nas Dicas de saúde.</p>
+    <div class="dica-card"><p><b>Exemplos do que escrever:</b></p><ul class="cad-ul">
+      <li>Pressão alta, toma remédio de manhã</li><li>Alergia a dipirona</li><li>Não pode comer muito sal</li><li>Estômago sensível</li><li>O joelho dói quando esfria</li></ul>
+      <small>Quando a caderneta reconhece o assunto, as dicas certas aparecem sozinhas.</small></div>
+    ${campoVoz("cad-outras", "O que a vó tem (uma coisa por linha)", linhas.join("\n"), true)}
     <button class="seguir" id="cad-guardar">Guardar</button>`;
+  porId("cad-outras").rows = 6;
   ligaMicrofones();
-  const marcadasAgora = () => [...app.querySelectorAll(".marca input:checked")].map(i => i.value);
-  // marcou, já guarda (antes só guardava no botão lá do fim, e quem saía sem tocar nele perdia as marcas)
-  app.querySelectorAll(".marca input").forEach(caixa => caixa.onchange = async () => {
-    const condicoes = marcadasAgora();
-    if (await guardarComCalma(salvarPerfil({condicoes})) === "erro") { caixa.checked = !caixa.checked; return; }
-    CAD.perfil = {...(CAD.perfil || p), condicoes};
-  });
   porId("cad-guardar").onclick = async () => {
-    const dados = {condicoes: marcadasAgora(), outras: linhasDe("cad-outras")};
+    const outras = linhasDe("cad-outras"), dados = {outras, condicoes: condicoesDoTexto(outras)};
     if (await guardarComCalma(salvarPerfil(dados)) === "erro") return;   // não sai da tela se não guardou
-    CAD.perfil = {...(CAD.perfil || p), ...dados};
+    CAD.perfil = {...p, ...dados};
     primeira ? rota() : voltar("caderneta");
   };
 }
 
 function telaDicas() {
   const p = CAD.perfil || {}, recs = recomendacoesDaMedica(CAD.registros);
-  const grupos = Object.entries(CONDICOES).filter(([k, c]) => !c.sempre && (p.condicoes || []).includes(k)).concat(Object.entries(CONDICOES).filter(([, c]) => c.sempre));
+  const tem = (p.outras || []).length ? condicoesDoTexto(p.outras) : (p.condicoes || []);
+  const grupos = Object.entries(CONDICOES).filter(([k, c]) => !c.sempre && tem.includes(k)).concat(Object.entries(CONDICOES).filter(([, c]) => c.sempre));
   const card = (t, sub = "", forte = false) => `<div class="dica-card${forte ? " forte" : ""}"><p>${esc(t)}</p>${sub ? `<small>${esc(sub)}</small>` : ""}</div>`;
   app.innerHTML = topo("Dicas de saúde", "caderneta") + `
     <div class="dica-card aviso-medico">Estas dicas não substituem a médica. Na dúvida, pergunte pra ela. 💛</div>
