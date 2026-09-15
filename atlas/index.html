@@ -27,7 +27,7 @@ body{font:700 var(--tam)/1.45 "Nunito",system-ui,sans-serif;padding-inline:16px;
 button{font:inherit;color:inherit;cursor:pointer}
 h1,h2,h3{font-family:"Lora",Georgia,serif;font-weight:700;margin:0;line-height:1.15;text-wrap:balance}
 .tela{max-width:560px;margin:0 auto}
-.topo{position:sticky;top:0;z-index:5;background:var(--papel);display:flex;align-items:center;gap:12px;padding-block:12px;border-bottom:2px solid var(--linha);margin-bottom:18px}
+.topo{position:sticky;top:0;z-index:5;background:var(--papel);display:flex;align-items:center;gap:12px;padding-block:12px;margin-inline:-16px;padding-inline:16px;border-bottom:2px solid var(--linha);margin-bottom:18px}
 .voltar{flex:none;border:3px solid var(--borda);background:var(--cartao);border-radius:16px;min-height:56px;padding:0 18px;font-weight:800}
 .topo h2{font-size:1.1em}
 .capa{text-align:center;padding-block:22px 6px}
@@ -101,6 +101,59 @@ h1,h2,h3{font-family:"Lora",Georgia,serif;font-weight:700;margin:0;line-height:1
 .legenda i{display:inline-block;width:26px;height:6px;border-radius:3px;vertical-align:middle;margin-right:6px}
 .ajustes{display:flex;gap:10px;margin-top:26px}
 .ajustes button{flex:1;min-height:60px;border:3px solid var(--borda);background:var(--cartao);border-radius:16px;font-weight:800;font-size:.85em}
+/* festa */
+.confete{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:50}
+.aviso{position:fixed;left:50%;top:86px;transform:translateX(-50%);z-index:40;background:var(--tinta);color:#fff;padding:12px 22px;border-radius:999px;font-weight:900;box-shadow:0 8px 24px rgba(0,0,0,.22);animation:entra .3s ease-out;white-space:nowrap}
+.aviso.sai{opacity:0;transition:opacity .5s}
+@keyframes entra{from{transform:translate(-50%,-14px);opacity:0}}
+.chip{display:inline-block;background:#FFE7A8;color:#6B4A0E;border-radius:999px;padding:4px 14px;font-size:.85em;margin-top:8px}
+/* trilha */
+.heroi{display:block;width:100%;text-align:left;border:0;border-radius:24px;padding:18px 20px 20px;margin:4px 0 6px;color:#fff;background:linear-gradient(135deg,#467F35,#2A6690);box-shadow:0 6px 0 #1F4F6E}
+.heroi:active{transform:translateY(3px);box-shadow:0 3px 0 #1F4F6E}
+.heroi b{display:block;font-family:"Lora",Georgia,serif;font-size:1.35em}
+.heroi small{display:block;opacity:.95}
+.heroi .jogar{display:inline-block;margin-top:12px;background:#FFD34D;color:#4A3200;border-radius:999px;padding:10px 22px;font-weight:900;box-shadow:0 4px 0 #C99A12}
+.trilha{position:relative;margin-inline:-16px;overflow:hidden}
+.trilha svg{position:absolute;inset:0;width:100%;height:100%}
+.no{position:absolute;width:74px;height:74px;margin:-37px 0 0 -37px;border-radius:50%;border:5px solid #fff;font-size:1.2em;font-weight:900;color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.2);display:grid;place-items:center;padding:0}
+.no.fechada{background:#BDB6AA;color:#F4F1EA}
+.no.feita{background:var(--verde)}
+.no.atual{background:var(--terracota);animation:pulsa 1.2s ease-in-out infinite}
+@keyframes pulsa{50%{transform:scale(1.13)}}
+.no .est{position:absolute;top:70px;left:50%;transform:translateX(-50%);font-size:.6em;white-space:nowrap;letter-spacing:-.08em}
+.mundo{position:absolute;left:16px;right:16px;text-align:center;font-family:"Lora",Georgia,serif;background:rgba(255,253,248,.94);border-radius:16px;padding:6px 10px;border:2px solid var(--linha)}
+.enfeite{position:absolute;font-size:1.6em;opacity:.6;transform:translate(-50%,-50%)}
+.voce{position:absolute;transform:translate(-50%,-128%);font-size:1.5em;animation:pulinho 1s ease-in-out infinite;pointer-events:none}
+@keyframes pulinho{50%{margin-top:-8px}}
+.completa .estrelas span{display:inline-block;animation:estrela .55s cubic-bezier(.3,1.6,.5,1) both}
+.completa .estrelas span:nth-child(2){animation-delay:.25s}.completa .estrelas span:nth-child(3){animation-delay:.5s}
+.completa .estrelas .apagada{filter:grayscale(1);opacity:.3}
+@keyframes estrela{from{transform:scale(0) rotate(-70deg)}}
+/* jogo da memória */
+.placar{display:flex;justify-content:space-between;font-size:.9em;color:var(--suave);margin:0 2px 12px}
+.cartas{display:grid;gap:10px;perspective:900px}
+.carta{position:relative;aspect-ratio:5/6;border:0;padding:0;background:none}
+.carta .in{position:absolute;inset:0;transition:transform .45s;transform-style:preserve-3d}
+.carta.virada .in,.carta.par .in{transform:rotateY(180deg)}
+.carta .costas,.carta .frente{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-items:center;align-content:center;box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.carta .costas{background:repeating-linear-gradient(45deg,#B4532C 0 8px,#A34924 8px 16px);border:4px solid #fff;font-size:1.7em}
+.carta .frente{transform:rotateY(180deg);background:#FFFDF8;border:3px solid var(--borda);padding:6px;text-align:center;line-height:1.15;font-weight:900;font-size:clamp(14px,4.3vw,19px);overflow:hidden}
+.carta .frente .emo{display:block;font-size:2.1em;line-height:1.1}
+.carta .frente small{display:block;font-size:.6em;color:var(--suave);letter-spacing:.06em;margin-bottom:4px}
+.carta.par .frente{border-color:var(--certo);background:var(--certo-bg);color:#1F5A22}
+/* combina 3 */
+.meta3{display:flex;gap:10px;margin-bottom:12px}
+.meta3 div{flex:1;background:var(--cartao);border:3px solid var(--linha);border-radius:16px;text-align:center;padding:6px}
+.meta3 b{display:block;font-size:1.35em;line-height:1.15}
+.meta3 small{font-size:.75em;color:var(--suave)}
+.tabuleiro{display:grid;gap:4px;background:#2A6690;padding:6px;border-radius:18px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.peca3{aspect-ratio:1;border:0;border-radius:10px;background:rgba(255,255,255,.92);font-size:clamp(22px,7.2vw,34px);padding:0;display:grid;place-items:center;line-height:1}
+.peca3.sel{background:#FFE08A;box-shadow:0 0 0 4px #FFD34D inset}
+.peca3.some{animation:some .28s forwards}
+@keyframes some{to{transform:scale(0);opacity:0}}
+.peca3.cai{animation:cai .3s ease-in both}
+@keyframes cai{from{transform:translateY(var(--de))}}
+.peca3.nao{animation:balanca .3s}
 </style>
 </head>
 <body>
@@ -261,19 +314,61 @@ const sorteia = (arr, n, rnd) => embaralha(arr, rnd).slice(0, n);
 function numeroDoDia() { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000); }
 const chaveHoje = () => "dia-" + numeroDoDia();
 
-// ---------- som e voz ----------
+// ---------- som, voz e festa ----------
 let audio;
-function som() {
+function tons(freqs, passo = 0.13, vol = 0.2) {
   if (!guarda.ler("som", true)) return;
   try {
     audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-    [660, 880].forEach((f, i) => {
-      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + i * 0.13;
+    freqs.forEach((f, i) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + i * passo;
       o.type = "sine"; o.frequency.value = f;
-      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.2, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
       o.connect(g).connect(audio.destination); o.start(t); o.stop(t + 0.45);
     });
   } catch (e) {}
+}
+const som = () => tons([660, 880]);
+const fanfarra = () => tons([523, 659, 784, 1047], 0.14, 0.22);
+function acertou() { som(); marcaDia(); }
+const estrelasPor = (certos, total) => certos >= total ? 3 : certos / total >= 0.6 ? 2 : 1;
+
+const semMovimento = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+function confete(qtd = 110) {
+  if (semMovimento) return;
+  const cv = document.createElement("canvas"), dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.className = "confete"; cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+  document.body.appendChild(cv);
+  const g = cv.getContext("2d"); g.scale(dpr, dpr);
+  const cores = ["#B4532C", "#D8A23E", "#467F35", "#2A6690", "#E7A59B", "#FFD34D"];
+  const ps = Array.from({length: qtd}, () => ({x: innerWidth / 2 + (Math.random() - .5) * 90, y: innerHeight * .38,
+    vx: (Math.random() - .5) * 14, vy: -Math.random() * 14 - 5, r: Math.random() * 7 + 6, a: Math.random() * 6,
+    va: (Math.random() - .5) * .3, c: cores[Math.floor(Math.random() * cores.length)]}));
+  const t0 = performance.now();
+  (function passo(t) {
+    g.clearRect(0, 0, innerWidth, innerHeight);
+    ps.forEach(p => { p.vy += .34; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va;
+      g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillStyle = p.c; g.fillRect(-p.r / 2, -p.r / 3, p.r, p.r * .66); g.restore(); });
+    if (t - t0 < 2800) requestAnimationFrame(passo); else cv.remove();
+  })(t0);
+}
+function aviso(txt) {
+  const el = document.createElement("div");
+  el.className = "aviso"; el.textContent = txt;
+  document.body.appendChild(el);
+  setTimeout(() => el.classList.add("sai"), 1600); setTimeout(() => el.remove(), 2200);
+}
+// dias seguidos jogando
+function marcaDia() {
+  const hoje = numeroDoDia(), d = guarda.ler("dias", {ultimo: 0, seguidos: 0});
+  if (d.ultimo === hoje) return;
+  d.seguidos = d.ultimo === hoje - 1 ? d.seguidos + 1 : 1; d.ultimo = hoje;
+  guarda.gravar("dias", d);
+  if (d.seguidos >= 2) setTimeout(() => aviso(`🔥 ${d.seguidos} dias seguidos jogando!`), 900);
+}
+function chipDias() {
+  const d = guarda.ler("dias", {ultimo: 0, seguidos: 0});
+  return d.ultimo >= numeroDoDia() - 1 && d.seguidos >= 2 ? `<div class="chip">🔥 ${d.seguidos} dias seguidos jogando</div>` : "";
 }
 const temVoz = "speechSynthesis" in window;
 function calar() { if (temVoz) speechSynthesis.cancel(); }
@@ -319,8 +414,9 @@ function inicio() {
   app.innerHTML = `
   <div class="capa"><div class="sobre">Passatempos de mapas</div><h1>O Atlas da<br>Vó Maria</h1>${svgCapa()}</div>
   ${festa
-    ? `<div class="recado"><h2>Feliz aniversário, vó! 🎂</h2><p>Este atlas é o seu presente: pra viajar pelo mapa sem sair de casa, no seu tempo.</p><p class="assina">Com carinho, Sabrina</p></div>`
-    : `<div class="recado"><h2>${saudacao()}, vó Maria!</h2><p>Que tal uma viagem pelo mapa hoje?</p></div>`}
+    ? `<div class="recado"><h2>Feliz aniversário, vó! 🎂</h2><p>Este atlas é o seu presente: pra viajar pelo mapa sem sair de casa, no seu tempo.</p><p class="assina">Com carinho, Sabrina</p>${chipDias()}</div>`
+    : `<div class="recado"><h2>${saudacao()}, vó Maria!</h2><p>Que tal uma viagem pelo mapa hoje?</p>${chipDias()}</div>`}
+  ${heroiTrilha()}
   <div class="secao">Hoje</div>
   ${bloco("dia", "☀️", "#FFE7A8", "As 3 perguntas do dia", "Todo dia mudam sozinhas", guarda.ler(chaveHoje(), false), "destaque")}
   <div class="secao">Perguntas</div>
@@ -333,6 +429,9 @@ function inicio() {
   ${bloco("mapa-br", "🗺️", "#D6E8F1", "Que estado é este?", "Olhe o mapa do Brasil")}
   ${bloco("mapa-sc", "📍", "#FBE0D2", "Cidades de Santa Catarina", "Olhe o mapa de SC")}
   ${bloco("paises", "🌎", "#DCEFD3", "Qual é o país?", "Adivinhe pelo formato")}
+  <div class="secao">Jogos</div>
+  ${bloco("memoria", "🃏", "#FBE0D2", "Jogo da memória", "Vire as cartas e ache os pares")}
+  ${bloco("combina", "🍌", "#FFE7A8", "Combina 3 da natureza", "Junte três figuras iguais")}
   <div class="secao">Jogos de palavras</div>
   ${bloco("ligue", "🔗", "#E4E0F3", "Ligue o estado à capital", "Por região do Brasil")}
   ${bloco("letras", "🔤", "#FFE7A8", "Letras embaralhadas", "Monte o nome certinho")}
@@ -348,11 +447,11 @@ function aplicaLetra() { document.documentElement.classList.toggle("maior", guar
 
 // ---------- motor das perguntas ----------
 const ELOGIOS = ["Isso mesmo, vó!", "Muito bem!", "Acertou!", "Que memória!", "Certinho!", "Parabéns!"];
-function jogoQuiz({titulo, lista, aoTerminar, deNovo = true, nota = ""}) {
-  let i = 0, acertos = 0;
+function jogoQuiz({titulo, lista, aoTerminar, deNovo = true, nota = "", pai = "", aoFim}) {
+  let i = 0, acertos = 0, seguidas = 0;
   function mostra() {
     const q = lista[i], ops = q.o || ["Verdade", "Mentira"];
-    app.innerHTML = topo(titulo) + `
+    app.innerHTML = topo(titulo, pai) + `
       <div class="contador">Pergunta ${i + 1} de ${lista.length}</div>
       ${q.fig ? `<div class="figura">${q.fig}</div>` : ""}
       <div class="pergunta">${esc(q.p)}</div>
@@ -365,7 +464,11 @@ function jogoQuiz({titulo, lista, aoTerminar, deNovo = true, nota = ""}) {
   }
   function responde(k) {
     const q = lista[i], ok = k === q.r;
-    if (ok) { acertos++; som(); }
+    if (ok) {
+      acertos++; seguidas++; acertou();
+      if (seguidas === 3) aviso("🔥 3 seguidas!");
+      else if (seguidas === 5) aviso("🔥 5 seguidas! Que memória!");
+    } else seguidas = 0;
     document.querySelectorAll(".opcao").forEach((el, n) => {
       el.disabled = true;
       if (n === q.r) el.classList.add("certo");
@@ -379,8 +482,10 @@ function jogoQuiz({titulo, lista, aoTerminar, deNovo = true, nota = ""}) {
   }
   function fim() {
     if (aoTerminar) aoTerminar(acertos);
-    const n = Math.max(1, Math.round(acertos / lista.length * 3));
-    app.innerHTML = topo(titulo) + `<div class="fim"><div class="estrelas">${"⭐".repeat(n)}</div>
+    if (aoFim) return aoFim(estrelasPor(acertos, lista.length));
+    if (acertos === lista.length) { confete(); fanfarra(); }
+    const n = estrelasPor(acertos, lista.length);
+    app.innerHTML = topo(titulo, pai) + `<div class="fim"><div class="estrelas">${"⭐".repeat(n)}</div>
       <h2>Acertou ${acertos} de ${lista.length}!</h2><p>${nota || (acertos === lista.length ? "Não errou nenhuma!" : "Cada partida é uma viagem nova.")}</p>
       ${deNovo ? `<button class="seguir" onclick="rota()">Jogar de novo</button>` : ""}
       <button class="leve" onclick="voltarInicio()">Voltar ao início</button></div>`;
@@ -435,23 +540,22 @@ function tresOpcoes(certa, todas) {
   const o = embaralha([certa, ...sorteia(todas.filter(n => n !== certa), 2)]);
   return {o, r: o.indexOf(certa)};
 }
-ROTAS["mapa-br"] = () => {
+function listaMapaBR(n) {
   const ufs = GEO.brasil.ufs.filter(u => u.sigla !== "DF"), nomes = ufs.map(u => u.nome);
-  const lista = sorteia(ufs, 6).map(u => ({p: "Que estado é este, pintado de laranja?", ...tresOpcoes(u.nome, nomes),
+  return sorteia(ufs, n).map(u => ({p: "Que estado é este, pintado de laranja?", ...tresOpcoes(u.nome, nomes),
     x: `Esse é ${u.nome}, da região ${u.regiao}. A capital é ${capitalDe(u.nome)}.`, fig: svgBrasil(u.sigla)}));
-  jogoQuiz({titulo: "Que estado é este?", lista});
-};
-ROTAS["mapa-sc"] = () => {
-  const lista = sorteia(CIDADES_SC, 6).map(n => ({p: "Que cidade é esta, pintada de laranja?", ...tresOpcoes(n, CIDADES_SC), x: `Essa é ${n}.`, fig: svgSC(n)}));
-  jogoQuiz({titulo: "Cidades de Santa Catarina", lista});
-};
-ROTAS.paises = () => {
+}
+const listaMapaSC = n => sorteia(CIDADES_SC, n).map(c => ({p: "Que cidade é esta, pintada de laranja?", ...tresOpcoes(c, CIDADES_SC), x: `Essa é ${c}.`, fig: svgSC(c)}));
+function listaPaises(n) {
   const nomes = GEO.silhuetas.map(p => p.nome);
-  const lista = sorteia(GEO.silhuetas, 6).map(p => ({p: "Que país tem este formato?", ...tresOpcoes(p.nome, nomes), x: `Esse é o formato de: ${p.nome}.`, fig: svgPais(p)}));
-  jogoQuiz({titulo: "Qual é o país?", lista});
-};
+  return sorteia(GEO.silhuetas, n).map(p => ({p: "Que país tem este formato?", ...tresOpcoes(p.nome, nomes), x: `Esse é o formato de: ${p.nome}.`, fig: svgPais(p)}));
+}
+ROTAS["mapa-br"] = () => jogoQuiz({titulo: "Que estado é este?", lista: listaMapaBR(6)});
+ROTAS["mapa-sc"] = () => jogoQuiz({titulo: "Cidades de Santa Catarina", lista: listaMapaSC(6)});
+ROTAS.paises = () => jogoQuiz({titulo: "Qual é o país?", lista: listaPaises(6)});
 
 // ====== O Atlas da Vó Maria: ligue, letras embaralhadas e caça-palavras ======
+// Cada jogo aceita op = {titulo, pai, aoFim(estrelas)}. Com aoFim, ele vira uma fase da trilha.
 const semAcento = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase();
 function menu(titulo, ajuda, itens) {
   app.innerHTML = topo(titulo) + `<p class="ajuda">${ajuda}</p>` + itens.map(it =>
@@ -465,15 +569,11 @@ function mostraFinal(html) {
 }
 
 // ---------- ligue o estado à capital ----------
-ROTAS.ligue = regiao => {
-  if (!regiao || !CAPITAIS[regiao]) {
-    return menu("Ligue o estado à capital", "Escolha uma região do Brasil:", Object.keys(CAPITAIS).map(r =>
-      ({rota: "ligue/" + r, ic: "🔗", cor: "#E4E0F3", t: r, sub: CAPITAIS[r].length + " estados", feito: guarda.ler("ligue-" + r, false)})));
-  }
+function jogoLigue(regiao, op = {}) {
   const pares = CAPITAIS[regiao];
   const estados = embaralha(pares.map((p, i) => ({t: p[0], i}))), capitais = embaralha(pares.map((p, i) => ({t: p[1], i})));
-  let marcado = null, feitos = 0;
-  app.innerHTML = topo(regiao, "ligue") + `<p class="ajuda">Toque num estado e depois na capital dele.</p>
+  let marcado = null, feitos = 0, erros = 0;
+  app.innerHTML = topo(op.titulo || regiao, op.pai ?? "ligue") + `<p class="ajuda">Toque num estado e depois na capital dele.</p>
     <div class="ligue"><div class="col">${estados.map(e => `<button class="par estado" data-i="${e.i}" data-lado="e">${e.t}</button>`).join("")}</div>
     <div class="col">${capitais.map(c => `<button class="par" data-i="${c.i}" data-lado="c">${c.t}</button>`).join("")}</div></div>
     <div id="depois"></div>`;
@@ -487,42 +587,48 @@ ROTAS.ligue = regiao => {
     }
     if (marcado.dataset.i === b.dataset.i) {
       [marcado, b].forEach(x => { x.classList.remove("marcado"); x.classList.add("ok"); x.disabled = true; });
-      som(); feitos++; marcado = null;
+      acertou(); feitos++; marcado = null;
       if (feitos === pares.length) {
-        guarda.gravar("ligue-" + regiao, true);
+        const est = erros === 0 ? 3 : erros <= 2 ? 2 : 1;
+        if (op.aoFim) return setTimeout(() => op.aoFim(est), 700);
+        guarda.gravar("ligue-" + regiao, true); confete(); fanfarra();
         mostraFinal(`<div class="retorno certo" style="margin-top:18px"><strong>Ligou todas! 🎉</strong>A região ${regiao} está completinha.</div>
           <button class="seguir" onclick="voltar('ligue')">Escolher outra região</button>`);
       }
     } else {
+      erros++;
       b.classList.add("nao"); setTimeout(() => b.classList.remove("nao"), 400);
       marcado.classList.remove("marcado"); marcado = null;
     }
   });
-};
+}
+ROTAS.ligue = regiao => CAPITAIS[regiao] ? jogoLigue(regiao) : menu("Ligue o estado à capital", "Escolha uma região do Brasil:",
+  Object.keys(CAPITAIS).map(r => ({rota: "ligue/" + r, ic: "🔗", cor: "#E4E0F3", t: r, sub: CAPITAIS[r].length + " estados", feito: guarda.ler("ligue-" + r, false)})));
 
 // ---------- letras embaralhadas ----------
-ROTAS.letras = idx => {
-  const cats = Object.keys(EMBARALHADAS);
-  if (idx === undefined || !cats[idx]) {
-    return menu("Letras embaralhadas", "Escolha um tema:", cats.map((c, i) => ({rota: "letras/" + i, ic: "🔤", cor: "#FFE7A8", t: c, sub: "5 palavras por vez"})));
-  }
-  const cat = cats[idx], palavras = sorteia(EMBARALHADAS[cat], 5);
+function jogoLetras(idx, op = {}) {
+  const cat = Object.keys(EMBARALHADAS)[idx], palavras = sorteia(EMBARALHADAS[cat], op.n || 5), titulo = op.titulo || cat, pai = op.pai ?? "letras";
   let n = 0, sozinha = 0;
   function palavra() {
     const certa = palavras[n], alvo = semAcento(certa).replace(/[^A-Z]/g, "");
     let pecas;
     do { pecas = embaralha([...alvo]); } while (pecas.join("") === alvo);
     let usadas = [], acabou = false;
+    const botaoSeguir = () => `<button class="seguir" id="seguir">${n + 1 < palavras.length ? "Próxima palavra →" : "Continuar"}</button>`;
+    function ligaSeguir() {
+      const s = document.getElementById("seguir");
+      if (s) s.onclick = () => { n++; window.scrollTo(0, 0); n < palavras.length ? palavra() : fim(); };
+    }
     function desenha(msg = "") {
-      const cheia = usadas.length === alvo.length, acertou = cheia && usadas.map(p => pecas[p]).join("") === alvo;
-      app.innerHTML = topo(cat, "letras") + `<div class="contador">Palavra ${n + 1} de ${palavras.length}</div>
+      const cheia = usadas.length === alvo.length, certo = cheia && usadas.map(p => pecas[p]).join("") === alvo;
+      app.innerHTML = topo(titulo, pai) + `<div class="contador">Palavra ${n + 1} de ${palavras.length}</div>
         <div class="pergunta">Que nome é este?</div>
         <p class="dica">Começa com <b>${alvo[0]}</b> e tem ${alvo.length} letras. Toque nas letras na ordem certa.</p>
-        <div class="resposta ${acertou ? "ok" : ""}">${usadas.map((p, k) => `<button class="peca" data-u="${k}">${pecas[p]}</button>`).join("")}</div>
+        <div class="resposta ${certo ? "ok" : ""}">${usadas.map((p, k) => `<button class="peca" data-u="${k}">${pecas[p]}</button>`).join("")}</div>
         <div class="pecas">${pecas.map((l, p) => `<button class="peca" data-p="${p}" ${usadas.includes(p) ? 'style="visibility:hidden"' : ""}>${l}</button>`).join("")}</div>
         <div id="depois">${msg}</div>`;
-      if (acertou && !acabou) {
-        acabou = true; som(); sozinha++;
+      if (certo && !acabou) {
+        acabou = true; acertou(); sozinha++;
         return desenha(`<div class="retorno certo"><strong>${ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]}</strong>${certa}</div>${botaoSeguir()}`);
       }
       if (acabou) return ligaSeguir();
@@ -540,20 +646,20 @@ ROTAS.letras = idx => {
       app.querySelectorAll("[data-p]").forEach(b => b.onclick = () => { if (!acabou && !usadas.includes(+b.dataset.p)) { usadas.push(+b.dataset.p); desenha(); } });
       app.querySelectorAll("[data-u]").forEach(b => b.onclick = () => { if (!acabou) { usadas.splice(+b.dataset.u, 1); desenha(); } });
     }
-    const botaoSeguir = () => `<button class="seguir" id="seguir">${n + 1 < palavras.length ? "Próxima palavra →" : "Ver como foi"}</button>`;
-    function ligaSeguir() {
-      const s = document.getElementById("seguir");
-      if (s) s.onclick = () => { n++; window.scrollTo(0, 0); n < palavras.length ? palavra() : fim(); };
-    }
     desenha();
   }
   function fim() {
-    app.innerHTML = topo(cat, "letras") + `<div class="fim"><div class="estrelas">${"⭐".repeat(Math.max(1, Math.round(sozinha / palavras.length * 3)))}</div>
+    const est = estrelasPor(sozinha, palavras.length);
+    if (op.aoFim) return op.aoFim(est);
+    if (sozinha === palavras.length) { confete(); fanfarra(); }
+    app.innerHTML = topo(titulo, pai) + `<div class="fim"><div class="estrelas">${"⭐".repeat(est)}</div>
       <h2>Montou ${sozinha} de ${palavras.length}!</h2><p>Cada vez que jogar, as palavras mudam.</p>
       <button class="seguir" onclick="rota()">Jogar de novo</button><button class="leve" onclick="voltar('letras')">Escolher outro tema</button></div>`;
   }
   palavra();
-};
+}
+ROTAS.letras = idx => Object.keys(EMBARALHADAS)[idx] ? jogoLetras(+idx) : menu("Letras embaralhadas", "Escolha um tema:",
+  Object.keys(EMBARALHADAS).map((c, i) => ({rota: "letras/" + i, ic: "🔤", cor: "#FFE7A8", t: c, sub: "5 palavras por vez"})));
 
 // ---------- caça-palavras ----------
 const TAM = 10;
@@ -582,14 +688,11 @@ function montaGrade(palavras, rnd) {
     }
   }
 }
-ROTAS.caca = idx => {
-  if (idx === undefined || !CACAS[idx]) {
-    return menu("Caça-palavras", "Escolha uma cartela:", CACAS.map((c, i) => ({rota: "caca/" + i, ic: "🔎", cor: "#DCEFD3", t: c.t, sub: c.w.length + " palavras", feito: guarda.ler("caca-" + i, false)})));
-  }
-  const cart = CACAS[idx], {letras, pos} = montaGrade(cart.w, semente(100 + +idx));
-  const achadas = new Set(guarda.ler("caca-achadas-" + idx, []));
-  let inicioSel = null;
-  app.innerHTML = topo(cart.t, "caca") + `<p class="ajuda">Toque na <b>primeira</b> letra de uma palavra e depois na <b>última</b>. As palavras estão deitadas (→) ou em pé (↓).</p>
+function jogoCaca(idx, op = {}) {
+  const fase = !!op.aoFim, cart = CACAS[idx], {letras, pos} = montaGrade(cart.w, semente((fase ? 500 : 100) + idx));
+  const achadas = new Set(fase ? [] : guarda.ler("caca-achadas-" + idx, []));
+  let inicioSel = null, terminou = false;
+  app.innerHTML = topo(op.titulo || cart.t, op.pai ?? "caca") + `${fase ? `<p class="dica">${cart.t}</p>` : ""}<p class="ajuda">Toque na <b>primeira</b> letra de uma palavra e depois na <b>última</b>. As palavras estão deitadas (→) ou em pé (↓).</p>
     <div class="grade" style="grid-template-columns:repeat(${TAM},1fr)">${letras.map((l, k) => `<button class="cel" data-k="${k}">${l}</button>`).join("")}</div>
     <div class="lista">${cart.w.map(w => `<span data-w="${w}">${w}</span>`).join("")}</div><div id="depois"></div>`;
   const cels = [...app.querySelectorAll(".cel")];
@@ -597,9 +700,11 @@ ROTAS.caca = idx => {
     cels.forEach(c => c.classList.remove("achada"));
     achadas.forEach(w => pos[w].forEach(k => cels[k].classList.add("achada")));
     app.querySelectorAll(".lista span").forEach(s => s.classList.toggle("ok", achadas.has(s.dataset.w)));
-    if (achadas.size === cart.w.length) {
-      guarda.gravar("caca-" + idx, true);
-      const prox = CACAS[+idx + 1] ? `<button class="seguir" onclick="location.replace('#caca/${+idx + 1}')">Próxima cartela →</button>` : "";
+    if (achadas.size === cart.w.length && !terminou) {
+      terminou = true;
+      if (fase) return setTimeout(() => op.aoFim(3), 700);
+      guarda.gravar("caca-" + idx, true); confete(); fanfarra();
+      const prox = CACAS[idx + 1] ? `<button class="seguir" onclick="location.replace('#caca/${idx + 1}')">Próxima cartela →</button>` : "";
       mostraFinal(`<div class="retorno certo"><strong>Achou todas! 🎉</strong>Cartela completinha.</div>${prox}<button class="leve" onclick="voltar('caca')">Ver as cartelas</button>`);
     }
   }
@@ -614,11 +719,285 @@ ROTAS.caca = idx => {
     const passo = la === lk ? 1 : TAM, [ini, fimK] = a < k ? [a, k] : [k, a], trecho = [];
     for (let x = ini; x <= fimK; x += passo) trecho.push(x);
     const achou = cart.w.find(w => !achadas.has(w) && pos[w].length === trecho.length && pos[w].every((p, j) => p === trecho[j]));
-    if (achou) { achadas.add(achou); guarda.gravar("caca-achadas-" + idx, [...achadas]); som(); pinta(); }
-    else { cel.classList.add("inicio"); setTimeout(() => cel.classList.remove("inicio"), 350); }
+    if (achou) {
+      achadas.add(achou); acertou();
+      if (!fase) guarda.gravar("caca-achadas-" + idx, [...achadas]);
+      pinta();
+    } else { cel.classList.add("inicio"); setTimeout(() => cel.classList.remove("inicio"), 350); }
   });
   pinta();
+}
+ROTAS.caca = idx => CACAS[idx] ? jogoCaca(+idx) : menu("Caça-palavras", "Escolha uma cartela:",
+  CACAS.map((c, i) => ({rota: "caca/" + i, ic: "🔎", cor: "#DCEFD3", t: c.t, sub: c.w.length + " palavras", feito: guarda.ler("caca-" + i, false)})));
+
+// ====== O Atlas da Vó Maria: jogo da memória e combina 3 ======
+
+// ---------- jogo da memória (as cartas do baralho) ----------
+const MEMORIA = {
+  natureza: {t: "Figuras da natureza", igual: true, dica: "Vire duas cartas e ache as figuras iguais.", sub: "Ache as figuras iguais", itens: [["🌊", "Mar"], ["⛰️", "Montanha"], ["🌲", "Floresta"], ["🏝️", "Ilha"], ["🌵", "Deserto"], ["🌈", "Arco-íris"], ["🍌", "Banana"], ["🐚", "Concha"]]},
+  sc: {t: "Cidades e suas famas", a: "CIDADE", b: "FAMOSA POR", dica: "Vire duas cartas e ache cada cidade junto com aquilo que deixou ela famosa.", sub: "A cidade e a sua fama", itens: [["Joinville", "Flores"], ["Blumenau", "Oktoberfest"], ["Pomerode", "Jeito alemão"], ["Corupá", "Cachoeiras"], ["Nova Trento", "Santa Paulina"], ["Jaraguá do Sul", "Malha"], ["São Joaquim", "Neve e maçã"], ["Penha", "Beto Carrero"], ["Laguna", "Pesca com botos"], ["Florianópolis", "Ponte Hercílio Luz"], ["Chapecó", "Chapecoense"], ["Treze Tílias", "Tirol Brasileiro"]]},
+  capitais: {t: "Estado e capital", a: "ESTADO", b: "CAPITAL", dica: "Vire duas cartas e ache cada estado junto com a sua capital.", sub: "O estado e a sua capital", itens: Object.values(CAPITAIS).flat().filter(p => p[0] !== p[1])},
+  paises: {t: "País e capital", a: "PAÍS", b: "CAPITAL", dica: "Vire duas cartas e ache cada país junto com a sua capital.", sub: "O país e a sua capital", itens: [["Itália", "Roma"], ["Portugal", "Lisboa"], ["Espanha", "Madri"], ["França", "Paris"], ["Alemanha", "Berlim"], ["Argentina", "Buenos Aires"], ["Chile", "Santiago"], ["Uruguai", "Montevidéu"], ["Paraguai", "Assunção"], ["Japão", "Tóquio"], ["Reino Unido", "Londres"], ["Egito", "Cairo"], ["Peru", "Lima"], ["Rússia", "Moscou"]]}
 };
+function jogoMemoria(chave, op = {}) {
+  const S = MEMORIA[chave], nPares = op.pares || 6;
+  let cartas = [];
+  sorteia(S.itens, nPares).forEach((it, i) => {
+    if (S.igual) cartas.push({id: i, h: `<span class="emo">${it[0]}</span>${it[1]}`}, {id: i, h: `<span class="emo">${it[0]}</span>${it[1]}`});
+    else cartas.push({id: i, h: `<small>${S.a}</small>${it[0]}`}, {id: i, h: `<small>${S.b}</small>${it[1]}`});
+  });
+  cartas = embaralha(cartas);
+  let abertas = [], pares = 0, tentativas = 0, trava = false;
+  app.innerHTML = topo(op.titulo || "Jogo da memória", op.pai ?? "memoria") + `
+    <p class="ajuda">${S.dica}</p>
+    <div class="placar"><span id="pares">Pares: 0 de ${nPares}</span><span id="tent">Tentativas: 0</span></div>
+    <div class="cartas" style="grid-template-columns:repeat(${cartas.length > 12 ? 4 : 3},1fr)">${cartas.map((c, k) =>
+      `<button class="carta" data-k="${k}"><span class="in"><span class="costas">🧭</span><span class="frente">${c.h}</span></span></button>`).join("")}</div>
+    <div id="depois"></div>`;
+  const els = [...app.querySelectorAll(".carta")];
+  els.forEach(el => el.onclick = () => {
+    const k = +el.dataset.k;
+    if (trava || el.classList.contains("virada") || el.classList.contains("par")) return;
+    el.classList.add("virada"); abertas.push(k);
+    if (abertas.length < 2) return;
+    tentativas++; document.getElementById("tent").textContent = "Tentativas: " + tentativas;
+    const [a, b] = abertas; abertas = [];
+    if (cartas[a].id !== cartas[b].id) {
+      trava = true;
+      return setTimeout(() => { els[a].classList.remove("virada"); els[b].classList.remove("virada"); trava = false; }, 1300);
+    }
+    [a, b].forEach(x => { els[x].classList.remove("virada"); els[x].classList.add("par"); });
+    pares++; acertou();
+    document.getElementById("pares").textContent = `Pares: ${pares} de ${nPares}`;
+    if (pares < nPares) return;
+    const est = tentativas <= nPares * 1.6 ? 3 : tentativas <= nPares * 2.4 ? 2 : 1;
+    if (op.aoFim) return setTimeout(() => op.aoFim(est), 800);
+    confete(); fanfarra();
+    mostraFinal(`<div class="retorno certo" style="margin-top:16px"><strong>Achou todos os pares! 🎉</strong>Em ${tentativas} tentativas.</div>
+      <button class="seguir" onclick="rota()">Jogar de novo</button><button class="leve" onclick="voltar('memoria')">Escolher outro baralho</button>`);
+  });
+}
+ROTAS.memoria = chave => MEMORIA[chave] ? jogoMemoria(chave, {pares: MEMORIA[chave].igual ? 8 : 6}) : menu("Jogo da memória", "Escolha um baralho:",
+  Object.keys(MEMORIA).map(k => ({rota: "memoria/" + k, ic: "🃏", cor: "#FBE0D2", t: MEMORIA[k].t, sub: MEMORIA[k].sub})));
+
+// ---------- combina 3 da natureza ----------
+const FIGURAS = ["🌊", "🌲", "🍌", "🌻", "🐚"], L3 = 7;
+function jogoCombina(op = {}) {
+  const sorteiaFig = () => FIGURAS[Math.floor(Math.random() * FIGURAS.length)];
+  const alvo = op.alvo || sorteiaFig(), meta = op.qtd || 20;
+  let tab, jogadas = op.jogadas || 25, junto = 0, sel = null, ocupado = false, acabou = false, extra = false;
+  const espera = ms => new Promise(r => setTimeout(r, ms));
+  const vizinhos = (a, b) => (Math.abs(a - b) === 1 && Math.floor(a / L3) === Math.floor(b / L3)) || Math.abs(a - b) === L3;
+  function grupos(t) {
+    const s = new Set(); let maior = 0;
+    const corre = (idx) => { for (let i = 0; i < L3;) { let f = i; while (f < L3 && t[idx(f)] === t[idx(i)]) f++; if (f - i >= 3) { for (let x = i; x < f; x++) s.add(idx(x)); maior = Math.max(maior, f - i); } i = f; } };
+    for (let l = 0; l < L3; l++) corre(c => l * L3 + c);
+    for (let c = 0; c < L3; c++) corre(l => l * L3 + c);
+    return {s, maior};
+  }
+  function temJogada(t) {
+    for (let k = 0; k < L3 * L3; k++) for (const j of [k % L3 < L3 - 1 ? k + 1 : -1, k + L3 < L3 * L3 ? k + L3 : -1]) {
+      if (j < 0) continue;
+      const u = t.slice(); [u[k], u[j]] = [u[j], u[k]];
+      if (grupos(u).s.size) return true;
+    }
+    return false;
+  }
+  function novoTab() {
+    for (;;) {
+      const t = [];
+      for (let k = 0; k < L3 * L3; k++) {
+        let f;
+        do { f = sorteiaFig(); } while ((k % L3 >= 2 && t[k - 1] === f && t[k - 2] === f) || (k >= 2 * L3 && t[k - L3] === f && t[k - 2 * L3] === f));
+        t.push(f);
+      }
+      if (temJogada(t)) return t;
+    }
+  }
+  function desenha(somem = new Set(), caem = {}) {
+    document.getElementById("tab").innerHTML = tab.map((f, k) => `<button class="peca3${sel === k ? " sel" : ""}${somem.has(k) ? " some" : ""}${caem[k] ? " cai" : ""}" data-k="${k}"${caem[k] ? ` style="--de:${-caem[k] * 108}%"` : ""}>${f}</button>`).join("");
+    document.getElementById("jog").textContent = jogadas;
+    document.getElementById("junto").textContent = `${Math.min(junto, meta)} de ${meta}`;
+  }
+  async function troca(a, b) {
+    if (ocupado || acabou) return;
+    ocupado = true; sel = null;
+    [tab[a], tab[b]] = [tab[b], tab[a]]; desenha();
+    let g = grupos(tab);
+    if (!g.s.size) {
+      await espera(280);
+      [tab[a], tab[b]] = [tab[b], tab[a]]; desenha();
+      const el = document.querySelector(`.peca3[data-k="${b}"]`); if (el) el.classList.add("nao");
+      ocupado = false; return;
+    }
+    jogadas--;
+    let rodada = 0;
+    while (g.s.size) {
+      rodada++;
+      g.s.forEach(k => { if (tab[k] === alvo) junto++; });
+      if (rodada === 1 && g.maior >= 4) { jogadas++; aviso("Quatro juntas! +1 jogada"); }
+      acertou(); desenha(g.s); await espera(300);
+      const caem = {};
+      for (let c = 0; c < L3; c++) {
+        const vivos = [];
+        for (let l = L3 - 1; l >= 0; l--) if (!g.s.has(l * L3 + c)) vivos.push([tab[l * L3 + c], l]);
+        const faltam = L3 - vivos.length;
+        vivos.forEach(([f, r], i) => { const l = L3 - 1 - i; tab[l * L3 + c] = f; if (l !== r) caem[l * L3 + c] = l - r; });
+        for (let l = 0; l < faltam; l++) { tab[l * L3 + c] = sorteiaFig(); caem[l * L3 + c] = faltam; }
+      }
+      desenha(new Set(), caem); await espera(340);
+      g = grupos(tab);
+    }
+    if (rodada >= 3) aviso("Maravilha! 🌟"); else if (rodada === 2) aviso("Que combinação!");
+    desenha();
+    if (junto >= meta) return vence();
+    if (jogadas <= 0) return semJogadas();
+    if (!temJogada(tab)) { aviso("Embaralhando as figuras…"); await espera(800); tab = novoTab(); desenha(); }
+    ocupado = false;
+  }
+  function vence() {
+    acabou = true;
+    const est = jogadas >= 8 ? 3 : jogadas >= 4 ? 2 : 1;
+    if (op.aoFim) return setTimeout(() => op.aoFim(est), 700);
+    confete(); fanfarra();
+    mostraFinal(`<div class="retorno certo" style="margin-top:16px"><strong>Conseguiu! 🎉</strong>Juntou ${meta} ${alvo} e ainda sobraram ${jogadas} jogadas.</div>
+      <button class="seguir" onclick="rota()">Jogar de novo</button><button class="leve" onclick="voltarInicio()">Voltar ao início</button>`);
+  }
+  function semJogadas() {
+    acabou = true;
+    mostraFinal(`<div class="retorno errado" style="margin-top:16px"><strong>Faltou pouquinho!</strong>Faltaram só ${meta - junto} ${alvo}.</div>
+      ${extra ? "" : `<button class="seguir azul" id="mais5">Ganhar mais 5 jogadas</button>`}<button class="leve" onclick="rota()">Começar de novo</button>`);
+    const b = document.getElementById("mais5");
+    if (b) b.onclick = () => { extra = true; jogadas = 5; acabou = false; ocupado = false; document.getElementById("depois").innerHTML = ""; desenha(); window.scrollTo(0, 0); };
+  }
+  tab = novoTab();
+  app.innerHTML = topo(op.titulo || "Combina 3 da natureza", op.pai ?? "") + `
+    <p class="ajuda">Toque numa figura e depois na vizinha pra trocar as duas de lugar. Junte 3 iguais em fila!</p>
+    <div class="meta3"><div><small>Juntar ${alvo}</small><b id="junto"></b></div><div><small>Jogadas</small><b id="jog"></b></div></div>
+    <div class="tabuleiro" id="tab" style="grid-template-columns:repeat(${L3},1fr)"></div><div id="depois"></div>`;
+  desenha();
+  const T = document.getElementById("tab");
+  let ini = null;
+  T.addEventListener("pointerdown", e => { const p = e.target.closest(".peca3"); ini = p ? {k: +p.dataset.k, x: e.clientX, y: e.clientY} : null; });
+  T.addEventListener("pointerup", e => {
+    if (!ini || ocupado || acabou) { ini = null; return; }
+    const dx = e.clientX - ini.x, dy = e.clientY - ini.y, k = ini.k;
+    ini = null;
+    if (Math.hypot(dx, dy) > 24) {
+      const j = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? (k % L3 < L3 - 1 ? k + 1 : -1) : (k % L3 > 0 ? k - 1 : -1))
+                                            : (dy > 0 ? (k + L3 < L3 * L3 ? k + L3 : -1) : (k - L3 >= 0 ? k - L3 : -1));
+      if (j >= 0) troca(k, j);
+      return;
+    }
+    if (sel !== null && sel !== k && vizinhos(sel, k)) return troca(sel, k);
+    sel = sel === k ? null : k;
+    desenha();
+  });
+}
+ROTAS.combina = () => jogoCombina();
+
+// ====== A Trilha da Vó: fases no estilo Candy Crush ======
+const MUNDOS = [
+  {t: "Santa Catarina", ic: "🌊", cor: "#DDEFD4", enfeites: ["🌲", "🍌", "🌊", "⛰️", "🐚", "🌻"]},
+  {t: "Brasil", ic: "🦜", cor: "#FFF0C6", enfeites: ["🦜", "🌴", "☀️", "🌵", "🏖️", "🐢"]},
+  {t: "O mundo", ic: "🌍", cor: "#DCE9F5", enfeites: ["🗼", "🏰", "🗻", "✈️", "🚢", "🌍"]}
+];
+const FASES = [
+  {t: "quiz", cat: "sc", n: 5}, {t: "memoria", set: "natureza", pares: 6}, {t: "caca", i: 0},
+  {t: "combina", alvo: "🍌", qtd: 12, jogadas: 20}, {t: "mapa-sc", n: 5}, {t: "letras", i: 0, n: 4},
+  {t: "memoria", set: "sc", pares: 6}, {t: "quiz", cat: "vf", n: 5}, {t: "combina", alvo: "🌊", qtd: 15, jogadas: 20},
+  {t: "caca", i: 1, especial: true},
+  {t: "quiz", cat: "brasil", n: 5}, {t: "ligue", r: "Sul"}, {t: "mapa-br", n: 5},
+  {t: "combina", alvo: "🌲", qtd: 15, jogadas: 18}, {t: "memoria", set: "capitais", pares: 6}, {t: "quiz", cat: "quem", n: 5},
+  {t: "caca", i: 2}, {t: "letras", i: 1, n: 4}, {t: "ligue", r: "Sudeste"}, {t: "combina", alvo: "🌻", qtd: 18, jogadas: 20},
+  {t: "quiz", cat: "mundo", n: 5}, {t: "paises", n: 5}, {t: "memoria", set: "paises", pares: 6},
+  {t: "caca", i: 3}, {t: "combina", alvo: "🐚", qtd: 18, jogadas: 18}, {t: "letras", i: 2, n: 4},
+  {t: "ligue", r: "Nordeste"}, {t: "memoria", set: "natureza", pares: 8}, {t: "caca", i: 5},
+  {t: "quiz", cat: "tudo", n: 8, final: true}
+];
+const progresso = () => guarda.ler("trilha", {});
+const totalEstrelas = () => Object.values(progresso()).reduce((a, b) => a + b, 0);
+function faseLiberada() { const p = progresso(); let n = 1; while (p[n] && n < FASES.length) n++; return n; }
+
+function heroiTrilha() {
+  const p = progresso(), n = faseLiberada(), tudo = !!p[FASES.length];
+  const sub = tudo ? `Trilha completa! ⭐ ${totalEstrelas()} estrelas` : `Fase ${n} de ${FASES.length} · ⭐ ${totalEstrelas()} estrelas`;
+  const botao = tudo ? "Ver a trilha ▶" : n === 1 ? "Começar a viagem ▶" : `Jogar a fase ${n} ▶`;
+  return `<button class="heroi" onclick="ir('trilha')"><b>🗺️ A Trilha da Vó</b><small>${sub}</small><span class="jogar">${botao}</span></button>`;
+}
+
+const PASSO = 125, VAO_MUNDO = 95;
+ROTAS.trilha = () => {
+  const p = progresso(), lib = faseLiberada(), N = FASES.length, tudo = !!p[N];
+  const mundoDe = i => Math.floor((i - 1) / 10);
+  const H = 180 + (N - 1) * PASSO + (MUNDOS.length - 1) * VAO_MUNDO + 150;
+  const yDe = i => H - 170 - (i - 1) * PASSO - mundoDe(i) * VAO_MUNDO;
+  const xDe = i => 50 + 27 * Math.sin(i * 0.95);
+  const faixas = MUNDOS.map((m, w) => {
+    const baixo = w === 0 ? H : yDe(w * 10 + 1) + 150, cima = w === MUNDOS.length - 1 ? 0 : yDe((w + 1) * 10 + 1) + 150;
+    return `<div style="position:absolute;left:0;right:0;top:${cima}px;height:${baixo - cima}px;background:${m.cor}"></div>`;
+  }).join("");
+  const caminho = curva(FASES.map((f, k) => [+xDe(k + 1).toFixed(2), yDe(k + 1)]));
+  const enfeites = FASES.map((f, k) => {
+    if (k % 2) return "";
+    const i = k + 1, lado = xDe(i) > 50 ? 11 : 89, m = MUNDOS[mundoDe(i)];
+    return `<span class="enfeite" style="left:${lado}%;top:${yDe(i) + 30}px">${m.enfeites[(k / 2) % m.enfeites.length]}</span>`;
+  }).join("");
+  const faixasTitulo = MUNDOS.map((m, w) => `<div class="mundo" style="top:${yDe(w * 10 + 1) + 98}px">${m.ic} Parte ${w + 1}: ${m.t}</div>`).join("")
+    + `<div class="mundo" style="top:${yDe(N) - 128}px">🏁 Fim da viagem</div>`;
+  const nos = FASES.map((f, k) => {
+    const i = k + 1, est = p[i] || 0, estado = est ? "feita" : i === lib ? "atual" : "fechada";
+    const acao = estado === "fechada" ? `aviso('🔒 Primeiro termine a fase ${lib}')` : `ir('fase/${i}')`;
+    const rotulo = f.final ? "🏆" : f.especial ? "❤️" : i;
+    const estrelas = est ? `<span class="est">${"⭐".repeat(est)}<span style="opacity:.3">${"⭐".repeat(3 - est)}</span></span>` : "";
+    return `<button class="no ${estado}" style="left:${xDe(i)}%;top:${yDe(i)}px" onclick="${acao}" aria-label="Fase ${i}">${rotulo}${estrelas}</button>`;
+  }).join("");
+  const voce = tudo ? "" : `<div class="voce" style="left:${xDe(lib)}%;top:${yDe(lib)}px">📍</div>`;
+  app.innerHTML = topo("A Trilha da Vó") + `<p class="ajuda">⭐ ${totalEstrelas()} de ${N * 3} estrelas. Toque na fase que está pulando!</p>
+    <div class="trilha" style="height:${H}px">${faixas}
+      <svg viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true">
+        <path d="${caminho}" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round" opacity=".85" vector-effect="non-scaling-stroke"/>
+        <path d="${caminho}" fill="none" stroke="#D2BF97" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      </svg>${enfeites}${faixasTitulo}${nos}${voce}</div>`;
+  requestAnimationFrame(() => {
+    const alvo = app.querySelector(".no.atual") || app.querySelectorAll(".no.feita")[N - 1];
+    if (alvo) window.scrollTo(0, alvo.getBoundingClientRect().top + window.scrollY - innerHeight / 2);
+  });
+};
+
+ROTAS.fase = arg => {
+  const n = +arg, f = FASES[n - 1];
+  if (!f || n > faseLiberada()) return location.replace("#trilha");
+  const op = {pai: "trilha", titulo: `Fase ${n}`, aoFim: est => telaFase(n, est)};
+  const quiz = lista => jogoQuiz({titulo: op.titulo, pai: op.pai, aoFim: op.aoFim, lista});
+  ({
+    quiz: () => quiz(sorteia(f.cat === "tudo" ? [].concat(...Object.values(PERGUNTAS)) : PERGUNTAS[f.cat], f.n)),
+    "mapa-br": () => quiz(listaMapaBR(f.n)),
+    "mapa-sc": () => quiz(listaMapaSC(f.n)),
+    paises: () => quiz(listaPaises(f.n)),
+    ligue: () => jogoLigue(f.r, op),
+    letras: () => jogoLetras(f.i, {...op, n: f.n}),
+    caca: () => jogoCaca(f.i, op),
+    memoria: () => jogoMemoria(f.set, {...op, pares: f.pares}),
+    combina: () => jogoCombina({...op, alvo: f.alvo, qtd: f.qtd, jogadas: f.jogadas})
+  })[f.t]();
+};
+
+function telaFase(n, est) {
+  const p = progresso();
+  p[n] = Math.max(p[n] || 0, est);
+  guarda.gravar("trilha", p);
+  marcaDia(); confete(); fanfarra(); window.scrollTo(0, 0);
+  const ultima = n === FASES.length;
+  const msg = ultima ? "Viajou por Santa Catarina, pelo Brasil e pelo mundo. Que memória, vó!" : est === 3 ? "Perfeito!" : est === 2 ? "Muito bem!" : "Passou de fase!";
+  app.innerHTML = topo(`Fase ${n}`, "trilha") + `<div class="fim completa">
+    <div class="estrelas">${[1, 2, 3].map(k => `<span class="${k <= est ? "" : "apagada"}">⭐</span>`).join("")}</div>
+    <h2>${ultima ? "Completou a trilha inteira! 🌍" : `Fase ${n} completa!`}</h2>
+    <p>${msg}${est < 3 ? " Dá pra jogar de novo e ganhar mais estrelas." : ""}</p>
+    ${ultima ? "" : `<button class="seguir" onclick="location.replace('#fase/${n + 1}')">Próxima fase ▶</button>`}
+    <button class="leve" onclick="voltar('trilha')">Ver a trilha</button>
+    ${est < 3 ? `<button class="leve" onclick="rota()">Jogar a fase ${n} de novo</button>` : ""}</div>`;
+}
 
 // ====== O Atlas da Vó Maria: os caminhos da família ======
 document.head.insertAdjacentHTML("beforeend", `<style>
