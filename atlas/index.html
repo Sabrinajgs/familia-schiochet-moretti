@@ -23,7 +23,7 @@
 html.maior{--tam:25px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--papel);color:var(--tinta)}
-body{font:700 var(--tam)/1.45 "Nunito",system-ui,sans-serif;padding-inline:16px;padding-block:0 40px;min-height:100vh}
+body{font:700 var(--tam)/1.45 "Nunito",system-ui,sans-serif;padding-inline:16px;padding-block:0 130px;min-height:100vh}
 button{font:inherit;color:inherit;cursor:pointer}
 h1,h2,h3{font-family:"Lora",Georgia,serif;font-weight:700;margin:0;line-height:1.15;text-wrap:balance}
 .tela{max-width:560px;margin:0 auto}
@@ -154,6 +154,21 @@ h1,h2,h3{font-family:"Lora",Georgia,serif;font-weight:700;margin:0;line-height:1
 .peca3.cai{animation:cai .3s ease-in both}
 @keyframes cai{from{transform:translateY(var(--de))}}
 .peca3.nao{animation:balanca .3s}
+/* ajudante de voz */
+[hidden]{display:none!important}
+.fab{position:fixed;right:14px;bottom:18px;z-index:30;width:84px;height:84px;border-radius:50%;border:4px solid #fff;background:var(--azul);color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;line-height:1}
+.fab span{font-size:1.55em}
+.fab small{font-size:13px;font-weight:900;margin-top:3px}
+.ajudante{position:fixed;inset:0;z-index:60;background:rgba(43,54,64,.5);display:flex;align-items:flex-end}
+.ajudante .folha{background:var(--papel);width:100%;max-width:560px;margin:0 auto;border-radius:26px 26px 0 0;padding:20px 18px 26px;max-height:90vh;overflow:auto;box-shadow:0 -8px 30px rgba(0,0,0,.2)}
+.ajudante h2{font-size:1.35em;margin-bottom:4px;text-align:center}
+.ajudante .dica{text-align:center}
+.mic{display:block;margin:10px auto 8px;width:112px;height:112px;border-radius:50%;border:0;background:var(--terracota);color:#fff;font-size:2.8em;box-shadow:0 6px 0 #8C3F20;padding:0}
+.mic.ouvindo{background:var(--verde);box-shadow:0 0 0 14px rgba(70,127,53,.25);animation:pulsa 1s ease-in-out infinite}
+.falado{text-align:center;color:var(--suave);font-style:italic;min-height:1.4em;margin:4px 0 10px}
+.fala-ia{background:var(--cartao);border:3px solid var(--azul);border-radius:18px;padding:14px 16px;margin:6px 0 10px;font-size:1.05em}
+.sugestoes{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:6px 0 4px}
+.sugestoes button{border:2px solid var(--borda);background:var(--cartao);border-radius:999px;padding:10px 14px;font-weight:800;font-size:.82em}
 </style>
 </head>
 <body>
@@ -998,6 +1013,172 @@ function telaFase(n, est) {
     <button class="leve" onclick="voltar('trilha')">Ver a trilha</button>
     ${est < 3 ? `<button class="leve" onclick="rota()">Jogar a fase ${n} de novo</button>` : ""}</div>`;
 }
+
+// ====== O ajudante de voz da vó ======
+// Não é uma IA paga: ouve pelo microfone do celular e entende as dúvidas sobre o próprio atlas.
+const Reconhece = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SUGESTOES = ["Como eu volto?", "Como se joga isso?", "Onde está a trilha?", "Aumentar a letra", "Quem fez este atlas?"];
+const COMO = {
+  quiz: "Leia a pergunta e toque na resposta que a senhora acha certa. A certa fica verde. Depois é só tocar em Próxima.",
+  mapa: "Olhe o que está pintado de laranja e toque no nome certo, lá embaixo.",
+  ligue: "Toque no nome de um estado, que ele fica azul. Depois toque na capital dele. Se estiver certo, os dois ficam verdes.",
+  letras: "Toque nas letras de baixo, na ordem certa, pra formar o nome. Se errar, toque na letra de cima que ela volta.",
+  caca: "Procure as palavras da lista. Toque na primeira letra da palavra e depois na última. Elas estão deitadas ou em pé.",
+  memoria: "Toque em duas cartas pra virar. Se forem par, ficam abertas. Se não forem, viram de volta. Tente lembrar onde estava cada uma.",
+  combina: "Toque numa figura e depois numa vizinha pra trocar as duas de lugar. Quando juntar três iguais em fila, elas somem. Junte as figuras da meta antes de acabar as jogadas.",
+  trilha: "Toque na bolinha laranja que está pulando pra jogar a fase. Quando terminar, a próxima fase abre.",
+  familia: "Aqui está a história da família. Arraste a tela pra cima com o dedo pra ler. O botão Ouvir a história lê tudo em voz alta.",
+  inicio: "Pra jogar, toque num dos quadrados da tela. O botão verde grande, lá em cima, é a Trilha da Vó, com as fases."
+};
+const JOGOS = [
+  {r: "trilha", nome: "a Trilha da Vó", c: "trilha", ch: ["trilha", "fase", "caminho", "candy"]},
+  {r: "memoria", nome: "o jogo da memória", c: "memoria", ch: ["memoria", "cartas", " carta ", "baralho"]},
+  {r: "combina", nome: "o Combina 3", c: "combina", ch: ["combina", "figura", "banana", "tres iguais"]},
+  {r: "caca", nome: "o caça-palavras", c: "caca", ch: ["caca", "cacar"]},
+  {r: "letras", nome: "as letras embaralhadas", c: "letras", ch: ["embaralh"]},
+  {r: "ligue", nome: "o ligue o estado à capital", c: "ligue", ch: ["ligue", "ligar"]},
+  {r: "dia", nome: "as perguntas do dia", c: "quiz", ch: ["do dia"]},
+  {r: "quiz/vf", nome: "o verdade ou mentira", c: "quiz", ch: ["verdade", "mentira"]},
+  {r: "quiz/quem", nome: "o quem sou eu", c: "quiz", ch: ["quem sou eu", "adivinh"]},
+  {r: "mapa-br", nome: "o mapa do Brasil", c: "mapa", ch: ["mapa do brasil", "que estado"]},
+  {r: "mapa-sc", nome: "as cidades de Santa Catarina", c: "mapa", ch: ["cidade"]},
+  {r: "paises", nome: "o qual é o país", c: "mapa", ch: [" pais ", "paises", "formato"]},
+  {r: "familia", nome: "os caminhos da família", c: "familia", ch: ["familia", "historia", "vitorio", "acores", "italia", "belluno", "garcia", "schiochet"]}
+];
+const norm = s => " " + semAcento(s).toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim() + " ";
+
+function ajudaDaTela() {
+  const [nome, arg] = hashAtual().split("/"), tipo = {dia: "quiz", quiz: "quiz", "mapa-br": "mapa", "mapa-sc": "mapa", paises: "mapa"};
+  if (!nome) return "inicio";
+  if (nome === "fase") { const f = FASES[+arg - 1]; return f ? tipo[f.t] || f.t : "trilha"; }
+  return tipo[nome] || (COMO[nome] ? nome : "inicio");
+}
+function ondeEstou() {
+  const [nome, arg] = hashAtual().split("/");
+  const N = {dia: "nas perguntas do dia", quiz: "nas perguntas", "mapa-br": "no mapa do Brasil", "mapa-sc": "no mapa de Santa Catarina", paises: "no jogo do país",
+    ligue: "no ligue o estado à capital", letras: "nas letras embaralhadas", caca: "no caça-palavras", memoria: "no jogo da memória", combina: "no Combina 3",
+    trilha: "na Trilha da Vó", familia: "nos caminhos da família"};
+  return nome === "fase" ? `na fase ${arg} da Trilha da Vó` : N[nome] || "no atlas";
+}
+function achaCapital(t) {
+  for (const [lugar, cap] of [...Object.values(CAPITAIS).flat(), ...MEMORIA.paises.itens]) if (t.includes(norm(lugar))) return [lugar, cap];
+}
+
+// entende o que ela disse e devolve {fala, acoes}; devolve null quando já abriu o jogo pedido
+function entende(txt) {
+  const t = norm(txt), tem = (...ps) => ps.some(p => t.includes(p)), pal = (...ps) => ps.some(p => t.includes(" " + p + " "));
+  const tela = ajudaDaTela(), emCasa = !hashAtual().split("/")[0];
+  const leva = (r, nome) => ({t: `Abrir ${nome} ▶`, f: () => { fechaAjudante(); ir(r); }});
+  if (tem("obrigad", "brigad", "valeu")) return {fala: "De nada, vó! Quando precisar, é só tocar no microfone. 💛"};
+  if (pal("cola") || tem("resposta certa", "qual e a resposta", "qual a resposta", "me fala a resposta")) return {fala: "Essa eu não conto! 😄 Mas depois de responder aparece a explicação. E nas letras embaralhadas tem o botão Mostrar a resposta."};
+  const cap = tem("capital") && achaCapital(t);
+  if (cap) return {fala: `${cap[0]}? A capital é ${cap[1]}.`};
+  if (tem("letra", "enxerg", "nao vejo", "nao to vendo", "pequen") && !tem("embaralh")) {
+    if (tem("menor", "diminu", "normal")) return {fala: "Posso voltar a letra pro tamanho normal.", acoes: [{t: "Letra normal", f: () => { guarda.gravar("maior", false); aplicaLetra(); fechaAjudante(); rota(); }}]};
+    if (guarda.ler("maior", false)) return {fala: "A letra já está no tamanho maior. Se precisar mais, abra dois dedos na tela que ela aumenta."};
+    return {fala: "Posso deixar a letra maior agora mesmo.", acoes: [{t: "Aumentar a letra 🔍", f: () => { guarda.gravar("maior", true); aplicaLetra(); fechaAjudante(); rota(); }}]};
+  }
+  if (pal("som") || tem("barulh", "volume", "silencio", "musiquinha")) {
+    const ligado = guarda.ler("som", true);
+    return {fala: ligado ? "O som dos acertos está ligado. Quer desligar?" : "O som dos acertos está desligado. Quer ligar?",
+      acoes: [{t: ligado ? "Desligar o som 🔕" : "Ligar o som 🔔", f: () => { guarda.gravar("som", !ligado); fechaAjudante(); if (emCasa) inicio(); }}]};
+  }
+  if (tem("quem fez", "quem criou", "presente", "aniversario", "sabrina", "parabens")) return {fala: "Este atlas foi feito com muito carinho pela Sabrina, de presente de aniversário pra senhora. 💛"};
+  if (tela === "combina" && tem("acab", "perdi", "jogada")) return {fala: "Quando as jogadas acabam, toque em Ganhar mais 5 jogadas, ou em Começar de novo. Perder faz parte, é só brincar de novo!"};
+  const jogo = JOGOS.find(j => j.ch.some(c => t.includes(c)));
+  if (jogo) {
+    const querAbrir = tem("abr", "quero", "leva", "jogar", "ir pr", "vai pr", "entrar", "volt");
+    const perguntaComo = tem("como", "nao sei", "nao entend", "explica", "ensina", "o que e", "funciona");
+    if (querAbrir && !perguntaComo) { fechaAjudante(); ir(jogo.r); setTimeout(() => falar(`Abrindo ${jogo.nome}.`), 400); return null; }
+    return {fala: COMO[jogo.c], acoes: [leva(jogo.r, jogo.nome)]};
+  }
+  if (tem("cadeado", "tranc", "fechad", "bloque", "nao abre", "estrela")) return {fala: "As fases da trilha abrem uma de cada vez. Jogue a bolinha laranja que está pulando e a próxima abre. Quanto mais acertos, mais estrelinhas.", acoes: tela === "trilha" ? [] : [leva("trilha", "a Trilha da Vó")]};
+  if (tem("volt", "inicio", "comeco", "sair", "menu", "perdi", "onde estou", "onde eu to", "onde to", "principal")) {
+    if (emCasa) return {fala: "A senhora já está na tela inicial. É só tocar num jogo pra começar."};
+    return {fala: `Agora a senhora está ${ondeEstou()}. Pra voltar, toque no botão Voltar, lá em cima, do lado esquerdo.`,
+      acoes: [{t: "Me leva pro começo 🏠", f: () => { fechaAjudante(); ir(""); }}]};
+  }
+  if (tem("como", "nao sei", "nao entend", "explica", "ensina", "o que faco", "o que eu faco", "ajuda", "socorro", "dificil")) return {fala: COMO[tela]};
+  if (pal("oi", "ola") || tem("bom dia", "boa tarde", "boa noite")) return {fala: `${saudacao()}, vó Maria! Pode me perguntar como jogar, como voltar, ou pedir pra abrir um jogo.`};
+  if (tem("internet")) return {fala: "Depois da primeira vez, o atlas funciona até sem internet. Só pra me ouvir é que o celular precisa de internet."};
+  return {fala: "Desculpa, vó, essa eu não entendi. Tente falar de outro jeito, ou toque numa das dúvidas aqui embaixo."};
+}
+
+// ---------- o botão e a janelinha ----------
+document.body.insertAdjacentHTML("beforeend", `
+  <button class="fab" id="fab" aria-label="Ajuda por voz"><span>🎤</span><small>Ajuda</small></button>
+  <div class="ajudante" id="ajudante" hidden><div class="folha" role="dialog" aria-label="Ajudante">
+    <h2>Posso ajudar, vó? 😊</h2>
+    <p class="dica" id="aj-estado"></p>
+    ${Reconhece ? `<button class="mic" id="aj-mic" aria-label="Falar">🎤</button><div class="falado" id="aj-falado"></div>` : ""}
+    <div id="aj-resposta"></div>
+    <p class="dica">${Reconhece ? "Ou toque numa dúvida:" : "Toque numa dúvida:"}</p>
+    <div class="sugestoes">${SUGESTOES.map(s => `<button>${s}</button>`).join("")}</div>
+    <button class="leve" id="aj-fechar">Fechar</button>
+  </div></div>`);
+const $a = id => document.getElementById(id);
+let reconhecendo = null;
+
+function abreAjudante() {
+  calar();
+  $a("ajudante").hidden = false; $a("fab").hidden = true;
+  $a("aj-resposta").innerHTML = "";
+  if ($a("aj-falado")) $a("aj-falado").textContent = "";
+  $a("aj-estado").textContent = Reconhece ? "Toque no microfone e fale a sua dúvida." : "";
+  if (Reconhece) escuta();
+}
+function fechaAjudante() {
+  if (reconhecendo) { try { reconhecendo.abort(); } catch (e) {} reconhecendo = null; }
+  $a("ajudante").hidden = true; $a("fab").hidden = false;
+  if ($a("aj-mic")) $a("aj-mic").classList.remove("ouvindo");
+}
+function escuta() {
+  if (reconhecendo || !Reconhece) return;
+  calar();
+  const rec = new Reconhece(), mic = $a("aj-mic");
+  let final = "", erro = "";
+  rec.lang = "pt-BR"; rec.interimResults = true; rec.maxAlternatives = 1;
+  rec.onstart = () => { mic.classList.add("ouvindo"); $a("aj-estado").textContent = "Estou ouvindo… pode falar!"; };
+  rec.onresult = e => {
+    const txt = [...e.results].map(r => r[0].transcript).join(" ");
+    $a("aj-falado").textContent = "“" + txt + "”";
+    if (e.results[e.results.length - 1].isFinal) final = txt;
+  };
+  rec.onerror = e => { erro = e.error; };
+  rec.onend = () => {
+    reconhecendo = null; mic.classList.remove("ouvindo");
+    if (final) return mostraResposta(final);
+    if (erro === "aborted" || $a("aj-resposta").innerHTML) return;
+    $a("aj-estado").textContent = erro === "not-allowed" || erro === "service-not-allowed" ? "O celular não deixou usar o microfone. Peça pra Sabrina liberar o microfone pro atlas."
+      : erro === "network" ? "Pra me ouvir, o celular precisa de internet. Mas dá pra tocar numa dúvida aqui embaixo."
+      : "Não consegui ouvir. Toque no microfone e fale pertinho do celular.";
+  };
+  reconhecendo = rec;
+  try { rec.start(); } catch (e) { reconhecendo = null; }
+}
+function mostraResposta(txt) {
+  const r = entende(txt);
+  if (!r) return;
+  const caixa = $a("aj-resposta"), acoes = r.acoes || [];
+  $a("aj-estado").textContent = "";
+  caixa.innerHTML = `<div class="fala-ia">${esc(r.fala)}</div>` + acoes.map((a, i) => `<button class="seguir azul" data-a="${i}">${esc(a.t)}</button>`).join("")
+    + (Reconhece ? `<button class="leve" id="aj-denovo">🎤 Perguntar outra coisa</button>` : "");
+  acoes.forEach((a, i) => caixa.querySelector(`[data-a="${i}"]`).onclick = a.f);
+  const d = $a("aj-denovo");
+  if (d) d.onclick = () => { caixa.innerHTML = ""; $a("aj-falado").textContent = ""; escuta(); };
+  falar(r.fala.replace(/[\u{1F300}-\u{1FAFF}☀-➿]/gu, ""));
+}
+
+$a("fab").onclick = abreAjudante;
+$a("aj-fechar").onclick = () => { calar(); fechaAjudante(); };
+$a("ajudante").onclick = e => { if (e.target.id === "ajudante") { calar(); fechaAjudante(); } };
+if ($a("aj-mic")) $a("aj-mic").onclick = escuta;
+document.querySelectorAll(".sugestoes button").forEach(b => b.onclick = () => {
+  if (reconhecendo) { try { reconhecendo.abort(); } catch (e) {} }
+  if ($a("aj-falado")) $a("aj-falado").textContent = "“" + b.textContent + "”";
+  mostraResposta(b.textContent);
+});
+window.addEventListener("hashchange", () => { if (!$a("ajudante").hidden) fechaAjudante(); });
 
 // ====== O Atlas da Vó Maria: os caminhos da família ======
 document.head.insertAdjacentHTML("beforeend", `<style>
