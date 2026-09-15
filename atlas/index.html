@@ -33,7 +33,7 @@ h1,h2,h3{font-family:"Lora",Georgia,serif;font-weight:700;margin:0;line-height:1
 .capa{text-align:center;padding-block:22px 6px}
 .capa .sobre{font-size:.8em;letter-spacing:.12em;text-transform:uppercase;color:var(--terracota);font-weight:900}
 .capa h1{font-size:2.05em;margin-top:6px}
-.capa svg{width:min(78%,300px);height:auto;margin:14px auto 4px;display:block}
+.capa svg{width:min(42%,160px);height:auto;margin:10px auto 0;display:block}
 .recado{background:var(--cartao);border:3px solid var(--dourado);border-radius:22px;padding:18px 20px;margin:14px 0 22px;text-align:center}
 .recado h2{font-size:1.3em;color:var(--terracota);margin-bottom:6px}
 .recado p{margin:.3em 0}
@@ -108,21 +108,28 @@ h1,h2,h3{font-family:"Lora",Georgia,serif;font-weight:700;margin:0;line-height:1
 @keyframes entra{from{transform:translate(-50%,-14px);opacity:0}}
 .chip{display:inline-block;background:#FFE7A8;color:#6B4A0E;border-radius:999px;padding:4px 14px;font-size:.85em;margin-top:8px}
 /* trilha */
-.heroi{display:block;width:100%;text-align:left;border:0;border-radius:24px;padding:18px 20px 20px;margin:4px 0 6px;color:#fff;background:linear-gradient(135deg,#467F35,#2A6690);box-shadow:0 6px 0 #1F4F6E}
-.heroi:active{transform:translateY(3px);box-shadow:0 3px 0 #1F4F6E}
-.heroi b{display:block;font-family:"Lora",Georgia,serif;font-size:1.35em}
+.heroi{position:relative;overflow:hidden;display:block;width:100%;text-align:left;border:0;border-radius:26px;padding:20px 20px 22px;margin:8px 0 10px;color:#fff;background:linear-gradient(135deg,#3F8A3A 0%,#2A6690 100%);box-shadow:0 7px 0 #1F4F6E,0 14px 28px rgba(42,102,144,.35)}
+.heroi:active{transform:translateY(4px);box-shadow:0 3px 0 #1F4F6E}
+.heroi b{display:block;font-family:"Lora",Georgia,serif;font-size:1.55em}
 .heroi small{display:block;opacity:.95}
-.heroi .jogar{display:inline-block;margin-top:12px;background:#FFD34D;color:#4A3200;border-radius:999px;padding:10px 22px;font-weight:900;box-shadow:0 4px 0 #C99A12}
+.heroi .jogar{display:block;text-align:center;margin-top:8px;background:#FFD34D;color:#4A3200;border-radius:999px;padding:14px 22px;font-weight:900;font-size:1.15em;box-shadow:0 5px 0 #C99A12}
+.mini-trilha{display:block;width:100%;height:auto;margin:8px 0 2px}
+.mini-atual{transform-box:fill-box;transform-origin:center;animation:pulsa 1.2s ease-in-out infinite}
+.brilho{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.3),transparent);animation:brilha 3.4s ease-in-out infinite;pointer-events:none}
+@keyframes brilha{0%{left:-60%}55%,100%{left:130%}}
+.recado.com-mapa{display:flex;gap:14px;align-items:center;text-align:left}
+.recado.com-mapa svg{flex:none;width:88px;height:auto}
+.recado.com-mapa h2{font-size:1.15em}
 .trilha{position:relative;margin-inline:-16px;overflow:hidden}
 .trilha svg{position:absolute;inset:0;width:100%;height:100%}
-.no{position:absolute;width:74px;height:74px;margin:-37px 0 0 -37px;border-radius:50%;border:5px solid #fff;font-size:1.2em;font-weight:900;color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.2);display:grid;place-items:center;padding:0}
+.no{position:absolute;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;border:6px solid #fff;font-size:1.4em;font-weight:900;color:#fff;box-shadow:0 6px 0 rgba(0,0,0,.22);display:grid;place-items:center;padding:0}
 .no.fechada{background:#BDB6AA;color:#F4F1EA}
 .no.feita{background:var(--verde)}
-.no.atual{background:var(--terracota);animation:pulsa 1.2s ease-in-out infinite}
+.no.atual{background:var(--terracota);animation:pulsa 1.2s ease-in-out infinite;box-shadow:0 0 0 10px rgba(180,83,44,.28),0 6px 0 rgba(0,0,0,.22)}
 @keyframes pulsa{50%{transform:scale(1.13)}}
-.no .est{position:absolute;top:70px;left:50%;transform:translateX(-50%);font-size:.6em;white-space:nowrap;letter-spacing:-.08em}
-.mundo{position:absolute;left:16px;right:16px;text-align:center;font-family:"Lora",Georgia,serif;background:rgba(255,253,248,.94);border-radius:16px;padding:6px 10px;border:2px solid var(--linha)}
-.enfeite{position:absolute;font-size:1.6em;opacity:.6;transform:translate(-50%,-50%)}
+.no .est{position:absolute;top:80px;left:50%;transform:translateX(-50%);font-size:.62em;white-space:nowrap;letter-spacing:-.08em}
+.mundo{position:absolute;left:16px;right:16px;text-align:center;font-family:"Lora",Georgia,serif;font-size:1.1em;background:#FFFDF8;border-radius:18px;padding:8px 10px;border:3px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.enfeite{position:absolute;font-size:2.1em;opacity:.85;transform:translate(-50%,-50%)}
 .voce{position:absolute;transform:translate(-50%,-128%);font-size:1.5em;animation:pulinho 1s ease-in-out infinite;pointer-events:none}
 @keyframes pulinho{50%{margin-top:-8px}}
 .completa .estrelas span{display:inline-block;animation:estrela .55s cubic-bezier(.3,1.6,.5,1) both}
@@ -156,7 +163,7 @@ h1,h2,h3{font-family:"Lora",Georgia,serif;font-weight:700;margin:0;line-height:1
 .peca3.nao{animation:balanca .3s}
 /* ajudante de voz */
 [hidden]{display:none!important}
-.fab{position:fixed;right:14px;bottom:18px;z-index:30;width:84px;height:84px;border-radius:50%;border:4px solid #fff;background:var(--azul);color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;line-height:1}
+.fab{position:fixed;right:12px;bottom:16px;z-index:30;width:74px;height:74px;border-radius:50%;border:4px solid #fff;background:var(--azul);color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;line-height:1}
 .fab span{font-size:1.55em}
 .fab small{font-size:13px;font-weight:900;margin-top:3px}
 .ajudante{position:fixed;inset:0;z-index:60;background:rgba(43,54,64,.5);display:flex;align-items:flex-end}
@@ -427,11 +434,13 @@ function inicio() {
   const maior = guarda.ler("maior", false), comSom = guarda.ler("som", true);
   const cacasFeitas = CACAS.filter((c, i) => guarda.ler("caca-" + i, false)).length;
   app.innerHTML = `
-  <div class="capa"><div class="sobre">Passatempos de mapas</div><h1>O Atlas da<br>Vó Maria</h1>${svgCapa()}</div>
-  ${festa
-    ? `<div class="recado"><h2>Feliz aniversário, vó! 🎂</h2><p>Este atlas é o seu presente: pra viajar pelo mapa sem sair de casa, no seu tempo.</p><p class="assina">Com carinho, Sabrina</p>${chipDias()}</div>`
-    : `<div class="recado"><h2>${saudacao()}, vó Maria!</h2><p>Que tal uma viagem pelo mapa hoje?</p>${chipDias()}</div>`}
-  ${heroiTrilha()}
+  <div class="capa"><div class="sobre">Passatempos de mapas</div><h1>O Atlas da Vó Maria</h1>${svgCapa()}</div>
+  ${(() => {
+    const recado = festa
+      ? `<div class="recado"><h2>Feliz aniversário, vó! 🎂</h2><p>Este atlas é o seu presente: pra viajar pelo mapa sem sair de casa, no seu tempo.</p><p class="assina">Com carinho, Sabrina</p>${chipDias()}</div>`
+      : `<div class="recado"><h2>${saudacao()}, vó Maria!</h2><p>Que tal uma viagem pelo mapa hoje?</p>${chipDias()}</div>`;
+    return festa ? recado + heroiTrilha() : heroiTrilha() + recado;
+  })()}
   <div class="secao">Hoje</div>
   ${bloco("dia", "☀️", "#FFE7A8", "As 3 perguntas do dia", "Todo dia mudam sozinhas", guarda.ler(chaveHoje(), false), "destaque")}
   <div class="secao">Perguntas</div>
@@ -913,9 +922,9 @@ ROTAS.combina = () => jogoCombina();
 
 // ====== A Trilha da Vó: fases no estilo Candy Crush ======
 const MUNDOS = [
-  {t: "Santa Catarina", ic: "🌊", cor: "#DDEFD4", enfeites: ["🌲", "🍌", "🌊", "⛰️", "🐚", "🌻"]},
-  {t: "Brasil", ic: "🦜", cor: "#FFF0C6", enfeites: ["🦜", "🌴", "☀️", "🌵", "🏖️", "🐢"]},
-  {t: "O mundo", ic: "🌍", cor: "#DCE9F5", enfeites: ["🗼", "🏰", "🗻", "✈️", "🚢", "🌍"]}
+  {t: "Santa Catarina", ic: "🌊", cor: "#CBE6BE", enfeites: ["🌲", "🍌", "🌊", "⛰️", "🐚", "🌻"]},
+  {t: "Brasil", ic: "🦜", cor: "#FFE3A0", enfeites: ["🦜", "🌴", "☀️", "🌵", "🏖️", "🐢"]},
+  {t: "O mundo", ic: "🌍", cor: "#C9DEF2", enfeites: ["🗼", "🏰", "🗻", "✈️", "🚢", "🌍"]}
 ];
 const FASES = [
   {t: "quiz", cat: "sc", n: 5}, {t: "memoria", set: "natureza", pares: 6}, {t: "caca", i: 0},
@@ -938,7 +947,20 @@ function heroiTrilha() {
   const p = progresso(), n = faseLiberada(), tudo = !!p[FASES.length];
   const sub = tudo ? `Trilha completa! ⭐ ${totalEstrelas()} estrelas` : `Fase ${n} de ${FASES.length} · ⭐ ${totalEstrelas()} estrelas`;
   const botao = tudo ? "Ver a trilha ▶" : n === 1 ? "Começar a viagem ▶" : `Jogar a fase ${n} ▶`;
-  return `<button class="heroi" onclick="ir('trilha')"><b>🗺️ A Trilha da Vó</b><small>${sub}</small><span class="jogar">${botao}</span></button>`;
+  // um pedacinho da trilha: 5 bolinhas em volta da fase atual
+  const ini = Math.max(1, Math.min(n - 2, FASES.length - 4)), bolas = [0, 1, 2, 3, 4].map(k => ini + k);
+  const pos = bolas.map((i, k) => [30 + k * 60, 54 + (k % 2 ? -20 : 20)]);
+  const estrada = curva(pos);
+  const nos = bolas.map((i, k) => {
+    const [x, y] = pos[k], est = p[i] || 0, atual = i === n && !tudo, cor = est ? "#467F35" : atual ? "#B4532C" : "#BDB6AA";
+    return `<g class="${atual ? "mini-atual" : ""}"><circle cx="${x}" cy="${y}" r="${atual ? 22 : 17}" fill="${cor}" stroke="#fff" stroke-width="4"/>
+      <text x="${x}" y="${y + 6}" text-anchor="middle" font-size="${atual ? 19 : 15}" font-weight="900" fill="#fff" font-family="Nunito,sans-serif">${i}</text></g>
+      ${est ? `<text x="${x}" y="${y + 34}" text-anchor="middle" font-size="10">${"⭐".repeat(est)}</text>` : ""}`;
+  }).join("");
+  return `<button class="heroi" onclick="ir('trilha')"><span class="brilho"></span><b>🗺️ A Trilha da Vó</b><small>${sub}</small>
+    <svg class="mini-trilha" viewBox="0 0 300 112" aria-hidden="true"><path d="${estrada}" fill="none" stroke="#FFF3D6" stroke-width="18" stroke-linecap="round" opacity=".95"/>
+    <path d="${estrada}" fill="none" stroke="#C28F4A" stroke-width="3.5" stroke-dasharray="2 9" stroke-linecap="round"/>${nos}</svg>
+    <span class="jogar">${botao}</span></button>`;
 }
 
 const PASSO = 125, VAO_MUNDO = 95;
@@ -971,8 +993,9 @@ ROTAS.trilha = () => {
   app.innerHTML = topo("A Trilha da Vó") + `<p class="ajuda">⭐ ${totalEstrelas()} de ${N * 3} estrelas. Toque na fase que está pulando!</p>
     <div class="trilha" style="height:${H}px">${faixas}
       <svg viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true">
-        <path d="${caminho}" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round" opacity=".85" vector-effect="non-scaling-stroke"/>
-        <path d="${caminho}" fill="none" stroke="#D2BF97" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <path d="${caminho}" fill="none" stroke="#A98752" stroke-width="44" stroke-linecap="round" opacity=".35" vector-effect="non-scaling-stroke"/>
+        <path d="${caminho}" fill="none" stroke="#FFF6E0" stroke-width="34" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <path d="${caminho}" fill="none" stroke="#C28F4A" stroke-width="7" stroke-dasharray="3 17" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
       </svg>${enfeites}${faixasTitulo}${nos}${voce}</div>`;
   requestAnimationFrame(() => {
     const alvo = app.querySelector(".no.atual") || app.querySelectorAll(".no.feita")[N - 1];
