@@ -1384,7 +1384,7 @@ ROTAS.caderneta = async arg => {
   if (location.hash !== minha) return;
   if (!u) return telaLogin();
   try {
-    [CAD.perfil, CAD.registros, CAD.exames] = await Promise.all([lerPerfil(), lerRegistros(), lerExames()]);
+    [CAD.perfil, CAD.registros, CAD.exames, CAD.gastos] = await Promise.all([lerPerfil(), lerRegistros(), lerExames(), lerGastos()]);
   } catch (e) {
     return cadAviso("📶", navigator.onLine ? "Não consegui abrir a caderneta agora. Tente de novo daqui a pouquinho." : "Parece que o celular está sem internet.");
   }
@@ -1395,6 +1395,9 @@ ROTAS.caderneta = async arg => {
   if (arg === "exames") return telaExames();
   if (arg === "exame-novo") return telaNovoExame();
   if (arg && arg.startsWith("exame-")) return telaVerExame(arg.slice(6));
+  if (arg === "gasto-novo") return telaGastoForm({});
+  if (arg && arg.startsWith("gastos")) return telaGastos(arg.slice(7));
+  if (arg && arg.startsWith("gasto-")) { const g = CAD.gastos.find(x => x.id === arg.slice(6)); return g ? telaGastoForm(g) : telaGastos(); }
   if (arg === "lista") return telaLista();
   if (arg === "dicas") return telaDicas();
   if (arg === "condicoes") return telaCondicoes(false);
@@ -1441,6 +1444,7 @@ function telaCadInicio() {
     ${bloco("caderneta/dicas", "💡", "#FFE7A8", "Dicas de saúde pra vó", "Do jeito que a médica recomenda")}
     ${bloco("caderneta/lista", "📋", "#D6E8F1", "Tudo o que já foi anotado", regs.length ? `${regs.length} ${regs.length > 1 ? "anotações" : "anotação"} · a última em ${dataBonita(ult.data)}` : "Ainda nada anotado")}
     ${bloco("caderneta/exames", "🧪", "#DCEFD3", "Exames", CAD.exames.length ? `${CAD.exames.length} ${CAD.exames.length > 1 ? "guardados" : "guardado"}` : "Guarde fotos e PDFs dos exames")}
+    ${bloco("caderneta/gastos", "💰", "#F6E3B4", "Gastos da vó", resumoGastos())}
     ${bloco("caderneta/condicoes", "🩺", "#FBE0D2", "O que a vó tem", "Escreva do seu jeito pra ajustar as dicas")}
     <div class="ajustes"><button id="cad-sair">Sair da caderneta</button></div>`;
   porId("cad-sair").onclick = async () => {
@@ -1730,6 +1734,120 @@ function telaFormulario(r) {
     await guardarComCalma(pronto);
     acertou();
     location.replace("#caderneta");
+  };
+}
+
+// ====== Gastos da vó (modelo de 15/09/2026, pedido da Sabrina: "pra eu ver como fica, qualquer coisa excluímos") ======
+// Mora na mesma nuvem protegida da caderneta (cadernetas/vo-maria/gastos), atrás do login da família.
+// Pra tirar tudo: apagar este arquivo, tirar o nome dele do MONTAR-ATLAS.py e as linhas de "gasto" em caderneta-telas.js.
+const CATEGORIAS_GASTO = {
+  remedio: {t: "Remédios", ic: "💊"},
+  saude: {t: "Consultas e exames", ic: "🩺"},
+  mercado: {t: "Mercado", ic: "🛒"},
+  casa: {t: "Casa e contas", ic: "🏠"},
+  transporte: {t: "Transporte", ic: "🚕"},
+  outros: {t: "Outros", ic: "📦"}
+};
+// quando ninguém escolhe o tipo, adivinha pelo que foi escrito (palavras já sem acento; a ordem importa)
+const PALAVRAS_GASTO = [
+  ["remedio", /remedio|farmacia|drogaria|vitamina|pomada|medicamento/],
+  ["saude", /consulta|exame|medic|doutor|dentista|laboratorio|fisio|plano de saude|hospital|clinica/],
+  ["mercado", /mercado|padaria|feira|acougue|fruta|comida/],
+  ["casa", /\bluz\b|energia|\bagua\b|internet|telefone|celular|aluguel|condominio|\bgas\b|iptu/],
+  ["transporte", /uber|taxi|onibus|gasolina|combustivel|passagem|carro/]
+];
+function categoriaDoTexto(t) {
+  const n = String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return (PALAVRAS_GASTO.find(([, r]) => r.test(n)) || ["outros"])[0];
+}
+// "45,90" · "R$ 1.234,50" · "45.90" · "45 reais" → número
+function valorDoTexto(t) {
+  const s = String(t || "").replace(/[^\d.,]/g, " ").trim().split(/\s+/)[0] || "";
+  const br = s.includes(",") ? s.replace(/\./g, "").replace(",", ".") : /\.\d{1,2}$/.test(s) ? s : s.replace(/\./g, "");
+  return Math.round((parseFloat(br) || 0) * 100) / 100;
+}
+const emReais = v => (Number(v) || 0).toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
+const somaGastos = lista => lista.reduce((s, g) => s + (Number(g.valor) || 0), 0);
+const gastosDoMes = mes => (CAD.gastos || []).filter(g => (g.data || "").startsWith(mes));
+
+async function lerGastos() {
+  const {fs, db} = await carregaFirebase();
+  const s = await fs.getDocs(fs.query(fs.collection(db, "cadernetas", CADERNETA, "gastos"), fs.orderBy("data", "desc")));
+  return s.docs.map(d => ({id: d.id, ...d.data()}));
+}
+async function salvarGasto(g) {
+  const {fs, db} = await carregaFirebase();
+  const {id, ...dados} = g;
+  const col = fs.collection(db, "cadernetas", CADERNETA, "gastos");
+  const ref = id ? fs.doc(col, id) : fs.doc(col);
+  return {id: ref.id, pronto: fs.setDoc(ref, {...dados, [id ? "atualizadoEm" : "criadoEm"]: fs.serverTimestamp()}, {merge: true})};
+}
+async function apagarGasto(id) {
+  const {fs, db} = await carregaFirebase();
+  return fs.deleteDoc(fs.doc(db, "cadernetas", CADERNETA, "gastos", id));
+}
+
+// o subtítulo do quadrinho na tela inicial da caderneta
+function resumoGastos() {
+  const v = somaGastos(gastosDoMes(isoDe(new Date()).slice(0, 7)));
+  return v ? `Este mês: ${emReais(v)}` : "Remédios, consultas, mercado…";
+}
+
+function telaGastos(mes) {
+  const agora = isoDe(new Date()).slice(0, 7);
+  if (!/^\d{4}-\d{2}$/.test(mes || "")) mes = agora;
+  const [a, m] = mes.split("-").map(Number);
+  const outro = k => { const d = new Date(a, m - 1 + k, 1); return {chave: `${d.getFullYear()}-${z2(d.getMonth() + 1)}`, nome: MESES_BONITOS[d.getMonth()]}; };
+  const antes = outro(-1), depois = outro(1), doMes = gastosDoMes(mes);
+  const catDe = g => CATEGORIAS_GASTO[g.categoria] ? g.categoria : "outros";
+  const porTipo = Object.entries(CATEGORIAS_GASTO).map(([k, c]) => ({c, v: somaGastos(doMes.filter(g => catDe(g) === k))})).filter(x => x.v > 0).sort((x, y) => y.v - x.v);
+  app.innerHTML = topo("Gastos da vó", "caderneta") + `
+    <div class="recado"><h2>💰 ${MESES_BONITOS[m - 1]} de ${a}</h2>
+      <p style="font-size:1.9em;font-weight:900;margin:.1em 0">${emReais(somaGastos(doMes))}</p>
+      <p class="dica">${doMes.length ? `${doMes.length} ${doMes.length > 1 ? "gastos anotados" : "gasto anotado"}` : "Nenhum gasto anotado neste mês"}</p></div>
+    <button class="seguir" onclick="ir('caderneta/gasto-novo')">➕ Anotar um gasto</button>
+    <div class="lado-a-lado">
+      <button class="leve" onclick="location.replace('#caderneta/gastos-${antes.chave}')">◀ ${antes.nome}</button>
+      ${mes < agora ? `<button class="leve" onclick="location.replace('#caderneta/gastos-${depois.chave}')">${depois.nome} ▶</button>` : ""}</div>
+    ${porTipo.length ? `<h3 class="cad-h">Por tipo</h3>` + porTipo.map(({c, v}) => `<div class="dica-card" style="display:flex;justify-content:space-between;gap:10px"><p>${c.ic} ${c.t}</p><p><b>${emReais(v)}</b></p></div>`).join("") : ""}
+    ${doMes.length ? `<h3 class="cad-h">Tudo o que foi gasto</h3>` + doMes.map(g => { const c = CATEGORIAS_GASTO[catDe(g)]; return `<button class="bloco" style="margin-top:10px" onclick="ir('caderneta/gasto-${g.id}')">
+      <span class="ic" style="background:#F6E3B4">${c.ic}</span><span><b>${esc(g.oque || c.t)}</b><small>${esc(dataBonita(g.data))}${g.quem ? ` · pagou ${esc(g.quem)}` : ""}</small></span>
+      <b class="feito" style="color:var(--tinta)">${emReais(g.valor)}</b></button>`; }).join("") : ""}`;
+}
+
+function telaGastoForm(g) {
+  let escolhida = CATEGORIAS_GASTO[g.categoria] ? g.categoria : "";
+  app.innerHTML = topo(g.id ? "Corrigir gasto" : "Anotar um gasto", g.id ? `caderneta/gastos-${(g.data || "").slice(0, 7)}` : "caderneta/gastos") + `
+    <label class="campo">Quanto foi? (R$)<input id="g-valor" inputmode="decimal" placeholder="Ex.: 45,90" value="${g.valor ? Number(g.valor).toFixed(2).replace(".", ",") : ""}"></label>
+    ${campoVoz("g-oque", "O que foi? (ex.: remédio do estômago na farmácia)", g.oque)}
+    <p class="campo" style="margin-bottom:6px">Tipo de gasto <small>(se não escolher, a caderneta adivinha pelo que foi escrito)</small></p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${Object.entries(CATEGORIAS_GASTO).map(([k, c]) => `<button type="button" class="opcao g-cat" style="min-height:58px;text-align:center" data-cat="${k}">${c.ic} ${c.t}</button>`).join("")}</div>
+    <label class="campo">Data<input type="date" id="g-data" value="${esc(g.data || isoDe(new Date()))}"></label>
+    ${campoVoz("g-quem", "Quem pagou (se quiser anotar)", g.id ? g.quem : guarda.ler("gasto-quem", ""))}
+    <button class="seguir" id="g-guardar">💾 Guardar gasto</button>
+    ${g.id ? `<button class="leve apagar" id="g-apagar">Apagar este gasto</button>` : ""}`;
+  ligaMicrofones();
+  const marca = () => app.querySelectorAll(".g-cat").forEach(b => b.classList.toggle("certo", b.dataset.cat === escolhida));
+  app.querySelectorAll(".g-cat").forEach(b => b.onclick = () => { escolhida = escolhida === b.dataset.cat ? "" : b.dataset.cat; marca(); });
+  marca();
+  const vaiProMes = d => location.replace(`#caderneta/gastos-${(d || isoDe(new Date())).slice(0, 7)}`);
+  porId("g-guardar").onclick = async () => {
+    const oque = porId("g-oque").value.trim();
+    const valor = valorDoTexto(porId("g-valor").value) || (/r\$|\breais?\b/i.test(oque) ? valorDoTexto(oque) : 0);
+    if (!valor) return aviso("Escreva quanto foi 🙂");
+    const dados = {valor, oque, categoria: escolhida || categoriaDoTexto(oque), data: porId("g-data").value || isoDe(new Date()), quem: porId("g-quem").value.trim()};
+    guarda.gravar("gasto-quem", dados.quem);
+    const b = porId("g-guardar");
+    b.disabled = true;
+    const {pronto} = await salvarGasto({id: g.id, ...dados});
+    if (await guardarComCalma(pronto, "Gasto guardado ✔") === "erro") { b.disabled = false; return; }
+    vaiProMes(dados.data);
+  };
+  const apagar = porId("g-apagar");
+  if (apagar) apagar.onclick = async () => {
+    if (!confirm("Apagar este gasto? Não dá pra desfazer.")) return;
+    if (await guardarComCalma(apagarGasto(g.id), "Gasto apagado.") === "erro") return;
+    vaiProMes(g.data);
   };
 }
 
