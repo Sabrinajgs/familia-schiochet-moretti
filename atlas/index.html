@@ -176,6 +176,26 @@ h1,h2,h3{font-family:"Lora",Georgia,serif;font-weight:700;margin:0;line-height:1
 .fala-ia{background:var(--cartao);border:3px solid var(--azul);border-radius:18px;padding:14px 16px;margin:6px 0 10px;font-size:1.05em}
 .sugestoes{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:6px 0 4px}
 .sugestoes button{border:2px solid var(--borda);background:var(--cartao);border-radius:999px;padding:10px 14px;font-weight:800;font-size:.82em}
+/* caderneta de saúde */
+.campo{display:block;margin:14px 0;font-size:.88em;color:var(--suave)}
+.campo input,.campo textarea,.campo select{display:block;width:100%;margin-top:6px;font:inherit;font-size:1.08em;color:var(--tinta);background:var(--cartao);border:3px solid var(--borda);border-radius:14px;padding:12px}
+.campo textarea{resize:vertical;line-height:1.35}
+.com-mic{display:flex;gap:8px;align-items:flex-start}
+.com-mic input,.com-mic textarea{flex:1;min-width:0}
+.mic-campo{flex:none;width:58px;height:58px;margin-top:6px;border-radius:14px;border:0;background:var(--terracota);color:#fff;font-size:1.4em;padding:0}
+.mic-campo.ouvindo{background:var(--verde);animation:pulsa 1s ease-in-out infinite}
+.dica-card{background:var(--cartao);border:2px solid var(--linha);border-radius:16px;padding:12px 16px;margin:8px 0}
+.dica-card p{margin:0}
+.dica-card small{display:block;color:var(--suave);margin-top:4px;font-size:.8em}
+.dica-card.forte{border:3px solid var(--azul)}
+.aviso-medico{background:#FFF1D6;border-color:#E8C77A;color:#6B4A0E;font-size:.9em}
+.cad-h{font-size:1.15em;margin:22px 0 6px}
+.cad-ul{margin:4px 0 10px;padding-left:1.3em}
+.cad-ul li{margin:4px 0}
+.marca{cursor:pointer}
+.marca input{width:30px;height:30px;flex:none;accent-color:var(--verde);margin:0}
+.cad-original summary{color:var(--suave);margin:14px 0 6px;cursor:pointer}
+.apagar{color:var(--errado)}
 </style>
 </head>
 <body>
@@ -460,6 +480,7 @@ function inicio() {
   ${bloco("ligue", "🔗", "#E4E0F3", "Ligue o estado à capital", "Por região do Brasil")}
   ${bloco("letras", "🔤", "#FFE7A8", "Letras embaralhadas", "Monte o nome certinho")}
   ${bloco("caca", "🔎", "#DCEFD3", "Caça-palavras", cacasFeitas ? `${cacasFeitas} de ${CACAS.length} cartelas feitas` : `${CACAS.length} cartelas`)}
+  ${FIREBASE_CONFIG ? `<div class="secao">A saúde da vó</div>${bloco("caderneta", "🩺", "#FBE0D2", "Caderneta de saúde", "Só da família, com senha")}` : ""}
   <div class="secao">A nossa família</div>
   ${bloco("familia", "❤️", "#FBE0D2", "Os caminhos da família", "Dos Açores e da Itália até aqui")}
   <div class="ajustes">
@@ -1037,6 +1058,462 @@ function telaFase(n, est) {
     ${est < 3 ? `<button class="leve" onclick="rota()">Jogar a fase ${n} de novo</button>` : ""}</div>`;
 }
 
+// ====== Caderneta de saúde: nuvem da família, organizador da fala e dicas ======
+// ⚠️ Nada da saúde da vó fica neste código (a página é aberta). Tudo mora na nuvem, atrás do login da família.
+const FIREBASE_CONFIG = {"apiKey": "AIzaSyCI15EVuW4tnxmCguJtgdhHKbwbRF67Pg4", "authDomain": "caderneta-vo-maria.firebaseapp.com", "projectId": "caderneta-vo-maria", "storageBucket": "caderneta-vo-maria.firebasestorage.app", "messagingSenderId": "233684207014", "appId": "1:233684207014:web:e6244c6ef314ac09693b67"};
+const FB_VER = "12.4.0";
+const CADERNETA = "vo-maria";
+let fb = null;
+
+async function carregaFirebase() {
+  if (fb) return fb;
+  const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
+  const [app, auth, fs] = await Promise.all([import(base + "firebase-app.js"), import(base + "firebase-auth.js"), import(base + "firebase-firestore.js")]);
+  const aplicativo = app.initializeApp(FIREBASE_CONFIG);
+  let db;
+  try { db = fs.initializeFirestore(aplicativo, {localCache: fs.persistentLocalCache({tabManager: fs.persistentMultipleTabManager()})}); }
+  catch (e) { db = fs.getFirestore(aplicativo); }
+  fb = {auth, fs, a: auth.getAuth(aplicativo), db};
+  return fb;
+}
+async function usuarioAtual() {
+  const {auth, a} = await carregaFirebase();
+  return new Promise(ok => { const para = auth.onAuthStateChanged(a, u => { para(); ok(u); }); });
+}
+async function entrar(email, senha) { const {auth, a} = await carregaFirebase(); return auth.signInWithEmailAndPassword(a, email.trim(), senha); }
+async function sair() { const {auth, a} = await carregaFirebase(); return auth.signOut(a); }
+async function lerPerfil() {
+  const {fs, db} = await carregaFirebase();
+  const s = await fs.getDoc(fs.doc(db, "cadernetas", CADERNETA));
+  return s.exists() ? s.data() : null;
+}
+async function salvarPerfil(dados) {
+  const {fs, db} = await carregaFirebase();
+  return fs.setDoc(fs.doc(db, "cadernetas", CADERNETA), {...dados, atualizadoEm: fs.serverTimestamp()}, {merge: true});
+}
+async function lerRegistros() {
+  const {fs, db} = await carregaFirebase();
+  const s = await fs.getDocs(fs.query(fs.collection(db, "cadernetas", CADERNETA, "registros"), fs.orderBy("data", "desc")));
+  return s.docs.map(d => ({id: d.id, ...d.data()}));
+}
+async function salvarRegistro(r) {
+  const {fs, db} = await carregaFirebase();
+  const {id, ...dados} = r;
+  const col = fs.collection(db, "cadernetas", CADERNETA, "registros");
+  if (id) return fs.setDoc(fs.doc(col, id), {...dados, atualizadoEm: fs.serverTimestamp()}, {merge: true});
+  return fs.addDoc(col, {...dados, criadoEm: fs.serverTimestamp()});
+}
+async function apagarRegistro(id) {
+  const {fs, db} = await carregaFirebase();
+  return fs.deleteDoc(fs.doc(db, "cadernetas", CADERNETA, "registros", id));
+}
+
+// ---------- datas ----------
+const MESES = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+const MESES_BONITOS = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+const z2 = n => String(n).padStart(2, "0");
+const isoDe = d => `${d.getFullYear()}-${z2(d.getMonth() + 1)}-${z2(d.getDate())}`;
+function dataBonita(iso) {
+  if (!iso) return "";
+  const [a, m, d] = iso.split("-").map(Number);
+  return `${d} de ${MESES_BONITOS[m - 1]} de ${a}`;
+}
+const baseMinuscula = s => s.split("").map(c => c.normalize("NFD")[0].toLowerCase()).join("");
+const NUMEROS = {um: 1, uma: 1, dois: 2, duas: 2, tres: 3, quatro: 4, cinco: 5, seis: 6, oito: 8, dez: 10, doze: 12, quinze: 15, trinta: 30};
+const numero = t => /^\d+$/.test(t) ? +t : NUMEROS[t] || 0;
+
+function achaData(n, base = new Date()) {
+  let m;
+  const menos = k => { const d = new Date(base); d.setDate(d.getDate() - k); return isoDe(d); };
+  if (/\banteontem\b/.test(n)) return menos(2);
+  if (/\bontem\b/.test(n)) return menos(1);
+  if ((m = n.match(/\b(\d{1,2})\s*\/\s*(\d{1,2})(?:\s*\/\s*(\d{2,4}))?\b/))) {
+    const ano = m[3] ? (m[3].length === 2 ? 2000 + +m[3] : +m[3]) : base.getFullYear();
+    return `${ano}-${z2(m[2])}-${z2(m[1])}`;
+  }
+  if ((m = n.match(new RegExp(`\\bdia\\s+(\\d{1,2}|primeiro)(?:\\s+de\\s+(${MESES.join("|")}))?`)))) {
+    const dia = m[1] === "primeiro" ? 1 : +m[1], mes = m[2] ? MESES.indexOf(m[2]) + 1 : base.getMonth() + 1;
+    return `${base.getFullYear()}-${z2(mes)}-${z2(dia)}`;
+  }
+  if (/\bhoje\b/.test(n)) return isoDe(base);
+  return "";
+}
+function achaRetorno(n, base = new Date()) {
+  const i = n.search(/\b(retorno|voltar|volta|proxima consulta)\b/);
+  if (i < 0) return {texto: "", data: ""};
+  const trecho = n.slice(i, i + 70);
+  let m = trecho.match(/(\d+|um|uma|dois|duas|tres|quatro|cinco|seis|oito|dez|doze|quinze|trinta)\s+(dia|dias|semana|semanas|mes|meses|ano|anos)\b/);
+  if (m) {
+    const q = numero(m[1]), u = m[2], d = new Date(base);
+    if (u.startsWith("dia")) d.setDate(d.getDate() + q);
+    else if (u.startsWith("semana")) d.setDate(d.getDate() + 7 * q);
+    else if (u.startsWith("mes")) d.setMonth(d.getMonth() + q);
+    else d.setFullYear(d.getFullYear() + q);
+    const nome = u.startsWith("dia") ? (q > 1 ? "dias" : "dia") : u.startsWith("semana") ? (q > 1 ? "semanas" : "semana") : u.startsWith("mes") ? (q > 1 ? "meses" : "mês") : (q > 1 ? "anos" : "ano");
+    return {texto: `Daqui a ${q} ${nome} (por volta de ${dataBonita(isoDe(d))})`, data: isoDe(d)};
+  }
+  const d = achaData(trecho, base);
+  if (d && !/\b(hoje|ontem)\b/.test(trecho)) return {texto: dataBonita(d), data: d};
+  m = trecho.match(new RegExp(`\\b(${MESES.join("|")})\\b`));
+  if (m) {
+    const mes = MESES.indexOf(m[1]), ano = base.getFullYear() + (mes < base.getMonth() ? 1 : 0);
+    return {texto: `Em ${MESES_BONITOS[mes]} de ${ano}`, data: ""};
+  }
+  return {texto: "Tem retorno (confira a data)", data: ""};
+}
+
+// ---------- o organizador: transforma a fala em campos ----------
+const ESPECIALIDADES = [["gastro", "Gastroenterologista"], ["cardiolog", "Cardiologista"], ["cardio", "Cardiologista"], ["geriatr", "Geriatra"],
+  ["clinico geral", "Clínico geral"], ["clinica geral", "Clínico geral"], ["ortoped", "Ortopedista"], ["oftalmo", "Oftalmologista"],
+  ["dermato", "Dermatologista"], ["neurolog", "Neurologista"], ["endocrino", "Endocrinologista"], ["nutricion", "Nutricionista"],
+  ["fisioterap", "Fisioterapeuta"], ["dentista", "Dentista"], ["ginecolog", "Ginecologista"], ["urolog", "Urologista"],
+  ["otorrino", "Otorrinolaringologista"], ["pneumolog", "Pneumologista"], ["reumatolog", "Reumatologista"], ["psiquiatr", "Psiquiatra"],
+  ["psicolog", "Psicóloga(o)"], ["nefrolog", "Nefrologista"], ["vascular", "Cirurgião vascular"], ["cirurgi", "Cirurgião"]];
+const GATILHOS = [
+  ["recomendou", "rec", true], ["recomenda ", "rec", true], ["pediu pra ", "rec", true], ["pediu para ", "rec", true], ["falou pra ", "rec", true],
+  ["falou para ", "rec", true], ["falou que ", "rec", true], ["disse pra ", "rec", true], ["disse para ", "rec", true], ["disse que ", "rec", true],
+  ["orientou", "rec", true], ["mandou ", "rec", true], ["tem que ", "rec", false], ["precisa ", "rec", false], ["deve ", "rec", false],
+  ["evitar ", "rec", false], ["nao pode ", "rec", false], ["nao deve ", "rec", false],
+  ["receitou", "rem", true], ["passou o remedio", "rem", false], ["passou remedio", "rem", false], ["passou um remedio", "rem", false],
+  ["tomar ", "rem", false, true], ["comprimido", "rem", false, true],
+  ["pediu exame", "feito", false], ["pediu um exame", "feito", false], ["pediu os exames", "feito", false], ["fez exame", "feito", false],
+  ["fez um exame", "feito", false], ["fez o exame", "feito", false], ["examinou", "feito", false], ["mediu ", "feito", false, true], ["fez ", "feito", false, true],
+  ["retorno", "ret", true], ["proxima consulta", "ret", true], ["voltar ", "ret", true], ["volta em ", "ret", true], ["volta daqui", "ret", true],
+  ["volta dia ", "ret", true], ["volta no ", "ret", true]
+];
+// o quarto item marca gatilho "fraco": verbo comum que, colado noutro gatilho ("tem que tomar"), não abre campo novo
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+function limpa(s) {
+  let t = s.replace(/^[\s,.;:]+|[\s,.;:]+$/g, "");
+  const ini = /^(e|aí|ai|então|entao|também|tambem|que|pra|para|ela|ele|mas|a vó|a vo|vó|vo|a senhora|a médica|a medica|o médico|o medico|a doutora|o doutor)\s+/i;
+  const fim = /\s+(e|a|o|ela|ele|que|também|tambem|aí|ai|mas|pra|para|de)$/i;
+  for (let k = 0; k < 5; k++) t = t.replace(ini, "").replace(fim, "").replace(/^[\s,.;:]+|[\s,.;:]+$/g, "");
+  return t;
+}
+function limpaObs(s) {
+  const t = limpa(s.replace(/\b(hoje|ontem|anteontem)\b/gi, " ").replace(/\bdia\s+\d{1,2}(\s+de\s+[a-zç]+)?/gi, " ")
+    .replace(/\b\d{1,2}\/\d{1,2}(\/\d{2,4})?/g, " ").replace(/\s+/g, " "));
+  return /^((a|o)\s+)?(médica|medica|médico|medico|doutora|doutor|vó|vo)$/i.test(t) ? "" : cap(t);
+}
+function organiza(texto, base = new Date()) {
+  const orig = texto.replace(/\s+/g, " ").trim(), n = baseMinuscula(orig);
+  const achados = [];
+  for (const [g, campo, tira, fraco] of GATILHOS) {
+    for (let i = n.indexOf(g); i >= 0; i = n.indexOf(g, i + 1)) {
+      if (i > 0 && /[a-z0-9]/.test(n[i - 1])) continue;
+      achados.push({i, fim: i + g.length, campo, tira, fraco});
+    }
+  }
+  achados.sort((a, b) => a.i - b.i || b.fim - a.fim);
+  const cortes = [];
+  for (const a of achados) {
+    const ult = cortes[cortes.length - 1];
+    if (ult && a.i < ult.fim) continue;
+    if (ult && a.fraco && ult.campo !== a.campo && n.slice(ult.fim, a.i).trim().split(/\s+/).filter(Boolean).length < 2) continue;
+    cortes.push(a);
+  }
+  const campos = {rec: [], rem: [], feito: [], ret: []};
+  cortes.forEach((c, k) => {
+    const t = limpa(orig.slice(c.tira ? c.fim : c.i, k + 1 < cortes.length ? cortes[k + 1].i : orig.length));
+    if (t.split(/\s+/).length >= 1 && t.length > 2) campos[c.campo].push(cap(t));
+  });
+  const ri = n.search(/\b(retorno|voltar|volta|proxima consulta)\b/);
+  const medicoM = orig.match(/\b([Dd]outora|[Dd]outor|[Dd]ra\.?|[Dd]r\.?)\s+([A-Za-zÀ-ú]+)(\s+[A-ZÀ-Ú][a-zà-ú]+)?/)
+    || orig.match(/\b(médica|medica|médico|medico)\s+([A-ZÀ-Ú][a-zà-ú]+)(\s+[A-ZÀ-Ú][a-zà-ú]+)?/);
+  let medico = "";
+  if (medicoM && !ESPECIALIDADES.some(([k]) => baseMinuscula(medicoM[2]).startsWith(k))) {
+    const titulo = /^(doutora|dra|médica|medica)/i.test(medicoM[1]) ? "Dra." : "Dr.";
+    medico = `${titulo} ${cap(medicoM[2].toLowerCase())}${medicoM[3] || ""}`;
+  }
+  const esp = ESPECIALIDADES.find(([k]) => n.includes(k));
+  const especialidade = esp ? esp[1] : "";
+  const exame = /\b(exame|resultado|ultrassom|ultrassonografia|endoscopia|raio x|tomografia|ressonancia|laboratorio|sangue)\b/.test(n);
+  const tipo = medico || especialidade || /\b(medica|medico|doutora|doutor|consulta)\b/.test(n) ? "consulta" : exame ? "exame" : campos.rem.length ? "remedio" : "anotacao";
+  const ret = achaRetorno(n, base);
+  return {
+    data: achaData(ri >= 0 ? n.slice(0, ri) : n, base) || isoDe(base), tipo, medico, especialidade,
+    feito: campos.feito, recomendacoes: campos.rec, remedios: campos.rem,
+    retornoTexto: ret.texto, retornoData: ret.data,
+    obs: limpaObs(orig.slice(0, cortes.length ? cortes[0].i : orig.length)), textoOriginal: orig
+  };
+}
+
+// ---------- dicas (gerais; quais aparecem depende do que a família marcar na nuvem) ----------
+const CONDICOES = {
+  estomago: {t: "Estômago sensível", ic: "🫖", dicas: [
+    "Comer porções pequenas, mais vezes ao dia, em vez de pratos muito cheios.",
+    "Mastigar bem e comer devagar, sem pressa.",
+    "Frituras e comidas muito gordurosas ou muito temperadas costumam pesar. Cozidos, assados e grelhados caem melhor.",
+    "Café forte, refrigerante e comidas muito ácidas podem irritar o estômago. Observe o que faz mal e conte pra médica.",
+    "Não deitar logo depois de comer. Esperar pelo menos umas duas horas.",
+    "Quando alguma comida cair mal, anote aqui na caderneta. Isso ajuda a médica a entender o estômago da senhora."]},
+  lactose: {t: "Pouca tolerância à lactose", ic: "🥛", dicas: [
+    "Preferir leite, iogurte e requeijão sem lactose. O gosto é quase igual e as vitaminas também.",
+    "Nas receitas de família, como a cuca, dá pra usar leite sem lactose no lugar do comum.",
+    "Queijos mais curados, como o parmesão, costumam ter pouquinha lactose. Vale perguntar pra médica o que cai bem.",
+    "Ler o rótulo: muitos produtos avisam \"contém lactose\" ou \"zero lactose\".",
+    "Se a barriga estufar ou doer depois de algo com leite, anote aqui na caderneta."]},
+  postura: {t: "Comer com a postura reta", ic: "🪑", dicas: [
+    "Comer sentada à mesa, com as costas retas e os pés apoiados no chão.",
+    "Evitar comer no sofá, recostada ou deitada.",
+    "Depois de comer, ficar sentada ou andar um pouquinho, sem deitar logo.",
+    "Pedaços pequenos e goles pequenos de água ajudam a comida a descer bem."]},
+  geral: {t: "Pra todos os dias", ic: "🌿", sempre: true, dicas: [
+    "Beber água aos pouquinhos durante o dia, mesmo sem sede.",
+    "Tomar os remédios sempre no horário que a médica passou.",
+    "Mostrar esta caderneta nas consultas: a médica gosta de saber o que aconteceu desde a última vez.",
+    "Uma caminhadinha leve, se a médica liberar, faz bem pro corpo e pra cabeça."]}
+};
+function recomendacoesDaMedica(registros) {
+  return registros.flatMap(r => (r.recomendacoes || []).map(t => ({texto: t, data: r.data, quem: r.medico || r.especialidade || ""})));
+}
+
+// ====== Caderneta de saúde: as telas ======
+const CAD = {perfil: null, registros: null};
+const NOME_TIPO = {consulta: "Consulta", exame: "Exame", remedio: "Remédio", anotacao: "Anotação"};
+const ICONE_TIPO = {consulta: "👩‍⚕️", exame: "🧪", remedio: "💊", anotacao: "📝"};
+const ReconheceCad = window.SpeechRecognition || window.webkitSpeechRecognition;
+const porId = id => document.getElementById(id);
+
+function cadAviso(titulo, msg) {
+  app.innerHTML = topo("Caderneta de saúde") + `<div class="fim"><div class="estrelas">${titulo}</div><p>${msg}</p>
+    <button class="seguir" onclick="rota()">Tentar de novo</button><button class="leve" onclick="voltarInicio()">Voltar ao início</button></div>`;
+}
+
+ROTAS.caderneta = async arg => {
+  const minha = location.hash;
+  app.innerHTML = topo("Caderneta de saúde") + `<div class="fim"><div class="estrelas">🩺</div><p>Abrindo a caderneta…</p></div>`;
+  let u;
+  try { u = await usuarioAtual(); }
+  catch (e) { return cadAviso("📶", "Pra abrir a caderneta pela primeira vez, o celular precisa de internet."); }
+  if (location.hash !== minha) return;
+  if (!u) return telaLogin();
+  try {
+    CAD.perfil = await lerPerfil();
+    CAD.registros = await lerRegistros();
+  } catch (e) {
+    return cadAviso("📶", navigator.onLine ? "Não consegui abrir a caderneta agora. Tente de novo daqui a pouquinho." : "Parece que o celular está sem internet.");
+  }
+  if (location.hash !== minha) return;
+  if (!CAD.perfil) return telaCondicoes(true);
+  if (arg === "nova") return telaNova();
+  if (arg === "lista") return telaLista();
+  if (arg === "dicas") return telaDicas();
+  if (arg === "condicoes") return telaCondicoes(false);
+  if (arg && arg.startsWith("ver-")) return telaVer(arg.slice(4));
+  if (arg && arg.startsWith("editar-")) { const r = CAD.registros.find(x => x.id === arg.slice(7)); if (r) return telaFormulario(r); }
+  telaCadInicio();
+};
+
+function telaLogin(erro = "") {
+  app.innerHTML = topo("Caderneta de saúde") + `
+    <div class="fim" style="padding-top:6px"><div class="estrelas">🔒</div><h2>Caderneta de saúde da vó</h2>
+    <p>Ela é protegida. Entre com o login da família.</p></div>
+    <label class="campo">E-mail da família<input id="cad-email" type="email" autocomplete="username" inputmode="email"></label>
+    <label class="campo">Senha da caderneta<input id="cad-senha" type="password" autocomplete="current-password"></label>
+    ${erro ? `<div class="retorno errado">${esc(erro)}</div>` : ""}
+    <button class="seguir" id="cad-entrar">Entrar</button>
+    <p class="dica" style="text-align:center">Depois de entrar uma vez, o celular lembra sozinho.</p>`;
+  porId("cad-entrar").onclick = async () => {
+    const b = porId("cad-entrar");
+    b.disabled = true; b.textContent = "Entrando…";
+    try { await entrar(porId("cad-email").value, porId("cad-senha").value); rota(); }
+    catch (e) {
+      const c = e.code || "";
+      telaLogin(c.includes("network") ? "Sem internet. Tente de novo quando tiver sinal."
+        : c.includes("too-many") ? "Muitas tentativas. Espere uns minutinhos e tente de novo."
+        : "O e-mail ou a senha não conferem. Confira e tente de novo.");
+    }
+  };
+}
+
+function telaCadInicio() {
+  const regs = CAD.registros, hoje = isoDe(new Date());
+  const retorno = regs.filter(r => r.retornoData && r.retornoData >= hoje).sort((a, b) => a.retornoData.localeCompare(b.retornoData))[0];
+  const ult = regs[0];
+  app.innerHTML = topo("Caderneta de saúde") + `
+    <div class="capa" style="padding-block:6px 0"><div class="sobre">Só da família</div><h1 style="font-size:1.6em">🩺 Caderneta de saúde da vó Maria</h1></div>
+    ${retorno ? `<div class="recado"><h2>📅 Próximo retorno</h2><p><b>${esc(dataBonita(retorno.retornoData))}</b></p><p>${esc([retorno.medico, retorno.especialidade].filter(Boolean).join(" · "))}</p></div>` : ""}
+    <button class="heroi" onclick="ir('caderneta/nova')"><span class="brilho"></span><b>🎤 Contar uma consulta</b>
+      <small>Fale do jeito que quiser, que a caderneta organiza.</small><span class="jogar">Começar a contar ▶</span></button>
+    ${bloco("caderneta/dicas", "💡", "#FFE7A8", "Dicas de saúde pra vó", "Do jeito que a médica recomenda")}
+    ${bloco("caderneta/lista", "📋", "#D6E8F1", "Tudo o que já foi anotado", regs.length ? `${regs.length} ${regs.length > 1 ? "anotações" : "anotação"} · a última em ${dataBonita(ult.data)}` : "Ainda nada anotado")}
+    ${bloco("caderneta/condicoes", "🩺", "#FBE0D2", "O que a vó tem", "Marque pra ajustar as dicas")}
+    <div class="ajustes"><button id="cad-sair">Sair da caderneta</button></div>`;
+  porId("cad-sair").onclick = async () => {
+    if (confirm("Sair da caderneta neste celular? Pra entrar de novo vai precisar da senha.")) { await sair(); rota(); }
+  };
+}
+
+function telaCondicoes(primeira) {
+  const p = CAD.perfil || {}, marcadas = new Set(p.condicoes || []);
+  app.innerHTML = topo("O que a vó tem", primeira ? "" : "caderneta") + `
+    ${primeira ? `<div class="recado"><h2>Bem-vinda à caderneta! 🩺</h2><p>Primeiro, marque o que vale pra vó. As dicas de saúde vão seguir isso.</p></div>`
+               : `<p class="ajuda">Marque o que vale pra vó. As dicas mudam junto.</p>`}
+    ${Object.entries(CONDICOES).filter(([, c]) => !c.sempre).map(([k, c]) => `<label class="bloco marca"><input type="checkbox" value="${k}" ${marcadas.has(k) ? "checked" : ""}>
+      <span class="ic" style="background:#FBE0D2">${c.ic}</span><span><b>${c.t}</b></span></label>`).join("")}
+    ${campoVoz("cad-outras", "Outras coisas sobre a saúde da vó, pra lembrar (uma por linha)", (p.outras || []).join("\n"), true)}
+    <button class="seguir" id="cad-guardar">Guardar</button>`;
+  ligaMicrofones();
+  porId("cad-guardar").onclick = async () => {
+    const dados = {condicoes: [...app.querySelectorAll(".marca input:checked")].map(i => i.value), outras: linhasDe("cad-outras")};
+    await guardarComCalma(salvarPerfil(dados));
+    CAD.perfil = {...p, ...dados};
+    primeira ? rota() : voltar("caderneta");
+  };
+}
+
+function telaDicas() {
+  const p = CAD.perfil || {}, recs = recomendacoesDaMedica(CAD.registros);
+  const grupos = Object.entries(CONDICOES).filter(([k, c]) => !c.sempre && (p.condicoes || []).includes(k)).concat(Object.entries(CONDICOES).filter(([, c]) => c.sempre));
+  const card = (t, sub = "", forte = false) => `<div class="dica-card${forte ? " forte" : ""}"><p>${esc(t)}</p>${sub ? `<small>${esc(sub)}</small>` : ""}</div>`;
+  app.innerHTML = topo("Dicas de saúde", "caderneta") + `
+    <div class="dica-card aviso-medico">Estas dicas não substituem a médica. Na dúvida, pergunte pra ela. 💛</div>
+    ${temVoz ? `<button class="ouvir" id="cad-ouvir">🔊 Ouvir as dicas</button>` : ""}
+    <h3 class="cad-h">👩‍⚕️ O que a médica recomendou</h3>
+    ${recs.length ? recs.map(r => card(r.texto, [dataBonita(r.data), r.quem].filter(Boolean).join(" · "), true)).join("")
+                  : `<p class="dica">Quando a família contar uma consulta, o que a médica recomendar aparece aqui, em primeiro lugar.</p>`}
+    ${(p.outras || []).length ? `<h3 class="cad-h">📝 Pra lembrar</h3>${p.outras.map(o => card(o)).join("")}` : ""}
+    ${grupos.map(([, c]) => `<h3 class="cad-h">${c.ic} ${c.t}</h3>${c.dicas.map(d => card(d)).join("")}`).join("")}`;
+  const b = porId("cad-ouvir");
+  if (b) b.onclick = () => falar([...app.querySelectorAll(".cad-h, .dica-card p")].map(e => e.textContent).join(". "));
+}
+
+function telaLista() {
+  const regs = CAD.registros;
+  app.innerHTML = topo("Anotações", "caderneta") + (regs.length ? regs.map(r => {
+    const sub = [r.medico, r.especialidade].filter(Boolean).join(" · ") || NOME_TIPO[r.tipo] || "Anotação";
+    const n = (r.recomendacoes || []).length;
+    return `<button class="bloco" onclick="ir('caderneta/ver-${r.id}')"><span class="ic" style="background:#D6E8F1">${ICONE_TIPO[r.tipo] || "📝"}</span>
+      <span><b>${esc(dataBonita(r.data))}</b><small>${esc(sub)}${n ? ` · ${n} ${n > 1 ? "recomendações" : "recomendação"}` : ""}</small></span></button>`;
+  }).join("") : `<p class="ajuda">Ainda não tem nada anotado.</p>`) + `<button class="seguir" onclick="ir('caderneta/nova')">🎤 Contar uma consulta</button>`;
+}
+
+function telaVer(id) {
+  const r = CAD.registros.find(x => x.id === id);
+  if (!r) return telaLista();
+  const lista = (t, itens) => (itens || []).length ? `<h3 class="cad-h">${t}</h3><ul class="cad-ul">${itens.map(i => `<li>${esc(i)}</li>`).join("")}</ul>` : "";
+  app.innerHTML = topo(dataBonita(r.data), "caderneta/lista") + `
+    <div class="dica-card forte"><p><b>${ICONE_TIPO[r.tipo] || "📝"} ${esc(NOME_TIPO[r.tipo] || "Anotação")}</b>${r.medico ? ` com ${esc(r.medico)}` : ""}${r.especialidade ? ` · ${esc(r.especialidade)}` : ""}</p>
+      ${r.quem ? `<small>Anotado por ${esc(r.quem)}</small>` : ""}</div>
+    ${r.obs ? `<p>${esc(r.obs)}</p>` : ""}
+    ${lista("O que foi feito", r.feito)}${lista("👩‍⚕️ Recomendações", r.recomendacoes)}${lista("💊 Remédios", r.remedios)}
+    ${r.retornoData || r.retornoTexto ? `<h3 class="cad-h">📅 Retorno</h3><p>${esc(r.retornoData ? dataBonita(r.retornoData) : r.retornoTexto)}</p>` : ""}
+    ${r.textoOriginal ? `<details class="cad-original"><summary>Ver o que foi falado</summary><p>${esc(r.textoOriginal)}</p></details>` : ""}
+    ${temVoz ? `<button class="leve" id="cad-ouvir">🔊 Ouvir esta anotação</button>` : ""}
+    <button class="leve" onclick="ir('caderneta/editar-${r.id}')">✏️ Corrigir</button>
+    <button class="leve apagar" id="cad-apagar">Apagar esta anotação</button>`;
+  const b = porId("cad-ouvir");
+  if (b) b.onclick = () => falar([...app.querySelectorAll(".dica-card p, .cad-h, .cad-ul li, #app > p")].map(e => e.textContent).join(". "));
+  porId("cad-apagar").onclick = async () => {
+    if (!confirm("Apagar esta anotação da caderneta? Não dá pra desfazer.")) return;
+    await guardarComCalma(apagarRegistro(r.id), "Apagada.");
+    CAD.registros = CAD.registros.filter(x => x.id !== r.id);
+    voltar("caderneta/lista");
+  };
+}
+
+function telaNova() {
+  app.innerHTML = topo("Contar uma consulta", "caderneta") + `
+    <p class="ajuda">Toque no microfone e conte do seu jeito. Por exemplo:</p>
+    <div class="dica-card"><p><i>"Hoje a vó foi na doutora Ana, gastro. Ela pediu exame de sangue, recomendou comer devagar e evitar fritura. Retorno daqui a 3 meses."</i></p></div>
+    ${ReconheceCad ? `<button class="mic" id="cad-mic" aria-label="Falar">🎤</button><p class="dica" id="cad-estado" style="text-align:center">Toque no microfone pra começar</p>`
+                   : `<p class="dica">Aqui o microfone não funciona, mas dá pra escrever.</p>`}
+    <label class="campo">O que foi contado (dá pra corrigir escrevendo)<textarea id="cad-texto" rows="6"></textarea></label>
+    <button class="seguir" id="cad-organizar">✨ Organizar</button>
+    <button class="leve" id="cad-direto">Prefiro preencher direto</button>`;
+  const area = porId("cad-texto"), mic = porId("cad-mic"), estado = porId("cad-estado");
+  let rec = null, antes = "";
+  const para = () => { if (rec) { try { rec.abort(); } catch (e) {} rec = null; } };
+  window.addEventListener("hashchange", para, {once: true});
+  if (mic) mic.onclick = () => {
+    if (rec) { rec.stop(); return; }
+    calar();
+    rec = new ReconheceCad();
+    rec.lang = "pt-BR"; rec.continuous = true; rec.interimResults = true;
+    antes = area.value.trim() ? area.value.trim() + " " : "";
+    let erro = "";
+    rec.onstart = () => { mic.classList.add("ouvindo"); estado.textContent = "Ouvindo… toque de novo quando terminar."; };
+    rec.onresult = e => {
+      let t = "";
+      for (const r of e.results) t += r[0].transcript + " ";
+      area.value = (antes + t).replace(/\s+/g, " ").trim();
+    };
+    rec.onerror = e => { erro = e.error; };
+    rec.onend = () => {
+      mic.classList.remove("ouvindo"); rec = null;
+      estado.textContent = erro === "not-allowed" || erro === "service-not-allowed" ? "O microfone não foi liberado pro site."
+        : erro === "network" ? "Pra ouvir, o celular precisa de internet."
+        : area.value ? "Pronto! Toque em Organizar, ou no microfone pra contar mais." : "Toque no microfone pra começar";
+    };
+    rec.start();
+  };
+  const quem = guarda.ler("cad-quem", "");
+  porId("cad-organizar").onclick = () => {
+    para();
+    if (!area.value.trim()) return aviso("Conte ou escreva primeiro 🙂");
+    telaFormulario({...organiza(area.value), quem});
+  };
+  porId("cad-direto").onclick = () => { para(); telaFormulario({data: isoDe(new Date()), tipo: "consulta", quem}); };
+}
+
+function campoVoz(id, rotulo, valor, grande) {
+  const campo = grande ? `<textarea id="${id}" rows="3">${esc(valor || "")}</textarea>` : `<input id="${id}" value="${esc(valor || "")}">`;
+  return `<label class="campo">${rotulo}<span class="com-mic">${campo}${ReconheceCad ? `<button type="button" class="mic-campo" data-alvo="${id}" aria-label="Falar: ${esc(rotulo)}">🎤</button>` : ""}</span></label>`;
+}
+function ligaMicrofones() {
+  app.querySelectorAll(".mic-campo").forEach(b => b.onclick = e => {
+    e.preventDefault();
+    const alvo = porId(b.dataset.alvo), rec = new ReconheceCad();
+    calar();
+    rec.lang = "pt-BR"; rec.interimResults = false;
+    b.classList.add("ouvindo");
+    rec.onresult = ev => {
+      const t = cap(ev.results[0][0].transcript.trim());
+      alvo.value = alvo.tagName === "TEXTAREA" && alvo.value.trim() ? alvo.value.trim() + "\n" + t : t;
+    };
+    rec.onend = () => b.classList.remove("ouvindo");
+    try { rec.start(); } catch (err) { b.classList.remove("ouvindo"); }
+  });
+}
+const linhasDe = id => porId(id).value.split("\n").map(s => s.trim()).filter(Boolean);
+
+async function guardarComCalma(promessa, feito = "Guardado na caderneta ✔") {
+  const r = await Promise.race([promessa.then(() => "ok", e => "erro"), new Promise(ok => setTimeout(() => ok("devagar"), 5000))]);
+  aviso(r === "ok" ? feito : r === "devagar" ? "Guardado no celular. Sobe pra nuvem quando tiver internet." : "Não consegui guardar. Confira a internet.");
+  return r;
+}
+
+function telaFormulario(r) {
+  app.innerHTML = topo(r.id ? "Corrigir anotação" : "Confira e guarde", r.id ? `caderneta/ver-${r.id}` : "caderneta") + `
+    <p class="ajuda">${r.id ? "Corrija o que precisar." : "A caderneta organizou assim. Confira, corrija o que precisar e guarde."} O 🎤 de cada campo deixa falar em vez de escrever.</p>
+    <label class="campo">Data<input type="date" id="f-data" value="${esc(r.data || "")}"></label>
+    <label class="campo">Tipo<select id="f-tipo">${Object.entries(NOME_TIPO).map(([k, v]) => `<option value="${k}" ${r.tipo === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+    ${campoVoz("f-medico", "Médico ou médica", r.medico)}
+    ${campoVoz("f-esp", "Especialidade", r.especialidade)}
+    ${campoVoz("f-feito", "O que foi feito (um por linha)", (r.feito || []).join("\n"), true)}
+    ${campoVoz("f-rec", "Recomendações (uma por linha)", (r.recomendacoes || []).join("\n"), true)}
+    ${campoVoz("f-rem", "Remédios (um por linha)", (r.remedios || []).join("\n"), true)}
+    ${campoVoz("f-ret", "Retorno", r.retornoTexto)}
+    <label class="campo">Data do retorno, se souber<input type="date" id="f-retdata" value="${esc(r.retornoData || "")}"></label>
+    ${campoVoz("f-obs", "Observações", r.obs, true)}
+    ${campoVoz("f-quem", "Quem anotou", r.quem)}
+    <button class="seguir" id="f-guardar">💾 Guardar na caderneta</button>`;
+  ligaMicrofones();
+  porId("f-guardar").onclick = async () => {
+    const v = id => porId(id).value.trim();
+    if (!v("f-data")) return aviso("Falta a data 📅");
+    const reg = {id: r.id, data: v("f-data"), tipo: v("f-tipo"), medico: v("f-medico"), especialidade: v("f-esp"),
+      feito: linhasDe("f-feito"), recomendacoes: linhasDe("f-rec"), remedios: linhasDe("f-rem"),
+      retornoTexto: v("f-ret"), retornoData: v("f-retdata"), obs: v("f-obs"), quem: v("f-quem"), textoOriginal: r.textoOriginal || ""};
+    porId("f-guardar").disabled = true;
+    guarda.gravar("cad-quem", reg.quem);
+    await guardarComCalma(salvarRegistro(reg));
+    acertou();
+    location.replace("#caderneta");
+  };
+}
+
 // ====== O ajudante de voz da vó ======
 // Não é uma IA paga: ouve pelo microfone do celular e entende as dúvidas sobre o próprio atlas.
 const Reconhece = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1051,9 +1528,11 @@ const COMO = {
   combina: "Toque numa figura e depois numa vizinha pra trocar as duas de lugar. Quando juntar três iguais em fila, elas somem. Junte as figuras da meta antes de acabar as jogadas.",
   trilha: "Toque na bolinha laranja que está pulando pra jogar a fase. Quando terminar, a próxima fase abre.",
   familia: "Aqui está a história da família. Arraste a tela pra cima com o dedo pra ler. O botão Ouvir a história lê tudo em voz alta.",
+  caderneta: "A caderneta de saúde guarda as consultas e as dicas da médica. Pra anotar uma consulta, toque em Contar uma consulta e fale do seu jeito.",
   inicio: "Pra jogar, toque num dos quadrados da tela. O botão verde grande, lá em cima, é a Trilha da Vó, com as fases."
 };
 const JOGOS = [
+  {r: "caderneta", nome: "a caderneta de saúde", c: "caderneta", ch: ["caderneta", "saude", "consulta", "remedio"]},
   {r: "trilha", nome: "a Trilha da Vó", c: "trilha", ch: ["trilha", "fase", "caminho", "candy"]},
   {r: "memoria", nome: "o jogo da memória", c: "memoria", ch: ["memoria", "cartas", " carta ", "baralho"]},
   {r: "combina", nome: "o Combina 3", c: "combina", ch: ["combina", "figura", "banana", "tres iguais"]},
@@ -1080,7 +1559,7 @@ function ondeEstou() {
   const [nome, arg] = hashAtual().split("/");
   const N = {dia: "nas perguntas do dia", quiz: "nas perguntas", "mapa-br": "no mapa do Brasil", "mapa-sc": "no mapa de Santa Catarina", paises: "no jogo do país",
     ligue: "no ligue o estado à capital", letras: "nas letras embaralhadas", caca: "no caça-palavras", memoria: "no jogo da memória", combina: "no Combina 3",
-    trilha: "na Trilha da Vó", familia: "nos caminhos da família"};
+    trilha: "na Trilha da Vó", familia: "nos caminhos da família", caderneta: "na caderneta de saúde"};
   return nome === "fase" ? `na fase ${arg} da Trilha da Vó` : N[nome] || "no atlas";
 }
 function achaCapital(t) {
