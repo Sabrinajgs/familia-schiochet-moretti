@@ -1154,7 +1154,7 @@ async function apagarExame(id) {
 }
 
 // ---------- agenda do Google: consultas marcadas e retornos vão pra agenda da conta da família ----------
-const AGENDA_URL = null;
+const AGENDA_URL = "https://script.google.com/macros/s/AKfycbzhelRJrH4wBR2UaVl-XZ5TWwlm5eyBbK4gXuOIa6BEKeIGHO-E-G0Od3yyNV8E6x3r/exec";
 function eventosDoRegistro(r) {
   const agora = new Date(), hoje = isoDe(agora), horaAgora = `${z2(agora.getHours())}:${z2(agora.getMinutes())}`;
   const quem = [r.medico, r.especialidade].filter(Boolean).join(" · "), evs = [];
