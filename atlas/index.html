@@ -465,7 +465,7 @@ function inicio() {
   <div class="capa"><div class="sobre">Passatempos de mapas</div><h1>O Atlas da Vó Maria</h1>${svgCapa()}</div>
   ${(() => {
     const recado = festa
-      ? `<div class="recado"><h2>Feliz aniversário, vó! 🎂</h2><p>Este atlas é o seu presente: pra viajar pelo mapa sem sair de casa, no seu tempo.</p><p class="assina">Com carinho, Sabrina</p>${chipDias()}</div>`
+      ? `<div class="recado"><h2>Feliz aniversário, vó! 🎂</h2><p>Este atlas é o seu presente: pra viajar pelo mapa sem sair de casa, no seu tempo.</p><p class="assina">Com carinho, Sabrina</p><button class="seguir" style="margin-top:14px" onclick="ir('video')">🎬 Um vídeo pra senhora</button>${chipDias()}</div>`
       : `<div class="recado"><h2>${saudacao()}, vó Maria!</h2><p>Que tal uma viagem pelo mapa hoje?</p>${chipDias()}</div>`;
     return festa ? recado + heroiTrilha() : heroiTrilha() + recado;
   })()}
@@ -490,6 +490,7 @@ function inicio() {
   ${bloco("caca", "🔎", "#DCEFD3", "Caça-palavras", cacasFeitas ? `${cacasFeitas} de ${CACAS.length} cartelas feitas` : `${CACAS.length} cartelas`)}
   ${FIREBASE_CONFIG ? `<div class="secao">A saúde da vó</div>${bloco("caderneta", "🩺", "#FBE0D2", "Caderneta de saúde", "Só da família, com senha")}` : ""}
   <div class="secao">A nossa família</div>
+  ${bloco("video", "🎬", "#FFE7A8", "Vídeo de aniversário", "Fotos da família, com música")}
   ${bloco("familia", "❤️", "#FBE0D2", "Os caminhos da família", "Dos Açores e da Itália até aqui")}
   <div class="ajustes">
     <button onclick="guarda.gravar('maior', ${!maior}); aplicaLetra(); inicio()">${maior ? "Letra normal" : "Letra maior"}</button>
@@ -606,6 +607,19 @@ function listaPaises(n) {
 ROTAS["mapa-br"] = () => jogoQuiz({titulo: "Que estado é este?", lista: listaMapaBR(6)});
 ROTAS["mapa-sc"] = () => jogoQuiz({titulo: "Cidades de Santa Catarina", lista: listaMapaSC(6)});
 ROTAS.paises = () => jogoQuiz({titulo: "Qual é o país?", lista: listaPaises(6)});
+
+// o vídeo de aniversário (15/09/2026): fotos da família com música suave
+ROTAS.video = () => {
+  app.innerHTML = topo("Um vídeo pra senhora") + `
+    <video id="video-vo" src="video-homenagem.mp4" poster="video-capa.jpg" controls playsinline preload="metadata"
+      style="display:block;width:100%;max-height:72vh;border-radius:22px;background:#000;margin-top:6px"></video>
+    <button class="seguir" id="video-play">▶ Assistir</button>
+    <p class="dica" style="text-align:center">Aumente o volume do celular pra ouvir a música 🎶</p>`;
+  const v = document.getElementById("video-vo"), b = document.getElementById("video-play");
+  b.onclick = () => { calar(); v.play(); if (v.requestFullscreen) v.requestFullscreen().catch(() => {}); };
+  v.onplay = () => { b.hidden = true; };
+  v.onpause = () => { b.hidden = false; };
+};
 
 // ====== O Atlas da Vó Maria: ligue, letras embaralhadas e caça-palavras ======
 // Cada jogo aceita op = {titulo, pai, aoFim(estrelas)}. Com aoFim, ele vira uma fase da trilha.
