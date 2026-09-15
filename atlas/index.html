@@ -1361,6 +1361,58 @@ const CONDICOES = {
     "Evitar comer no sofá, recostada ou deitada.",
     "Depois de comer, ficar sentada ou andar um pouquinho, sem deitar logo.",
     "Pedaços pequenos e goles pequenos de água ajudam a comida a descer bem."]},
+  pressao: {t: "Pressão alta", ic: "❤️", dicas: [
+    "Menos sal na comida. Alho, cebola, cheiro-verde e limão dão sabor sem sal.",
+    "Cuidado com salgadinho, embutido (salsicha, presunto, salame) e comida pronta: costumam ter muito sal.",
+    "Tomar o remédio da pressão todo dia no mesmo horário, mesmo quando estiver se sentindo bem.",
+    "Se tiver aparelho em casa, medir a pressão e anotar aqui na caderneta pra mostrar na consulta.",
+    "Dor de cabeça muito forte, tontura ou vista embaçada de repente: procurar atendimento (SAMU 192)."]},
+  pressaoBaixa: {t: "Pressão baixa", ic: "💧", dicas: [
+    "Levantar da cama ou da cadeira devagar, sentando um pouquinho antes de ficar em pé.",
+    "Beber água aos pouquinhos durante o dia.",
+    "Em dia muito quente, evitar sol forte e lugar abafado.",
+    "Se sentir tontura, sentar ou deitar na hora e contar pra médica."]},
+  diabetes: {t: "Diabetes (açúcar no sangue)", ic: "🩸", dicas: [
+    "Evitar doces, refrigerante e suco adoçado. A fruta inteira é melhor que o suco.",
+    "Comer em horários certinhos, sem ficar muito tempo sem comer.",
+    "Tomar o remédio ou a insulina do jeito e no horário que a médica passou.",
+    "Olhar os pés todo dia: machucado que demora pra sarar precisa ser mostrado pra médica.",
+    "Se a médica pediu, medir a glicose e anotar aqui na caderneta."]},
+  colesterol: {t: "Colesterol alto", ic: "🥗", dicas: [
+    "Menos fritura, gordura e carne gorda. Assado, cozido e grelhado são melhores.",
+    "Aveia, feijão, frutas e verduras ajudam.",
+    "Tomar o remédio no horário, se a médica passou.",
+    "Uma caminhadinha leve, se a médica liberar, também ajuda."]},
+  ossos: {t: "Ossos e quedas", ic: "🦴", dicas: [
+    "Tirar tapete solto do caminho e deixar uma luz acesa à noite no caminho do banheiro.",
+    "No banheiro, tapete antiderrapante e, se der, uma barra pra segurar.",
+    "Calçado firme e fechado atrás, nada de chinelo solto.",
+    "Cálcio e vitamina D só do jeito que a médica indicar."]},
+  intestino: {t: "Intestino preso", ic: "🍐", dicas: [
+    "Beber água aos pouquinhos durante o dia.",
+    "Mamão, ameixa, laranja com bagaço, verduras e aveia ajudam o intestino.",
+    "Uma caminhadinha leve, se a médica liberar.",
+    "Não tomar laxante por conta própria. Se ficar muitos dias sem ir ao banheiro, avisar a médica."]},
+  sono: {t: "Sono", ic: "🌙", dicas: [
+    "Deitar e levantar mais ou menos no mesmo horário todo dia.",
+    "Evitar café, chá preto e chimarrão no fim da tarde e à noite.",
+    "Se tiver cochilo depois do almoço, que seja curtinho.",
+    "Remédio pra dormir só com receita da médica."]},
+  juntas: {t: "Dor nas juntas", ic: "🦵", dicas: [
+    "Movimento leve todo dia ajuda as juntas, sem forçar e sem pegar peso.",
+    "Cadeira firme, com braço, facilita pra sentar e levantar.",
+    "Compressa morna pode aliviar, se a médica liberar.",
+    "Remédio pra dor só o que a médica passou: anti-inflamatório por conta própria pode fazer mal ao estômago."]},
+  memoria: {t: "Memória", ic: "🧠", dicas: [
+    "Passatempos ajudam a cabeça: os joguinhos deste atlas foram feitos pra isso.",
+    "Conversar, contar histórias e ver os amigos também faz bem.",
+    "Deixar os remédios organizados por dia e horário, numa caixinha separada.",
+    "Esquecimento que começa a atrapalhar o dia a dia merece ser contado pra médica."]},
+  alergia: {t: "Alergia a remédio", ic: "⚠️", dicas: [
+    "Anotar aqui o nome exato do remédio que dá alergia.",
+    "Avisar sempre: na consulta, no pronto-socorro e na farmácia.",
+    "Nunca tomar remédio por conta própria, nem os que alguém indicar.",
+    "Inchaço na boca ou falta de ar depois de um remédio: procurar atendimento na hora (SAMU 192)."]},
   geral: {t: "Pra todos os dias", ic: "🌿", sempre: true, dicas: [
     "Beber água aos pouquinhos durante o dia, mesmo sem sede.",
     "Tomar os remédios sempre no horário que a médica passou.",
@@ -1368,7 +1420,11 @@ const CONDICOES = {
     "Uma caminhadinha leve, se a médica liberar, faz bem pro corpo e pra cabeça."]}
 };
 // o que a família escreve em "O que a vó tem" puxa as dicas certas (palavras já sem acento)
-const PALAVRAS_CONDICAO = {estomago: /estomago|gastrit|azia|refluxo/, lactose: /lactose/, postura: /postura|engasg/};
+const PALAVRAS_CONDICAO = {estomago: /estomago|gastrit|azia|refluxo/, lactose: /lactose/, postura: /postura|engasg/,
+  pressao: /pressao alta|hipertens/, pressaoBaixa: /pressao baixa|hipotens/, diabetes: /diabet|glicose|glicemia|insulina|acucar no sangue/,
+  colesterol: /colesterol|triglicer/, ossos: /osteopor|ossos? fraco|fratura|queda|tombo/, intestino: /intestino preso|prisao de ventre|constipa/,
+  sono: /insonia|dorme mal|dormir mal|nao dorme|sono/, juntas: /artrose|artrite|reumat|junta|joelho|coluna|dor nas costas/,
+  memoria: /memoria|esquec|alzheimer|demencia/, alergia: /alergi/};
 function condicoesDoTexto(linhas) {
   const t = (linhas || []).join(" ").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   return Object.keys(PALAVRAS_CONDICAO).filter(k => PALAVRAS_CONDICAO[k].test(t));
@@ -1476,11 +1532,23 @@ function telaCondicoes(primeira) {
     <p class="ajuda">Escreva do seu jeito, uma coisa por linha. Fica guardado só na caderneta e aparece nas Dicas de saúde.</p>
     <div class="dica-card"><p><b>Exemplos do que escrever:</b></p><ul class="cad-ul">
       <li>Pressão alta, toma remédio de manhã</li><li>Alergia a dipirona</li><li>Não pode comer muito sal</li><li>Estômago sensível</li><li>O joelho dói quando esfria</li></ul>
-      <small>Quando a caderneta reconhece o assunto, as dicas certas aparecem sozinhas.</small></div>
+      <small>Quando a caderneta reconhece o assunto, as dicas aparecem logo embaixo e nas Dicas de saúde.</small></div>
     ${campoVoz("cad-outras", "O que a vó tem (uma coisa por linha)", linhas.join("\n"), true)}
+    <div id="cad-dicas-vivo"></div>
     <button class="seguir" id="cad-guardar">Guardar</button>`;
   porId("cad-outras").rows = 6;
   ligaMicrofones();
+  // enquanto escreve, as dicas do que foi escrito já aparecem aqui embaixo (pedido da Sabrina, 15/09)
+  const vivo = porId("cad-dicas-vivo");
+  const mostraDicas = () => {
+    const txt = linhasDe("cad-outras"), ks = condicoesDoTexto(txt);
+    vivo.innerHTML = ks.length
+      ? `<h3 class="cad-h">💡 O que ajuda</h3>` + ks.map(k => `<div class="dica-card"><p><b>${CONDICOES[k].ic} ${CONDICOES[k].t}</b></p><ul class="cad-ul">${CONDICOES[k].dicas.map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>`).join("")
+        + `<p class="dica">Estas dicas não substituem a médica. Na dúvida, pergunte pra ela. 💛</p>`
+      : txt.length ? `<p class="dica">💡 Ainda não tenho dicas prontas pra isso. Guarde e pergunte pra médica na próxima consulta.</p>` : "";
+  };
+  porId("cad-outras").addEventListener("input", mostraDicas);
+  mostraDicas();
   porId("cad-guardar").onclick = async () => {
     const outras = linhasDe("cad-outras"), dados = {outras, condicoes: condicoesDoTexto(outras)};
     if (await guardarComCalma(salvarPerfil(dados)) === "erro") return;   // não sai da tela se não guardou
@@ -1702,6 +1770,7 @@ function ligaMicrofones() {
     rec.onresult = ev => {
       const t = cap(ev.results[0][0].transcript.trim());
       alvo.value = alvo.tagName === "TEXTAREA" && alvo.value.trim() ? alvo.value.trim() + "\n" + t : t;
+      alvo.dispatchEvent(new Event("input"));
     };
     rec.onend = () => b.classList.remove("ouvindo");
     try { rec.start(); } catch (err) { b.classList.remove("ouvindo"); }
