@@ -196,6 +196,14 @@ h1,h2,h3{font-family:"Lora",Georgia,serif;font-weight:700;margin:0;line-height:1
 .marca input{width:30px;height:30px;flex:none;accent-color:var(--verde);margin:0}
 .cad-original summary{color:var(--suave);margin:14px 0 6px;cursor:pointer}
 .apagar{color:var(--errado)}
+.lado-a-lado{display:flex;gap:10px}
+.lado-a-lado>*{flex:1;min-width:0}
+.botao-arquivo{display:grid;place-items:center;text-align:center;text-decoration:none;color:var(--tinta);cursor:pointer}
+.miniaturas{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.mini{position:relative;width:96px;height:120px;border-radius:12px;overflow:hidden;border:2px solid var(--borda);background:var(--cartao);display:grid;place-items:center;font-size:.8em}
+.mini img{width:100%;height:100%;object-fit:cover}
+.mini button{position:absolute;top:4px;right:4px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;padding:0;font-size:16px}
+.exame-foto{display:block;width:100%;height:auto;border-radius:12px;margin:10px 0;border:2px solid var(--linha)}
 </style>
 </head>
 <body>
@@ -1096,16 +1104,85 @@ async function lerRegistros() {
   const s = await fs.getDocs(fs.query(fs.collection(db, "cadernetas", CADERNETA, "registros"), fs.orderBy("data", "desc")));
   return s.docs.map(d => ({id: d.id, ...d.data()}));
 }
+// devolve o id na hora (mesmo sem internet) e a promessa de quando a nuvem confirmar
 async function salvarRegistro(r) {
   const {fs, db} = await carregaFirebase();
   const {id, ...dados} = r;
   const col = fs.collection(db, "cadernetas", CADERNETA, "registros");
-  if (id) return fs.setDoc(fs.doc(col, id), {...dados, atualizadoEm: fs.serverTimestamp()}, {merge: true});
-  return fs.addDoc(col, {...dados, criadoEm: fs.serverTimestamp()});
+  const ref = id ? fs.doc(col, id) : fs.doc(col);
+  const carimbo = id ? {atualizadoEm: fs.serverTimestamp()} : {criadoEm: fs.serverTimestamp()};
+  return {id: ref.id, pronto: fs.setDoc(ref, {...dados, ...carimbo}, {merge: true})};
 }
 async function apagarRegistro(id) {
   const {fs, db} = await carregaFirebase();
   return fs.deleteDoc(fs.doc(db, "cadernetas", CADERNETA, "registros", id));
+}
+
+// ---------- exames: fotos e PDFs guardados em pedaços, dentro da mesma nuvem protegida ----------
+const PEDACO = 700000;
+async function lerExames() {
+  const {fs, db} = await carregaFirebase();
+  const s = await fs.getDocs(fs.query(fs.collection(db, "cadernetas", CADERNETA, "exames"), fs.orderBy("data", "desc")));
+  return s.docs.map(d => ({id: d.id, ...d.data()}));
+}
+async function lerArquivosExame(id) {
+  const {fs, db} = await carregaFirebase();
+  const s = await fs.getDocs(fs.query(fs.collection(db, "cadernetas", CADERNETA, "exames", id, "partes"), fs.orderBy("ordem")));
+  const arquivos = [];
+  s.docs.forEach(d => { const p = d.data(); (arquivos[p.pagina] ||= {tipo: p.tipo, dados: ""}).dados += p.dados; });
+  return arquivos.filter(Boolean);
+}
+async function salvarExame(meta, arquivos) {
+  const {fs, db} = await carregaFirebase();
+  const ref = fs.doc(fs.collection(db, "cadernetas", CADERNETA, "exames"));
+  const escritas = [];
+  let ordem = 0;
+  arquivos.forEach((arq, pagina) => {
+    for (let i = 0; i < arq.dados.length; i += PEDACO) {
+      const n = ordem++;
+      escritas.push(fs.setDoc(fs.doc(ref, "partes", String(n).padStart(4, "0")), {ordem: n, pagina, tipo: arq.tipo, dados: arq.dados.slice(i, i + PEDACO)}));
+    }
+  });
+  escritas.push(fs.setDoc(ref, {...meta, paginas: arquivos.length, tipos: arquivos.map(a => a.tipo), criadoEm: fs.serverTimestamp()}));
+  return {id: ref.id, pronto: Promise.all(escritas)};
+}
+async function apagarExame(id) {
+  const {fs, db} = await carregaFirebase();
+  const s = await fs.getDocs(fs.collection(db, "cadernetas", CADERNETA, "exames", id, "partes"));
+  await Promise.all(s.docs.map(d => fs.deleteDoc(d.ref)));
+  return fs.deleteDoc(fs.doc(db, "cadernetas", CADERNETA, "exames", id));
+}
+
+// ---------- agenda do Google: consultas marcadas e retornos vão pra agenda da conta da família ----------
+const AGENDA_URL = null;
+function eventosDoRegistro(r) {
+  const agora = new Date(), hoje = isoDe(agora), horaAgora = `${z2(agora.getHours())}:${z2(agora.getMinutes())}`;
+  const quem = [r.medico, r.especialidade].filter(Boolean).join(" · "), evs = [];
+  const descricao = [quem && `Com: ${quem}`, (r.recomendacoes || []).length ? `Recomendações: ${r.recomendacoes.join("; ")}` : "",
+    "Anotado na Caderneta de saúde da vó."].filter(Boolean).join("\n");
+  const futuro = (d, h) => d > hoje || (d === hoje && h && h > horaAgora);
+  if (r.tipo === "consulta" && r.data && futuro(r.data, r.hora)) {
+    evs.push({chave: `${r.id}-consulta`, titulo: `🩺 Consulta${quem ? ` · ${quem}` : ""}`, data: r.data, hora: r.hora || "", descricao});
+  }
+  if (r.retornoData && (r.retornoData > hoje || futuro(r.retornoData, r.retornoHora) || (r.retornoData === hoje && !r.retornoHora))) {
+    evs.push({chave: `${r.id}-retorno`, titulo: `🩺 Retorno${quem ? ` · ${quem}` : ""}`, data: r.retornoData, hora: r.retornoHora || "", descricao});
+  }
+  return evs;
+}
+async function enviaAgenda(pedido) {
+  if (!AGENDA_URL) return;
+  try {
+    const {a} = await carregaFirebase();
+    if (!a.currentUser) return;
+    const idToken = await a.currentUser.getIdToken();
+    await fetch(AGENDA_URL, {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify({idToken, ...pedido})});
+  } catch (e) {}
+}
+// uma vez por dia, manda tudo de novo (conserta o que não subiu por falta de internet)
+function sincronizaAgenda(registros) {
+  if (!AGENDA_URL || !navigator.onLine || guarda.ler("agenda-sinc", 0) === numeroDoDia()) return;
+  guarda.gravar("agenda-sinc", numeroDoDia());
+  enviaAgenda({eventos: registros.flatMap(eventosDoRegistro), completo: true});
 }
 
 // ---------- datas ----------
@@ -1119,7 +1196,7 @@ function dataBonita(iso) {
   return `${d} de ${MESES_BONITOS[m - 1]} de ${a}`;
 }
 const baseMinuscula = s => s.split("").map(c => c.normalize("NFD")[0].toLowerCase()).join("");
-const NUMEROS = {um: 1, uma: 1, dois: 2, duas: 2, tres: 3, quatro: 4, cinco: 5, seis: 6, oito: 8, dez: 10, doze: 12, quinze: 15, trinta: 30};
+const NUMEROS = {um: 1, uma: 1, dois: 2, duas: 2, tres: 3, quatro: 4, cinco: 5, seis: 6, sete: 7, oito: 8, nove: 9, dez: 10, onze: 11, doze: 12, quinze: 15, trinta: 30};
 const numero = t => /^\d+$/.test(t) ? +t : NUMEROS[t] || 0;
 
 function achaData(n, base = new Date()) {
@@ -1136,6 +1213,17 @@ function achaData(n, base = new Date()) {
     return `${base.getFullYear()}-${z2(mes)}-${z2(dia)}`;
   }
   if (/\bhoje\b/.test(n)) return isoDe(base);
+  return "";
+}
+function achaHora(n) {
+  let m = n.match(/\b(\d{1,2})\s*(?::|h(?=\d|\b)|horas?\b)\s*(\d{2})?/);
+  if (m && +m[1] <= 23) return `${z2(m[1])}:${m[2] || "00"}`;
+  m = n.match(/\b(\d{1,2}|uma|duas|tres|quatro|cinco|seis|sete|oito|nove|dez|onze|doze)\s+(e\s+meia\s+)?(?:horas?\s+)?da\s+(manha|tarde|noite)\b/);
+  if (m) {
+    let h = numero(m[1]);
+    if (m[3] !== "manha" && h < 12) h += 12;
+    return `${z2(h)}:${m[2] ? "30" : "00"}`;
+  }
   return "";
 }
 function achaRetorno(n, base = new Date()) {
@@ -1232,6 +1320,7 @@ function organiza(texto, base = new Date()) {
   const ret = achaRetorno(n, base);
   return {
     data: achaData(ri >= 0 ? n.slice(0, ri) : n, base) || isoDe(base), tipo, medico, especialidade,
+    hora: achaHora(ri >= 0 ? n.slice(0, ri) : n), retornoHora: ri >= 0 ? achaHora(n.slice(ri, ri + 70)) : "",
     feito: campos.feito, recomendacoes: campos.rec, remedios: campos.rem,
     retornoTexto: ret.texto, retornoData: ret.data,
     obs: limpaObs(orig.slice(0, cortes.length ? cortes[0].i : orig.length)), textoOriginal: orig
@@ -1269,7 +1358,7 @@ function recomendacoesDaMedica(registros) {
 }
 
 // ====== Caderneta de saúde: as telas ======
-const CAD = {perfil: null, registros: null};
+const CAD = {perfil: null, registros: null, exames: null};
 const NOME_TIPO = {consulta: "Consulta", exame: "Exame", remedio: "Remédio", anotacao: "Anotação"};
 const ICONE_TIPO = {consulta: "👩‍⚕️", exame: "🧪", remedio: "💊", anotacao: "📝"};
 const ReconheceCad = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1289,14 +1378,17 @@ ROTAS.caderneta = async arg => {
   if (location.hash !== minha) return;
   if (!u) return telaLogin();
   try {
-    CAD.perfil = await lerPerfil();
-    CAD.registros = await lerRegistros();
+    [CAD.perfil, CAD.registros, CAD.exames] = await Promise.all([lerPerfil(), lerRegistros(), lerExames()]);
   } catch (e) {
     return cadAviso("📶", navigator.onLine ? "Não consegui abrir a caderneta agora. Tente de novo daqui a pouquinho." : "Parece que o celular está sem internet.");
   }
   if (location.hash !== minha) return;
+  sincronizaAgenda(CAD.registros);
   if (!CAD.perfil) return telaCondicoes(true);
   if (arg === "nova") return telaNova();
+  if (arg === "exames") return telaExames();
+  if (arg === "exame-novo") return telaNovoExame();
+  if (arg && arg.startsWith("exame-")) return telaVerExame(arg.slice(6));
   if (arg === "lista") return telaLista();
   if (arg === "dicas") return telaDicas();
   if (arg === "condicoes") return telaCondicoes(false);
@@ -1329,15 +1421,20 @@ function telaLogin(erro = "") {
 
 function telaCadInicio() {
   const regs = CAD.registros, hoje = isoDe(new Date());
-  const retorno = regs.filter(r => r.retornoData && r.retornoData >= hoje).sort((a, b) => a.retornoData.localeCompare(b.retornoData))[0];
+  const retorno = regs.flatMap(r => [
+    r.tipo === "consulta" && r.data > hoje ? {r, data: r.data, hora: r.hora, nome: "Consulta marcada"} : null,
+    r.retornoData && r.retornoData >= hoje ? {r, data: r.retornoData, hora: r.retornoHora, nome: "Próximo retorno"} : null
+  ].filter(Boolean)).sort((a, b) => (a.data + (a.hora || "")).localeCompare(b.data + (b.hora || "")))[0];
   const ult = regs[0];
   app.innerHTML = topo("Caderneta de saúde") + `
     <div class="capa" style="padding-block:6px 0"><div class="sobre">Só da família</div><h1 style="font-size:1.6em">🩺 Caderneta de saúde da vó Maria</h1></div>
-    ${retorno ? `<div class="recado"><h2>📅 Próximo retorno</h2><p><b>${esc(dataBonita(retorno.retornoData))}</b></p><p>${esc([retorno.medico, retorno.especialidade].filter(Boolean).join(" · "))}</p></div>` : ""}
+    ${retorno ? `<div class="recado"><h2>📅 ${retorno.nome}</h2><p><b>${esc(dataBonita(retorno.data))}${retorno.hora ? ` às ${esc(retorno.hora)}` : ""}</b></p>
+      <p>${esc([retorno.r.medico, retorno.r.especialidade].filter(Boolean).join(" · "))}</p>${AGENDA_URL ? `<p class="dica">📲 Já vai pra agenda do celular</p>` : ""}</div>` : ""}
     <button class="heroi" onclick="ir('caderneta/nova')"><span class="brilho"></span><b>🎤 Contar uma consulta</b>
       <small>Fale do jeito que quiser, que a caderneta organiza.</small><span class="jogar">Começar a contar ▶</span></button>
     ${bloco("caderneta/dicas", "💡", "#FFE7A8", "Dicas de saúde pra vó", "Do jeito que a médica recomenda")}
     ${bloco("caderneta/lista", "📋", "#D6E8F1", "Tudo o que já foi anotado", regs.length ? `${regs.length} ${regs.length > 1 ? "anotações" : "anotação"} · a última em ${dataBonita(ult.data)}` : "Ainda nada anotado")}
+    ${bloco("caderneta/exames", "🧪", "#DCEFD3", "Exames", CAD.exames.length ? `${CAD.exames.length} ${CAD.exames.length > 1 ? "guardados" : "guardado"}` : "Guarde fotos e PDFs dos exames")}
     ${bloco("caderneta/condicoes", "🩺", "#FBE0D2", "O que a vó tem", "Marque pra ajustar as dicas")}
     <div class="ajustes"><button id="cad-sair">Sair da caderneta</button></div>`;
   porId("cad-sair").onclick = async () => {
@@ -1394,11 +1491,11 @@ function telaVer(id) {
   if (!r) return telaLista();
   const lista = (t, itens) => (itens || []).length ? `<h3 class="cad-h">${t}</h3><ul class="cad-ul">${itens.map(i => `<li>${esc(i)}</li>`).join("")}</ul>` : "";
   app.innerHTML = topo(dataBonita(r.data), "caderneta/lista") + `
-    <div class="dica-card forte"><p><b>${ICONE_TIPO[r.tipo] || "📝"} ${esc(NOME_TIPO[r.tipo] || "Anotação")}</b>${r.medico ? ` com ${esc(r.medico)}` : ""}${r.especialidade ? ` · ${esc(r.especialidade)}` : ""}</p>
+    <div class="dica-card forte"><p><b>${ICONE_TIPO[r.tipo] || "📝"} ${esc(NOME_TIPO[r.tipo] || "Anotação")}</b>${r.hora ? ` às ${esc(r.hora)}` : ""}${r.medico ? ` com ${esc(r.medico)}` : ""}${r.especialidade ? ` · ${esc(r.especialidade)}` : ""}</p>
       ${r.quem ? `<small>Anotado por ${esc(r.quem)}</small>` : ""}</div>
     ${r.obs ? `<p>${esc(r.obs)}</p>` : ""}
     ${lista("O que foi feito", r.feito)}${lista("👩‍⚕️ Recomendações", r.recomendacoes)}${lista("💊 Remédios", r.remedios)}
-    ${r.retornoData || r.retornoTexto ? `<h3 class="cad-h">📅 Retorno</h3><p>${esc(r.retornoData ? dataBonita(r.retornoData) : r.retornoTexto)}</p>` : ""}
+    ${r.retornoData || r.retornoTexto ? `<h3 class="cad-h">📅 Retorno</h3><p>${esc(r.retornoData ? dataBonita(r.retornoData) + (r.retornoHora ? ` às ${r.retornoHora}` : "") : r.retornoTexto)}</p>` : ""}
     ${r.textoOriginal ? `<details class="cad-original"><summary>Ver o que foi falado</summary><p>${esc(r.textoOriginal)}</p></details>` : ""}
     ${temVoz ? `<button class="leve" id="cad-ouvir">🔊 Ouvir esta anotação</button>` : ""}
     <button class="leve" onclick="ir('caderneta/editar-${r.id}')">✏️ Corrigir</button>
@@ -1407,6 +1504,7 @@ function telaVer(id) {
   if (b) b.onclick = () => falar([...app.querySelectorAll(".dica-card p, .cad-h, .cad-ul li, #app > p")].map(e => e.textContent).join(". "));
   porId("cad-apagar").onclick = async () => {
     if (!confirm("Apagar esta anotação da caderneta? Não dá pra desfazer.")) return;
+    enviaAgenda({apagar: [r.id]});
     await guardarComCalma(apagarRegistro(r.id), "Apagada.");
     CAD.registros = CAD.registros.filter(x => x.id !== r.id);
     voltar("caderneta/lista");
@@ -1457,6 +1555,109 @@ function telaNova() {
   porId("cad-direto").onclick = () => { para(); telaFormulario({data: isoDe(new Date()), tipo: "consulta", quem}); };
 }
 
+// ---------- exames ----------
+function telaExames() {
+  const ex = CAD.exames;
+  app.innerHTML = topo("Exames", "caderneta") + `
+    <p class="ajuda">Fotos e PDFs dos exames da vó, guardados com o login da família.</p>
+    <button class="seguir" onclick="ir('caderneta/exame-novo')">📷 Guardar um exame</button>
+    ${ex.length ? ex.map(e => `<button class="bloco" style="margin-top:12px" onclick="ir('caderneta/exame-${e.id}')"><span class="ic" style="background:#DCEFD3">${(e.tipos || []).includes("application/pdf") ? "📄" : "🧪"}</span>
+      <span><b>${esc(e.nome || "Exame")}</b><small>${esc(dataBonita(e.data))} · ${e.paginas} ${e.paginas > 1 ? "arquivos" : "arquivo"}</small></span></button>`).join("")
+      : `<p class="dica" style="margin-top:16px">Ainda nenhum exame guardado.</p>`}`;
+}
+function comprimeImagem(arquivo, max = 1600, qualidade = 0.72) {
+  return new Promise((ok, falha) => {
+    const url = URL.createObjectURL(arquivo), img = new Image();
+    img.onload = () => {
+      const e = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * e); c.height = Math.round(img.naturalHeight * e);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      ok({tipo: "image/jpeg", dados: c.toDataURL("image/jpeg", qualidade).split(",")[1]});
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); falha(new Error("imagem")); };
+    img.src = url;
+  });
+}
+const leComoBase64 = arquivo => new Promise((ok, falha) => {
+  const r = new FileReader();
+  r.onload = () => ok({tipo: arquivo.type || "application/pdf", dados: String(r.result).split(",")[1]});
+  r.onerror = falha;
+  r.readAsDataURL(arquivo);
+});
+function telaNovoExame() {
+  const arquivos = [];
+  app.innerHTML = topo("Guardar um exame", "caderneta/exames") + `
+    ${campoVoz("e-nome", "Qual exame? (ex.: exame de sangue, endoscopia)", "")}
+    <label class="campo">Data do exame<input type="date" id="e-data" value="${isoDe(new Date())}"></label>
+    <div class="lado-a-lado">
+      <label class="leve botao-arquivo">📷 Tirar foto<input type="file" accept="image/*" capture="environment" id="e-camera" hidden></label>
+      <label class="leve botao-arquivo">🖼️ Fotos ou PDF<input type="file" accept="image/*,application/pdf" multiple id="e-galeria" hidden></label>
+    </div>
+    <div class="miniaturas" id="e-mini"></div>
+    ${campoVoz("e-obs", "Observações (o que a médica disse do resultado, por exemplo)", "", true)}
+    <button class="seguir" id="e-guardar">💾 Guardar exame</button>`;
+  ligaMicrofones();
+  const mini = porId("e-mini");
+  const desenha = () => {
+    mini.innerHTML = arquivos.length
+      ? arquivos.map((a, i) => `<div class="mini">${a.tipo.startsWith("image/") ? `<img src="data:${a.tipo};base64,${a.dados}" alt="">` : `<span>📄 PDF</span>`}<button type="button" data-i="${i}" aria-label="Tirar este arquivo">✕</button></div>`).join("")
+      : `<p class="dica">Nenhuma foto ainda. Pode tirar várias, uma por página do exame.</p>`;
+    mini.querySelectorAll("button").forEach(b => b.onclick = () => { arquivos.splice(+b.dataset.i, 1); desenha(); });
+  };
+  const recebe = async lista => {
+    for (const f of lista) {
+      try {
+        if (f.type === "application/pdf") {
+          if (f.size > 8 * 1024 * 1024) { aviso("Esse PDF é grande demais (máximo 8 MB)"); continue; }
+          arquivos.push(await leComoBase64(f));
+        } else arquivos.push(await comprimeImagem(f));
+      } catch (e) { aviso("Não consegui abrir esse arquivo"); }
+    }
+    desenha();
+  };
+  ["e-camera", "e-galeria"].forEach(id => porId(id).onchange = e => { recebe([...e.target.files]); e.target.value = ""; });
+  desenha();
+  porId("e-guardar").onclick = async () => {
+    if (!arquivos.length) return aviso("Tire uma foto ou escolha um arquivo primeiro 📷");
+    const b = porId("e-guardar");
+    b.disabled = true; b.textContent = "Guardando…";
+    const meta = {nome: porId("e-nome").value.trim() || "Exame", data: porId("e-data").value || isoDe(new Date()), obs: porId("e-obs").value.trim()};
+    try {
+      const {pronto} = await salvarExame(meta, arquivos);
+      await guardarComCalma(pronto, "Exame guardado ✔");
+      location.replace("#caderneta/exames");
+    } catch (e) {
+      b.disabled = false; b.textContent = "💾 Guardar exame";
+      aviso("Não consegui guardar. Tente de novo.");
+    }
+  };
+}
+async function telaVerExame(id) {
+  const e = CAD.exames.find(x => x.id === id);
+  if (!e) return telaExames();
+  app.innerHTML = topo(e.nome || "Exame", "caderneta/exames") + `
+    <div class="dica-card forte"><p><b>🧪 ${esc(e.nome || "Exame")}</b></p><small>${esc(dataBonita(e.data))}</small></div>
+    ${e.obs ? `<p>${esc(e.obs)}</p>` : ""}
+    <div id="e-arquivos"><p class="dica">Abrindo os arquivos…</p></div>
+    <button class="leve apagar" id="e-apagar">Apagar este exame</button>`;
+  porId("e-apagar").onclick = async () => {
+    if (!confirm("Apagar este exame da caderneta? Não dá pra desfazer.")) return;
+    await guardarComCalma(apagarExame(id), "Exame apagado.");
+    CAD.exames = CAD.exames.filter(x => x.id !== id);
+    voltar("caderneta/exames");
+  };
+  try {
+    const arqs = await lerArquivosExame(id);
+    if (location.hash !== `#caderneta/exame-${id}`) return;
+    porId("e-arquivos").innerHTML = arqs.map((a, i) => a.tipo.startsWith("image/")
+      ? `<img class="exame-foto" src="data:${a.tipo};base64,${a.dados}" alt="Página ${i + 1} do exame">`
+      : `<a class="leve botao-arquivo" target="_blank" rel="noopener" href="${URL.createObjectURL(new Blob([Uint8Array.from(atob(a.dados), c => c.charCodeAt(0))], {type: a.tipo}))}">📄 Abrir o PDF${arqs.length > 1 ? ` ${i + 1}` : ""}</a>`).join("");
+  } catch (err) {
+    porId("e-arquivos").innerHTML = `<p class="dica">Não consegui abrir os arquivos agora. Confira a internet.</p>`;
+  }
+}
+
 function campoVoz(id, rotulo, valor, grande) {
   const campo = grande ? `<textarea id="${id}" rows="3">${esc(valor || "")}</textarea>` : `<input id="${id}" value="${esc(valor || "")}">`;
   return `<label class="campo">${rotulo}<span class="com-mic">${campo}${ReconheceCad ? `<button type="button" class="mic-campo" data-alvo="${id}" aria-label="Falar: ${esc(rotulo)}">🎤</button>` : ""}</span></label>`;
@@ -1487,7 +1688,8 @@ async function guardarComCalma(promessa, feito = "Guardado na caderneta ✔") {
 function telaFormulario(r) {
   app.innerHTML = topo(r.id ? "Corrigir anotação" : "Confira e guarde", r.id ? `caderneta/ver-${r.id}` : "caderneta") + `
     <p class="ajuda">${r.id ? "Corrija o que precisar." : "A caderneta organizou assim. Confira, corrija o que precisar e guarde."} O 🎤 de cada campo deixa falar em vez de escrever.</p>
-    <label class="campo">Data<input type="date" id="f-data" value="${esc(r.data || "")}"></label>
+    <div class="lado-a-lado"><label class="campo">Data<input type="date" id="f-data" value="${esc(r.data || "")}"></label>
+      <label class="campo">Hora, se tiver<input type="time" id="f-hora" value="${esc(r.hora || "")}"></label></div>
     <label class="campo">Tipo<select id="f-tipo">${Object.entries(NOME_TIPO).map(([k, v]) => `<option value="${k}" ${r.tipo === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
     ${campoVoz("f-medico", "Médico ou médica", r.medico)}
     ${campoVoz("f-esp", "Especialidade", r.especialidade)}
@@ -1495,7 +1697,9 @@ function telaFormulario(r) {
     ${campoVoz("f-rec", "Recomendações (uma por linha)", (r.recomendacoes || []).join("\n"), true)}
     ${campoVoz("f-rem", "Remédios (um por linha)", (r.remedios || []).join("\n"), true)}
     ${campoVoz("f-ret", "Retorno", r.retornoTexto)}
-    <label class="campo">Data do retorno, se souber<input type="date" id="f-retdata" value="${esc(r.retornoData || "")}"></label>
+    <div class="lado-a-lado"><label class="campo">Data do retorno<input type="date" id="f-retdata" value="${esc(r.retornoData || "")}"></label>
+      <label class="campo">Hora<input type="time" id="f-rethora" value="${esc(r.retornoHora || "")}"></label></div>
+    ${AGENDA_URL ? `<p class="dica">📲 Consulta marcada e retorno com data vão sozinhos pra agenda do celular da vó.</p>` : ""}
     ${campoVoz("f-obs", "Observações", r.obs, true)}
     ${campoVoz("f-quem", "Quem anotou", r.quem)}
     <button class="seguir" id="f-guardar">💾 Guardar na caderneta</button>`;
@@ -1505,10 +1709,13 @@ function telaFormulario(r) {
     if (!v("f-data")) return aviso("Falta a data 📅");
     const reg = {id: r.id, data: v("f-data"), tipo: v("f-tipo"), medico: v("f-medico"), especialidade: v("f-esp"),
       feito: linhasDe("f-feito"), recomendacoes: linhasDe("f-rec"), remedios: linhasDe("f-rem"),
-      retornoTexto: v("f-ret"), retornoData: v("f-retdata"), obs: v("f-obs"), quem: v("f-quem"), textoOriginal: r.textoOriginal || ""};
+      hora: v("f-hora"), retornoTexto: v("f-ret"), retornoData: v("f-retdata"), retornoHora: v("f-rethora"),
+      obs: v("f-obs"), quem: v("f-quem"), textoOriginal: r.textoOriginal || ""};
     porId("f-guardar").disabled = true;
     guarda.gravar("cad-quem", reg.quem);
-    await guardarComCalma(salvarRegistro(reg));
+    const {id, pronto} = await salvarRegistro(reg);
+    enviaAgenda({eventos: eventosDoRegistro({...reg, id}), tocados: [id]});
+    await guardarComCalma(pronto);
     acertou();
     location.replace("#caderneta");
   };
@@ -1532,7 +1739,7 @@ const COMO = {
   inicio: "Pra jogar, toque num dos quadrados da tela. O botão verde grande, lá em cima, é a Trilha da Vó, com as fases."
 };
 const JOGOS = [
-  {r: "caderneta", nome: "a caderneta de saúde", c: "caderneta", ch: ["caderneta", "saude", "consulta", "remedio"]},
+  {r: "caderneta", nome: "a caderneta de saúde", c: "caderneta", ch: ["caderneta", "saude", "consulta", "remedio", "exame"]},
   {r: "trilha", nome: "a Trilha da Vó", c: "trilha", ch: ["trilha", "fase", "caminho", "candy"]},
   {r: "memoria", nome: "o jogo da memória", c: "memoria", ch: ["memoria", "cartas", " carta ", "baralho"]},
   {r: "combina", nome: "o Combina 3", c: "combina", ch: ["combina", "figura", "banana", "tres iguais"]},
